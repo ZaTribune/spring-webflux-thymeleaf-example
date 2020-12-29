@@ -4,8 +4,58 @@
     <meta charset="UTF-8">
     <title>Restaurant</title>
     <link rel="shortcut icon" href="favicon.ico">
+    <style>
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th, td {
+            border: 1px solid #ddd;
+        }
+        tr:hover {background-color: #f5f5f5;}
+        tr:nth-child(even) {background-color: #f2f2f2;}
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-<h1>My Recipes are funny!</h1>
+<h1>My Recipes!</h1>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Difficulty</th>
+        <th>Prep Time</th>
+        <th>Cook Time</th>
+        <th>Image</th>
+        <th>Directions</th>
+        <th>Notes</th>
+        <th>Categories</th>
+        <th>Ingredients</th>
+    </tr>
+    <tr th:each="recipe:${recipes}">
+        <td th:text="${recipe.title}"></td>
+        <td th:text="${recipe.difficulty}"></td>
+        <td th:text="${recipe.prepTime}"></td>
+        <td th:text="${recipe.cookTime}"></td>
+        <td> <img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="100" th:height="100" alt="image"></td>
+        <td th:text="${recipe.directions}"></td>
+        <td th:text="${recipe.notes.description}"></td>
+        <td>
+            <ul>
+                <li th:each="category:${recipe.categories}" th:text="${category.description}"></li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li th:each="ingredient:${recipe.ingredients}" th:text="${ingredient.amount}+' '+${ingredient.unitOfMeasure.description}+' '+${ingredient.description}"></li>
+            </ul>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
