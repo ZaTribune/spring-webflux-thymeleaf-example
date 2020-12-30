@@ -1,0 +1,66 @@
+
+entity Recipe {
+	prepTime Integer
+    cookTime Integer
+    servings Integer
+    source String
+    url String
+    directions String
+    difficulty Difficulty
+    image Blob
+    notes Note
+}
+entity Ingredient {
+	description String
+    amount BigDecimal
+}
+
+entity Category {
+	departmentName String required
+}
+
+entity UnitOfMeasure {
+	uom String
+}
+
+entity Notes {
+	notes String
+    recipe Recipe
+}
+
+enum Difficulty{
+    EASY
+    MEDIUAM
+    HARD
+}
+
+relationship OneToOne {
+	Recipe{notes} to Notes
+    Ingredient{unitOfMeasure} to UnitOfMeasure
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	Recipe{recipe} to Ingredient
+}
+
+relationship ManyToOne {
+   Ingredient{ingredient}  to  Recipe
+}
+
+relationship ManyToMany {
+	Recipe{recipe(category)} to Category
+}
+
+// Set pagination options
+//paginate JobHistory, Employee with infinite-scroll
+//paginate Job with pagination
+
+// Use Data Transfer Objects (DTO)
+ dto * with mapstruct
+
+// Set service options to all except few
+//service all with serviceImpl except Employee, Job
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
