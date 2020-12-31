@@ -7,6 +7,12 @@ import org.springframework.stereotype.Service;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.data.repositories.RecipeRepository;
 
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+
+// this is a concretion
 @Slf4j
 @Service
 public class RecipeServiceImpl implements RecipeService{
@@ -18,8 +24,11 @@ public class RecipeServiceImpl implements RecipeService{
     }
 
     @Override
-    public Iterable<Recipe> getRecipes() {
+    public Set<Recipe> getRecipes() {
        log.debug("I'm in the RecipeService");
-        return recipeRepository.findAll();
+       Set<Recipe> recipeSet= StreamSupport.stream(recipeRepository.findAll().spliterator(),false)
+               .collect(Collectors.toSet());
+
+        return recipeSet;
     }
 }
