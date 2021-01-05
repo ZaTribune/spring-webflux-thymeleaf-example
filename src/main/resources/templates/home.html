@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div class="container-fluid" th:fragment="HomeFragment">
+    <!-- You can use the new d-flex class to eliminate the extra CSS: -->
+    <div class="card-deck m-5 d-flex justify-content-center">
+        <div class="card m-2 w-25">
+            <img class="card-img-top" src="../static/images/fast-food.svg"
+                 th:src="@{/images/fast-food.svg}" alt="Card image cap"
+                 th:width="200" th:height="200">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Fast Foods</h5>
+                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+                <p class="card-text mt-auto"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+        <div class="card m-2 w-25">
+            <img class="card-img-top" src="../static/images/salad.svg"
+                 th:src="@{/images/salad.svg}" alt="Card image cap"
+                 th:width="200" th:height="200">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Salads</h5>
+                <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional
+                    content. This content is a little bit longer.</p>
+                <p class="card-text mt-auto"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+        <div class="card m-2 w-25">
+            <img class="card-img-top" src="../static/images/pastry.svg"
+                 th:src="@{/images/pastry.svg}" alt="Card image cap"
+                 th:width="200" th:height="200">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Pastry</h5>
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
+                    content. This card has even longer content than the first to show that equal height action.</p>
+                <p class="card-text mt-auto"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
