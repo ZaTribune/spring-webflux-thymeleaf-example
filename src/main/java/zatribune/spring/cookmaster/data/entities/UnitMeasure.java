@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-public class UnitOfMeasure {
+public class UnitMeasure {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

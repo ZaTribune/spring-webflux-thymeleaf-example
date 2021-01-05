@@ -1,6 +1,7 @@
 package zatribune.spring.cookmaster.data.entities;
 
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.HashSet;

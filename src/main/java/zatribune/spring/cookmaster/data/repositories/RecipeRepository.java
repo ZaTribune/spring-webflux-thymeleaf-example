@@ -2,7 +2,6 @@ package zatribune.spring.cookmaster.data.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import zatribune.spring.cookmaster.data.entities.Recipe;
-import zatribune.spring.cookmaster.data.entities.UnitOfMeasure;
 
 import java.util.Optional;
 

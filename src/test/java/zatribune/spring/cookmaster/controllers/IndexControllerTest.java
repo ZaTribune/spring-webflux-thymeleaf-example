@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import zatribune.spring.cookmaster.data.entities.Recipe;
+import zatribune.spring.cookmaster.services.CategoryService;
 import zatribune.spring.cookmaster.services.RecipeService;
 
 import java.util.HashSet;
@@ -28,6 +29,9 @@ class IndexControllerTest {
     @Mock
     RecipeService recipeService;
     @Mock
+    CategoryService categoryService;
+
+    @Mock
     Model model;
 
     // to fix unchecked assignment problems
@@ -40,7 +44,7 @@ class IndexControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         //recipeService=new RecipeServiceImpl(recipeRepository);
-        indexController=new IndexController(recipeService);
+        indexController=new IndexController(recipeService,categoryService);
     }
 
     @Test
@@ -68,12 +72,12 @@ class IndexControllerTest {
         recipes.add(recipe2);
 
         //************ when ************
-        when(recipeService.getRecipes()).thenReturn(recipes);
+        when(recipeService.getAllRecipes()).thenReturn(recipes);
 
 
         //************ then ************
         assertEquals(expectedIndexString,indexController.getIndexPage(model));
-        verify(recipeService,times(1)).getRecipes();
+        verify(recipeService,times(1)).getAllRecipes();
         //this verifies that addAttribute() is called once.
         //the captor is to make sure that the argument passed to the function is the right one/type
         verify(model,times(1)).addAttribute(eq("recipes"),captor.capture());

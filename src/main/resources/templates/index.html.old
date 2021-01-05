@@ -6,12 +6,19 @@
     <link rel="shortcut icon" href="favicon.ico">
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+            integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+            crossorigin="anonymous"
+            th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
     <!-- JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-            crossorigin="anonymous"></script>
-    <!--
+            crossorigin="anonymous"
+            th:src="@{/webjars/bootstrap/5.0.0-beta1/js/bootstrap.min.js}"></script>
+
     <style>
         * {
             font-family: Arial, Helvetica, sans-serif;
@@ -39,57 +46,59 @@
             color: white;
         }
     </style>
-    -->
 </head>
 <body>
 <div class="container-fluid" style="margin-top: 20px">
-     <div class="row">
-         <div class="col-md-6 col-md-offset-3">
-             <div class="panel panel-primary">
-                  <div class="panel-heading">
-                      My Recipes!
-                  </div>
-                 <div class="panel-body">
-                     <div class="table-responsive" th:if="${not#lists.isEmpty(recipes)}">
-                         <table>
-                             <tr>
-                                 <th>Title</th>
-                                 <th>Difficulty</th>
-                                 <th>Prep Time</th>
-                                 <th>Cook Time</th>
-                                 <th>Image</th>
-                                 <th>Directions</th>
-                                 <th>Notes</th>
-                                 <th>Categories</th>
-                                 <th>Ingredients</th>
-                             </tr>
-                             <tr th:each="recipe:${recipes}">
-                                 <td th:text="${recipe.title}"></td>
-                                 <td th:text="${recipe.difficulty}"></td>
-                                 <td th:text="${recipe.prepTime}"></td>
-                                 <td th:text="${recipe.cookTime}"></td>
-                                 <td><img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="100" th:height="100" alt="image"></td>
-                                 <td th:text="${recipe.directions}"></td>
-                                 <td th:text="${recipe.notes.description}"></td>
-                                 <td>
-                                     <ul>
-                                         <li th:each="category:${recipe.categories}" th:text="${category.description}"></li>
-                                     </ul>
-                                 </td>
-                                 <td>
-                                     <ul>
-                                         <li th:each="ingredient:${recipe.ingredients}"
-                                             th:text="${ingredient.amount}+' '+${ingredient.unitOfMeasure.description}+' '+${ingredient.description}"></li>
-                                     </ul>
-                                 </td>
-                             </tr>
-                         </table>
-                     </div>
-                 </div>
-             </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-3">
+            <div class="card">
+                <div class="card-header">
+                    My Recipes!
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" th:if="${not#lists.isEmpty(recipes)}">
 
-         </div>
-     </div>
+                        <table>
+                            <tr>
+                                <th>Recipe</th>
+                                <th>Pictures</th>
+                            </tr>
+                            <tr th:each="recipe:${recipes}">
+                                <td>
+                                    <h1>Title</h1>
+                                    <p th:text="${recipe.title}"></p>
+                                    <h1>Difficulty:</h1>
+                                    <p th:text="${recipe.difficulty}"></p>
+                                    <h1>Preparation Time:</h1>
+                                    <p th:text="${recipe.prepTime}"></p>
+                                    <h1>Cooking Time:</h1>
+                                    <p th:text="${recipe.cookTime}"></p>
+                                    <h1>Category:</h1>
+                                    <ul>
+                                        <li th:each="category:${recipe.categories}"
+                                            th:text="${category.description}"></li>
+                                    </ul>
+                                    <h1>Description:</h1>
+                                    <p th:text="${recipe.notes.description}"></p>
+                                    <h1>Directions:</h1>
+                                    <p th:text="${recipe.directions}"></p>
+                                    <h1>Ingredients:</h1>
+                                    <ul>
+                                        <li th:each="ingredient:${recipe.ingredients}"
+                                            th:text="${ingredient.amount}+' '+${ingredient.unitMeasure.description}+' '+${ingredient.description}"></li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <p><img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="300"
+                                            th:height="300" alt="image"></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import zatribune.spring.cookmaster.data.entities.*;
 import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
 import zatribune.spring.cookmaster.data.repositories.RecipeRepository;
-import zatribune.spring.cookmaster.data.repositories.UnitOfMeasureRepository;
+import zatribune.spring.cookmaster.data.repositories.UnitMeasureRepository;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -19,14 +19,14 @@ import java.util.*;
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
     private final RecipeRepository recipeRepository;
     private final CategoryRepository categoryRepository;
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final UnitMeasureRepository unitMeasureRepository;
 
     @Autowired
-    public DevBootstrap(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
+    public DevBootstrap(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitMeasureRepository unitMeasureRepository) {
         log.debug("I'm at the Bootstrap phase");
         this.recipeRepository = recipeRepository;
         this.categoryRepository = categoryRepository;
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
+        this.unitMeasureRepository = unitMeasureRepository;
     }
 
     @Override
@@ -35,13 +35,13 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     void initData() {
-        Optional<UnitOfMeasure> emptyUOM = unitOfMeasureRepository.findUnitOfMeasureByDescription("");
-        Optional<UnitOfMeasure> teaspoon = unitOfMeasureRepository.findUnitOfMeasureByDescription("teaspoon");
-        Optional<UnitOfMeasure> tablespoon = unitOfMeasureRepository.findUnitOfMeasureByDescription("tablespoon");
-        Optional<UnitOfMeasure> cup = unitOfMeasureRepository.findUnitOfMeasureByDescription("cup");
-        Optional<UnitOfMeasure> pinch = unitOfMeasureRepository.findUnitOfMeasureByDescription("pinch");
-        Optional<UnitOfMeasure> ounce = unitOfMeasureRepository.findUnitOfMeasureByDescription("ounce");
-        Optional<UnitOfMeasure> dash = unitOfMeasureRepository.findUnitOfMeasureByDescription("dash");
+        Optional<UnitMeasure> emptyUOM = unitMeasureRepository.findUnitOfMeasureByDescription("");
+        Optional<UnitMeasure> teaspoon = unitMeasureRepository.findUnitOfMeasureByDescription("teaspoon");
+        Optional<UnitMeasure> tablespoon = unitMeasureRepository.findUnitOfMeasureByDescription("tablespoon");
+        Optional<UnitMeasure> cup = unitMeasureRepository.findUnitOfMeasureByDescription("cup");
+        Optional<UnitMeasure> pinch = unitMeasureRepository.findUnitOfMeasureByDescription("pinch");
+        Optional<UnitMeasure> ounce = unitMeasureRepository.findUnitOfMeasureByDescription("ounce");
+        Optional<UnitMeasure> dash = unitMeasureRepository.findUnitOfMeasureByDescription("dash");
 
         Optional<Category> american = categoryRepository.findCategoriesByDescription("American");
         Optional<Category> italian = categoryRepository.findCategoriesByDescription("Italian");
@@ -62,6 +62,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         american.ifPresent(recipe1Categories::add);
         italian.ifPresent(recipe1Categories::add);
         recipe1.setCategories(recipe1Categories);
+        recipe1.setServings(4);
 
         Recipe recipe2 = new Recipe();
         recipe2.setTitle("Grilled Chicken Tacos");
@@ -78,6 +79,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         HashSet<Category> recipe2Categories = new HashSet<>();
         mexican.ifPresent(recipe2Categories::add);
         recipe2.setCategories(recipe2Categories);
+        recipe2.setServings(3);
 
         if (emptyUOM.isPresent() && teaspoon.isPresent() && tablespoon.isPresent()) {
             recipe1.addIngredient(new Ingredient(BigDecimal.valueOf(2), emptyUOM.get(), "ripe advocates"))
