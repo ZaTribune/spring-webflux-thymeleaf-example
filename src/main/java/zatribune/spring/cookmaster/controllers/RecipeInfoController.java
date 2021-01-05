@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Controller
-public class RecipeController {
+public class RecipeInfoController {
 
     private final RecipeService recipeService;
     @Autowired
-    public RecipeController(RecipeService recipeService){
+    public RecipeInfoController(RecipeService recipeService){
         this.recipeService=recipeService;
     }
 

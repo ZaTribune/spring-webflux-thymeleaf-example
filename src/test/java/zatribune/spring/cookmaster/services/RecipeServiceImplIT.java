@@ -1,21 +1,14 @@
 package zatribune.spring.cookmaster.services;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 import zatribune.spring.cookmaster.commands.NotesCommand;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Difficulty;
-import zatribune.spring.cookmaster.data.entities.Notes;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
 
 
 @SpringBootTest

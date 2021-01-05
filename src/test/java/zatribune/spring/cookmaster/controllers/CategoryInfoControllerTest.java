@@ -18,16 +18,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-class CategoryControllerTest {
+class CategoryInfoControllerTest {
 
     @Mock
     CategoryService categoryService;
-    CategoryController categoryController;
+    CategoryInfoController categoryInfoController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        categoryController=new CategoryController(categoryService);
+        categoryInfoController =new CategoryInfoController(categoryService);
     }
 
     @Test
@@ -43,7 +43,7 @@ class CategoryControllerTest {
         returnedCategory.ifPresent(c->assertEquals(20L,c.getId()));
 
 
-        MockMvc mockMvc= MockMvcBuilders.standaloneSetup(categoryController).build();
+        MockMvc mockMvc= MockMvcBuilders.standaloneSetup(categoryInfoController).build();
         mockMvc.perform(get("/category/show/20"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/category/show"));

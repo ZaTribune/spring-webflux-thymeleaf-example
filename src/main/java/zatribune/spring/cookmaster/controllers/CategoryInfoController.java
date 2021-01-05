@@ -12,12 +12,12 @@ import zatribune.spring.cookmaster.services.CategoryService;
 import java.util.Optional;
 
 @Controller
-public class CategoryController {
+public class CategoryInfoController {
 
     private final CategoryService categoryService;
 
     @Autowired
-    public CategoryController(CategoryService categoryService){
+    public CategoryInfoController(CategoryService categoryService){
         this.categoryService=categoryService;
     }
 

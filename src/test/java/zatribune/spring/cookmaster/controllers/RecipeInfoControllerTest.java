@@ -11,24 +11,23 @@ import zatribune.spring.cookmaster.services.RecipeService;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-class RecipeControllerTest {
+class RecipeInfoControllerTest {
 
     @Mock
     RecipeService recipeService;
 
-    RecipeController recipeController;
+    RecipeInfoController recipeInfoController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        recipeController=new RecipeController(recipeService);
+        recipeInfoController =new RecipeInfoController(recipeService);
         //MockMvc mockMvc= MockMvcBuilders.standaloneSetup()
     }
 
@@ -44,7 +43,7 @@ class RecipeControllerTest {
                 .thenReturn(optionalRecipe);
 
 
-        MockMvc mockMvc=MockMvcBuilders.standaloneSetup(recipeController).build();
+        MockMvc mockMvc=MockMvcBuilders.standaloneSetup(recipeInfoController).build();
         mockMvc.perform(get("/recipe/show/1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/recipe/show"));
