@@ -7,10 +7,30 @@
 <body>
 <div class="container-fluid" style="margin-top: 20px;" th:fragment="RecipesFragment">
     <div class="row d-flex justify-content-center">
-        <div class="col-md-8 col-md-offset-3">
+        <div class="col-4">
+            <div class="btn-group-vertical d-table" role="group" aria-label="Basic radio toggle button group">
+                <!-- apply different styles to the label-->
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnSearch" autocomplete="off" checked=>
+                <label class="btn btn-outline-dark btn-side-menu" for="btnSearch">
+                    <i class="btn-label fa fa-search d-table-cell"></i><i class="d-table-cell" >Search Recipes</i></label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnAddNew" autocomplete="off">
+                <label class="btn btn-outline-dark btn-side-menu" for="btnAddNew">
+                    <i class="btn-label fa fa-plus-circle d-table-cell"></i><i class="d-table-cell" >Add New Recipe</i></label>
+
+                <input type="radio" class="btn-check" name="btnradio" id="btnImport" autocomplete="off">
+                <label class="btn btn-outline-dark btn-side-menu" for="btnImport">
+                    <i class="btn-label fa fa-file-import d-table-cell"></i><i class="d-table-cell" >Import Recipes</i></label>
+            </div>
+        </div>
+        <div class="col-8">
             <div class="card">
                 <div class="card-header">
-                    Recipes
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-light" type="submit">Search</button>
+                    </form>
                 </div>
                 <div class="card-body" th:if="${not#lists.isEmpty(recipes)}">
                     <table class="table">

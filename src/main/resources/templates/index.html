@@ -17,15 +17,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"
             th:src="@{/webjars/bootstrap/5.0.0-beta1/js/bootstrap.min.js}"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+          rel="stylesheet"
+          crossorigin="anonymous"
+          th:href="@{/webjars/font-awesome/5.15.1/css/all.min.css}">
     <link href="../static/css/style1.css" rel="stylesheet"
-          th:href="@{/resources/css/style1.css}">
+          th:href="@{/css/style1.css}">
     <script>
         $(document).ready(function () {
             $("#content").load('/home');
             $('.navbar-nav .nav-link').click(function(){
                 $('.navbar-nav .nav-link').removeClass('active');
                 $(this).addClass('active');
-                console.log('clicked')
             })
         });
 
@@ -34,6 +37,7 @@
         }
 
     </script>
+
 </head>
 <body style="background-color: antiquewhite">
 <div class="container-fluid">

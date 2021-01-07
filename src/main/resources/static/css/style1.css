@@ -1,3 +1,22 @@
-.navbar-dark .nav-item > .nav-link.active  {
-    color:white;
+.navbar-dark .nav-item > .nav-link.active {
+    color: white;
+}
+
+.btn-label {
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.15);
+    height: 20vh;
+}
+.fa, .fas{
+    margin: auto;
+}
+.btn {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.d-table-cell{
+    vertical-align: middle;
+}
+.btn-side-menu{
+    padding: 0;
 }
