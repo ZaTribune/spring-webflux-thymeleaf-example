@@ -77,7 +77,7 @@ class RecipesControllerTest {
 
 
         //************ then ************
-        assertEquals(expectedIndexString, recipesController.getRecipesPage(model));
+        assertEquals(expectedIndexString, recipesController.getRecipesHomePage(model));
         verify(recipeService,times(1)).getAllRecipes();
         //this verifies that addAttribute() is called once.
         //the captor is to make sure that the argument passed to the function is the right one/type

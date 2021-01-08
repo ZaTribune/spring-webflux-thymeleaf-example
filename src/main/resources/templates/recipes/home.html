@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title></title>
-    <script>
-        $(document).ready(function () {
-            $("#recipesContainer").load('/recipes/search');
-        });
-    </script>
-</head>
-<body>
-<div class="container-fluid" style="margin-top: 20px;" th:fragment="RecipesMainFragment">
+<div class="container-fluid" style="margin-top: 20px;"
+     xmlns:th="http://www.thymeleaf.org"
+     th:fragment="RecipesMainFragment">
     <div class="row justify-content-center">
         <div class="col-lg-2 col-sm-12 p-1">
             <div class="btn-group d-table m-auto" role="group" aria-label="Basic radio toggle button group">
@@ -37,9 +28,11 @@
                 </label>
             </div>
         </div>
-        <div id="recipesContainer" class="col-lg-10 col-sm-12 p-1"></div>
+        <div id="recipesContainer" class="col-lg-10 col-sm-12"></div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $("#recipesContainer").load('/recipes/search');
+        });
+    </script>
 </div>
-
-</body>
-</html>

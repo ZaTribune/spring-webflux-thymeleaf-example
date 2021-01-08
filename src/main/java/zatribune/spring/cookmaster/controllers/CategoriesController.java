@@ -21,18 +21,18 @@ public class CategoriesController {
     }
 
     @RequestMapping("/categories")
-    public String getCategoriesPage(Model model){
+    public String getCategoriesHomePage(Model model){
         return "/categories/home";
     }
 
     @RequestMapping("/categories/search")
-    public String getCategoriesSearchPage(Model model){
+    public String searchCategories(Model model){
         model.addAttribute("categories",categoryService.getAllCategories());
         return "/categories/search";
     }
 
     @RequestMapping("/category/show/{id}")
-    public String getCategoryPage(@PathVariable String id, Model model){
+    public String showCategory(@PathVariable String id, Model model){
         Optional<Category> optionalCategory=categoryService.getCategoryById(Long.valueOf(id));
         optionalCategory.ifPresent(category ->model.addAttribute("category",category));
         return "/categories/show";
