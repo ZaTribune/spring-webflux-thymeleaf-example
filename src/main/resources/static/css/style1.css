@@ -3,20 +3,26 @@
 }
 
 .btn-label {
-    padding: 6px 12px;
+    padding: 20px;
     background: rgba(0, 0, 0, 0.15);
-    height: 20vh;
+
 }
+/*
 .fa, .fas{
     margin: auto;
 }
-.btn {
-    padding-top: 0;
-    padding-bottom: 0;
-}
+*/
 .d-table-cell{
     vertical-align: middle;
 }
 .btn-side-menu{
     padding: 0;
+    border-radius: 0;
+    width: 150px;
+}
+i{
+    font-style: inherit;
+}
+.list-group-item{
+    font-size: 2vmin;
 }

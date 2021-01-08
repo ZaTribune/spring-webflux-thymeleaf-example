@@ -25,15 +25,24 @@
           th:href="@{/css/style1.css}">
     <script>
         $(document).ready(function () {
-            $("#content").load('/home');
+            $("#container").load('/home');
             $('.navbar-nav .nav-link').click(function(){
                 $('.navbar-nav .nav-link').removeClass('active');
                 $(this).addClass('active');
             })
         });
 
-        function getContent(url) {
-            $("#content").load(url);
+        function getContent(id,url) {
+            $(id).load(url);
+            let navbar=$("#navbarResponsive");
+
+            if (navbar.hasClass('show')){
+                $('#btnNavbar').click();
+                //navbar.area_expanded=false;
+                //navbar.addClass('collapsing');
+                //navbar.removeClass('show');
+            }
+
         }
 
     </script>
@@ -41,10 +50,19 @@
 </head>
 <body style="background-color: antiquewhite">
 <div class="container-fluid">
+    <header class="row bg-dark">
+        <section class="col text-start align-self-center p-1">
+            <img src="../static/images/logo.svg" th:src="@{/images/logo.svg}" alt="logo">
+        </section>
+
+        <section class="col text-end align-self-center p-1">
+            <button class="btn btn-outline-light" href="#" title="Login/Register">Login/Register</button>
+        </section>
+    </header>
     <nav class="row navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Menu</a>
-            <button class="navbar-toggler collapsed" type="button"
+            <button class="navbar-toggler collapsed" type="button" id="btnNavbar"
                     data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
                     aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -53,13 +71,13 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#"
-                           onclick="getContent('/home')">Home</a>
+                           onclick="getContent($('#container'),'/home')">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="getContent('/category')">Categories</a>
+                        <a class="nav-link" href="#" onclick="getContent($('#container'),'/categories')">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="getContent('/recipe')">Recipes</a>
+                        <a class="nav-link" href="#" onclick="getContent($('#container'),'/recipes')">Recipes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">About</a>
@@ -73,7 +91,7 @@
         </div>
     </nav>
     <!-- Here, we'll play with the content-->
-    <div class="row" id="content"></div>
+    <div class="row" id="container"></div>
 
 </div>
 

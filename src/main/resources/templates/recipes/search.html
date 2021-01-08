@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div class="card" th:fragment="RecipesSearchFragment">
+    <div class="card-header">
+        <form class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-dark" type="submit">Search</button>
+        </form>
+    </div>
+    <div class="card-body" th:if="${not#lists.isEmpty(recipes)}">
+        <div class="row">
+            <div class="col-3">
+                <div class="list-group" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action"
+                       th:each="recipe:${recipes}"
+                       th:id="'list-item-' + ${recipe.id}"
+                       th:href="'#list-item-content-' + ${recipe.id}"
+                       th:text="${recipe.title}"
+                       data-bs-toggle="list" role="tab" aria-controls="home">Home</a>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="tab-content" id="nav-tabContent" >
+                    <div class="tab-pane fade" role="tabpanel" th:each="recipe:${recipes}" th:id="'list-item-content-' + ${recipe.id}">
+                        <div style="margin: auto;">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h1 th:text="${recipe.title}+' Description'"></h1>
+                                </div>
+                                <div class="card-body container-fluid">
+                                    <div class="row">
+                                        <div class="col container-fluid">
+                                            <div class="row">
+                                                <div class="col fw-bold"><p>Categories:</p></div>
+                                                <div class="col-md-9">
+                                                    <ul>
+                                                        <li th:each="category:${recipe.categories}"
+                                                            th:text="${category.description}"></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <p>
+                                                    <span class="fw-bold">Preparation Time:</span>
+                                                    <span th:text="${recipe.prepTime}"></span>
+                                                </p>
+                                            </div>
+                                            <div class="row">
+                                                <p>
+                                                    <span class="fw-bold">Cooking Time:</span>
+                                                    <span th:text="${recipe.cookTime}"></span>
+                                                </p>
+                                            </div>
+                                            <div class="row">
+                                                <p>
+                                                    <span class="fw-bold">Difficulty:</span>
+                                                    <span th:text="${recipe.difficulty}"></span>
+                                                </p>
+                                            </div>
+                                            <div class="row">
+                                                <p>
+                                                    <span class="fw-bold">Servings:</span>
+                                                    <span th:text="${recipe.servings}"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <p><img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="300"
+                                                    th:height="300" alt="image"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header"><h1>Ingredients</h1></div>
+                                <div class="card-body">
+                                    <ul>
+                                        <li th:each="ingredient:${recipe.ingredients}"
+                                            th:text="${ingredient.amount}+' '+${ingredient.unitMeasure.description}+' '+${ingredient.description}"></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header"><h1>Directions</h1></div>
+                                <div class="card-body">
+                                    <p th:text="${recipe.directions}"></p>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header"><h1>Notes</h1></div>
+                                <div class="card-body">
+                                    <p th:text="${recipe.notes.description}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
