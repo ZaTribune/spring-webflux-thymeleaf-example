@@ -1,0 +1,7 @@
+<a class="list-group-item list-group-item-action"
+   xmlns:th="http://www.thymeleaf.org"
+   th:each="category, stat : ${categoriesSuggestions}"
+   th:id="${category.id}"
+   onclick="insertListItem($('#selectedCategories'),this);closeAllLists();">
+    <i th:text="${category.description}"></i>
+</a>

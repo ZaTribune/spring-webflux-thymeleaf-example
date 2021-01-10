@@ -1,4 +1,6 @@
 insert into category (description) values ('American');
+insert into category (description) values ('Armenian');
+insert into category (description) values ('Austrian');
 insert into category (description) values ('Mexican');
 insert into category (description) values ('Italian');
 insert into category (description) values ('Fast Food');

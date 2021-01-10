@@ -1,14 +1,13 @@
 <div class="card" xmlns:th="http://www.thymeleaf.org"
      th:fragment="RecipesSearchFragment">
-    <div class="card-header">
-        <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-dark" type="submit">Search</button>
-        </form>
-    </div>
+
     <div class="card-body" th:if="${not#lists.isEmpty(recipes)}">
         <div class="row">
             <div class="col-3">
+                    <form class="d-flex mb-2">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-dark" type="submit">Search</button>
+                    </form>
                 <div class="list-group" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action"
                        th:each="recipe:${recipes}"
@@ -23,12 +22,27 @@
                     <div class="tab-pane fade" role="tabpanel" th:each="recipe:${recipes}" th:id="'list-item-content-' + ${recipe.id}">
                         <div style="margin: auto;">
                             <div class="card">
-                                <div class="card-header">
-                                    <h1 th:text="${recipe.title}+' Description'"></h1>
+                                <div class="card-header" style="text-align-last: justify">
+                                    <h1 class="d-inline-block" th:text="${recipe.title}"></h1>
+                                    <section class="d-inline-block">
+                                        <button class="btn btn-secondary" id="btnEdit"
+                                                th:id="${recipe.id}"
+                                                onclick="getContent($('#recipesContainer'),'/updateRecipe/'+this.id)">
+
+                                            <i class="fa fa-edit d-table-cell"></i>
+                                            <i class="d-table-cell">Edit</i>
+                                        </button>
+                                        <button class="btn btn-danger" id="btnDelete"
+                                                th:id="${recipe.id}"
+                                                onclick="getContent($('#recipesContainer'),'/updateRecipe/'+this.id)">
+                                            <i class="fa fa-trash d-table-cell"></i>
+                                            <i class="d-table-cell">Delete</i>
+                                        </button>
+                                    </section>
+
                                 </div>
                                 <div class="card-body container-fluid">
                                     <div class="row">
-                                        <div class="col container-fluid">
                                             <div class="row">
                                                 <div class="col fw-bold"><p>Categories:</p></div>
                                                 <div class="col-md-9">
@@ -92,7 +106,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+
                 </div>
             </div>
         </div>

@@ -1,0 +1,146 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <form
+            th:fragment="AddRecipeFragment"
+            th:object="${recipe}"
+            th:action="@{/updateOrSaveRecipe}"
+            id="createRecipeForm"
+            th:method="post"
+            class="justify-content-center">
+        <div class="card">
+            <input type="hidden" th:field="*{id}">
+            <div class="card-header"><h1>Main Information</h1></div>
+            <div class="card-body container-fluid">
+                <div class="row">
+                    <div class="col container-fluid">
+                        <div class="row">
+                            <label class="m-1">Title:
+                                <input type="text" class="form-control w-50" id="inputTitle" placeholder="Recipe Name"
+                                       th:field="*{title}">
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label class="m-1">
+                                Preparation Time:
+                                <input type="text" class="form-control w-25" id="inputPrepTime"
+                                       placeholder="minutes"
+                                       th:field="*{prepTime}">
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label class="m-1">
+                                Cook Time:
+                                <input type="text" class="form-control w-25" id="inputCockTime"
+                                       placeholder="minutes"
+                                       th:field="*{cookTime}">
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label class="m-1">Difficulty:
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" th:field="*{difficulty}">
+                                    <option selected value="EASY">Easy</option>
+                                    <option value="MODERATE">Moderate</option>
+                                    <option value="HARD">Hard</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <label class="m-1">
+                                Servings:
+                                <input type="text" class="form-control w-25" id="inputServings"
+                                       placeholder="times"
+                                       th:field="*{servings}">
+                            </label>
+                        </div>
+                        <div class="row m-1">
+                            <div class="col-12 fw-bold p-0">
+                                <label>Categories:<input type="text" class="form-control w-100" id="inputCategory"
+                                                         onkeyup="getContent($('#categoriesListContainer'),'/listCategories'+'?s='+this.value)">
+                                </label>
+                                <div id="categoriesListContainer" class="autocomplete-items list-group w-25">
+                                </div>
+                            </div>
+                            <div id="selectedCategories" class="col-12 list-group mt-1">
+                                <a class="list-group-item d-flex justify-content-between p-1 align-items-center text-dark w-25"
+                                   xmlns:th="http://www.thymeleaf.org"
+                                   th:each="category, stat : *{categories}"
+                                   th:id="${category.id}">
+                                    <i th:text="${category.description}"></i>
+                                    <button class='btn btn-secondary' onclick='this.closest("a").remove()'><i class='fa fa-trash p-1'></i></button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col text-center">
+                        <button class="btn btn-secondary"><i class="fa fa-image p-1"></i><i>Pic</i></button>
+                        <p><img src="../../static/images/camera.svg" th:src="@{/images/camera.svg}" th:width="300"
+                                th:height="300" alt="image"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h1>Ingredients</h1></div>
+            <div class="card-body">
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h1>Directions</h1></div>
+            <div class="card-body">
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <label> Notes:
+                    <textarea class="form-control w-50" th:field="*{notes.description}"></textarea>
+                </label>
+            </div>
+        </div>
+        <script>
+            function closeAllLists() {
+                $('#categoriesListContainer').empty()
+            }
+
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
+
+            function sendData()
+            {
+                let selectedCategories=$('#selectedCategories');
+                selectedCategories.children('a').each(function (index, element) {
+                    $('<input />').attr('type', 'hidden')
+                        .attr('name', 'categories['+index+'].id')
+                        .attr('value', element.id)
+                        .appendTo('#createRecipeForm');
+                });
+                $.ajax(
+                    {
+                        type: "POST",
+                        data: $("#createRecipeForm").serialize(),
+                        cache: false,
+                        url: "/updateOrSaveRecipe",
+                        success: function(data)
+                        {
+                            getContent($('#container'),"/recipes")
+                            alert("Your changes have been saved");
+
+                        },
+                        error: function()
+                        {
+                            alert("Error - Data not saved");
+                        }
+
+                    });
+
+            }
+
+        </script>
+    </form>
+    <div class="card align-items-center">
+        <button id="btnSubmitRecipe" class="btn btn-primary w-25 m-2" th:height="50" type="submit" onclick="sendData()">Save</button>
+    </div>
+</div>
+
+

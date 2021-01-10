@@ -42,6 +42,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findById(id);
     }
 
+
     @Override
     public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
         Recipe recipe = converter.convert(recipeCommand);
@@ -52,5 +53,15 @@ public class RecipeServiceImpl implements RecipeService {
             recipeCommand.setId(id);
         }
         return recipeCommand;
+    }
+
+    @Override
+    public void deleteRecipe(Recipe recipe) {
+        recipeRepository.delete(recipe);
+    }
+
+    @Override
+    public void deleteRecipeById(Long id) {
+        recipeRepository.deleteById(id);
     }
 }

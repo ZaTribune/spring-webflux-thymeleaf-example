@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import zatribune.spring.cookmaster.data.entities.Difficulty;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -24,5 +26,5 @@ public class RecipeCommand {
     private String image;
     private NotesCommand notes;
     private Set<IngredientCommand> ingredients=new HashSet<>();
-    private Set<CategoryCommand>categories=new HashSet<>();
+    private List<CategoryCommand> categories=new ArrayList<>();
 }

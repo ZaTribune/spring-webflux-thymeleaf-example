@@ -17,7 +17,7 @@
                         <tr th:each="category:${categories}">
                             <td><p th:text="${category.id}"></p></td>
                             <td><p th:text="${category.description}"></p></td>
-                            <td><a href="#" th:href="@{'/category/show/'+${category.id}}">View</a></td>
+                            <td><a href="#" th:href="@{'/showCategory/'+${category.id}}">View</a></td>
                         </tr>
                     </table>
                 </div>

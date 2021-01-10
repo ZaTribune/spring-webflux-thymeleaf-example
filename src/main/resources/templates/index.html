@@ -16,7 +16,7 @@
     <!-- JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"
-            th:src="@{/webjars/bootstrap/5.0.0-beta1/js/bootstrap.min.js}"></script>
+            th:src="@{/webjars/bootstrap/5.0.0-beta1/js/bootstrap.bundle.js}"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
           rel="stylesheet"
           crossorigin="anonymous"
@@ -35,14 +35,31 @@
         function getContent(id,url) {
             $(id).load(url);
             let navbar=$("#navbarResponsive");
-
             if (navbar.hasClass('show')){
                 $('#btnNavbar').click();
                 //navbar.area_expanded=false;
                 //navbar.addClass('collapsing');
                 //navbar.removeClass('show');
             }
+        }
+        function insertListItem(parentId,item){
+            let invalid = false;
+            parentId.children('a').each(function (index, element) {
+                if (item.id===element.id){
+                   invalid=true;
+                   return false;
 
+                }
+            });
+            if (invalid===true)
+                return;
+            let selectedItem=$(item);
+            //alert("parentID:"+parentId+"\nitemId:"+itemId+"\nitemText"+itemText);
+            let btnDelete="<button class='btn btn-secondary' onclick='this.closest(\"a\").remove()'><i class='fa fa-trash p-1'></i></button>";
+            selectedItem.attr('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark w-25');
+            selectedItem.attr('onclick','');
+            selectedItem.append(btnDelete);
+            $(parentId).append(selectedItem);
         }
 
     </script>

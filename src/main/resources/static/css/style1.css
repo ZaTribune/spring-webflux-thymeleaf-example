@@ -18,11 +18,51 @@
 .btn-side-menu{
     padding: 0;
     border-radius: 0;
-    width: 150px;
 }
 i{
     font-style: inherit;
 }
 .list-group-item{
     font-size: 2vmin;
+}
+
+/* from w3 school */
+
+input {
+    border: 1px solid transparent;
+    background-color: #f1f1f1;
+    padding: 10px;
+    font-size: 16px;
+}
+input[type=text] {
+    background-color: #f1f1f1;
+    width: 100%;
+}
+input[type=submit] {
+    background-color: DodgerBlue;
+    color: #fff;
+}
+
+.autocomplete-items {
+    position: absolute;
+    padding: 0;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    left: 20px;
+    right: 0;
+}
+.autocomplete-items a {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items a:hover {
+    /*when hovering an item:*/
+    background-color: #e9e9e9;
+}
+.autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: DodgerBlue !important;
+    color: #ffffff;
 }

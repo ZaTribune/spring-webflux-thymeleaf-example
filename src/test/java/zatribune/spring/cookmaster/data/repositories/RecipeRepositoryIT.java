@@ -27,4 +27,5 @@ class RecipeRepositoryIT {
         Optional<Recipe> recipe= recipeRepository.findRecipeByTitle("Perfect Guacamole");
         recipe.ifPresent(u->assertEquals("Perfect Guacamole",u.getTitle()));
     }
+
 }
