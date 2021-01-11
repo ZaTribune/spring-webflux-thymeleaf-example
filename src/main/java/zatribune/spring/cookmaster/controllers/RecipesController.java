@@ -64,10 +64,12 @@ public class RecipesController {
 
     }
 
+
     @RequestMapping("/deleteRecipe/{id}")
-    public String deleteRecipe(@PathVariable String id, Model model) {
+    public @ResponseBody String deleteRecipe(@PathVariable String id, Model model) {
+        log.info("deleting recipe: "+id);
         recipeService.deleteRecipeById(Long.valueOf(id));
-        return "/recipes/createRecipe";
+        return "ok";
     }
 
 

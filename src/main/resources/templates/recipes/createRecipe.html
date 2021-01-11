@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div id="selectedCategories" class="col-12 list-group mt-1">
-                                <a class="list-group-item d-flex justify-content-between p-1 align-items-center text-dark w-25"
+                                <a class="list-group-item d-flex justify-content-between p-1 align-items-center text-dark w-50"
                                    xmlns:th="http://www.thymeleaf.org"
                                    th:each="category, stat : *{categories}"
                                    th:id="${category.id}">
@@ -131,7 +131,6 @@
                         {
                             alert("Error - Data not saved");
                         }
-
                     });
 
             }

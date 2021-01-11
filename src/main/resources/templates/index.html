@@ -56,7 +56,7 @@
             let selectedItem=$(item);
             //alert("parentID:"+parentId+"\nitemId:"+itemId+"\nitemText"+itemText);
             let btnDelete="<button class='btn btn-secondary' onclick='this.closest(\"a\").remove()'><i class='fa fa-trash p-1'></i></button>";
-            selectedItem.attr('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark w-25');
+            selectedItem.attr('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark w-50');
             selectedItem.attr('onclick','');
             selectedItem.append(btnDelete);
             $(parentId).append(selectedItem);
@@ -67,6 +67,7 @@
 </head>
 <body style="background-color: antiquewhite">
 <div class="container-fluid">
+    <div id="modalOverlay"></div>
     <header class="row bg-dark">
         <section class="col text-start align-self-center p-1">
             <img src="../static/images/logo.svg" th:src="@{/images/logo.svg}" alt="logo">

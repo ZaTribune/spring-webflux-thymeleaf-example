@@ -4,10 +4,10 @@
     <div class="card-body" th:if="${not#lists.isEmpty(recipes)}">
         <div class="row">
             <div class="col-3">
-                    <form class="d-flex mb-2">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-dark" type="submit">Search</button>
-                    </form>
+                <form class="d-flex mb-2">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-dark" type="submit">Search</button>
+                </form>
                 <div class="list-group" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action"
                        th:each="recipe:${recipes}"
@@ -17,98 +17,136 @@
                        data-bs-toggle="list" role="tab" aria-controls="home">Home</a>
                 </div>
             </div>
-            <div class="col-9">
-                <div class="tab-content" id="nav-tabContent" >
-                    <div class="tab-pane fade" role="tabpanel" th:each="recipe:${recipes}" th:id="'list-item-content-' + ${recipe.id}">
-                        <div style="margin: auto;">
-                            <div class="card">
-                                <div class="card-header" style="text-align-last: justify">
-                                    <h1 class="d-inline-block" th:text="${recipe.title}"></h1>
-                                    <section class="d-inline-block">
-                                        <button class="btn btn-secondary" id="btnEdit"
-                                                th:id="${recipe.id}"
-                                                onclick="getContent($('#recipesContainer'),'/updateRecipe/'+this.id)">
 
-                                            <i class="fa fa-edit d-table-cell"></i>
-                                            <i class="d-table-cell">Edit</i>
-                                        </button>
-                                        <button class="btn btn-danger" id="btnDelete"
-                                                th:id="${recipe.id}"
-                                                onclick="getContent($('#recipesContainer'),'/updateRecipe/'+this.id)">
-                                            <i class="fa fa-trash d-table-cell"></i>
-                                            <i class="d-table-cell">Delete</i>
-                                        </button>
-                                    </section>
+            <div class="col-9 tab-content" id="recipeTabContent">
+                <div class="tab-pane fade" role="tabpanel" th:each="recipe:${recipes}"
+                     th:id="'list-item-content-' + ${recipe.id}">
+                    <div style="margin: auto;">
+                        <div class="card">
+                            <div class="card-header" style="text-align-last: justify">
+                                <h1 class="d-inline-block" th:text="${recipe.title}"></h1>
+                                <section class="d-inline-block">
+                                    <button class="btn btn-secondary" id="btnEdit"
+                                            th:id="${recipe.id}"
+                                            onclick="getContent($('#recipeTabContent'),'/updateRecipe/'+this.id)">
 
-                                </div>
-                                <div class="card-body container-fluid">
+                                        <i class="fa fa-edit d-table-cell"></i>
+                                        <i class="d-table-cell">Edit</i>
+                                    </button>
+
+                                    <button class="btn btn-danger"
+                                            th:id="${recipe.id}"
+                                            onclick="
+                                            confirmDialog(
+                                                'delete',
+                                                '/deleteRecipe/'+this.id,
+                                                function() {getContent($('#container'),'/recipes')}
+                                                )"
+                                            data-bs-toggle="modal" data-bs-target="#myModal">
+                                        <i class="fa fa-trash d-table-cell"></i>
+                                        <i class="d-table-cell">Delete</i>
+                                    </button>
+                                </section>
+
+                            </div>
+                            <div class="card-body container-fluid row">
+                                <div class="col-6">
                                     <div class="row">
-                                            <div class="row">
-                                                <div class="col fw-bold"><p>Categories:</p></div>
-                                                <div class="col-md-9">
-                                                    <ul>
-                                                        <li th:each="category:${recipe.categories}"
-                                                            th:text="${category.description}"></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <p>
-                                                    <span class="fw-bold">Preparation Time:</span>
-                                                    <span th:text="${recipe.prepTime}"></span>
-                                                </p>
-                                            </div>
-                                            <div class="row">
-                                                <p>
-                                                    <span class="fw-bold">Cooking Time:</span>
-                                                    <span th:text="${recipe.cookTime}"></span>
-                                                </p>
-                                            </div>
-                                            <div class="row">
-                                                <p>
-                                                    <span class="fw-bold">Difficulty:</span>
-                                                    <span th:text="${recipe.difficulty}"></span>
-                                                </p>
-                                            </div>
-                                            <div class="row">
-                                                <p>
-                                                    <span class="fw-bold">Servings:</span>
-                                                    <span th:text="${recipe.servings}"></span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <p><img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="300"
-                                                    th:height="300" alt="image"></p>
+                                        <div class="col fw-bold"><p>Categories:</p></div>
+                                        <div class="col-md-9">
+                                            <ul>
+                                                <li th:each="category:${recipe.categories}"
+                                                    th:text="${category.description}"></li>
+                                            </ul>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <p>
+                                            <span class="fw-bold">Preparation Time:</span>
+                                            <span th:text="${recipe.prepTime}"></span>
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p>
+                                            <span class="fw-bold">Cooking Time:</span>
+                                            <span th:text="${recipe.cookTime}"></span>
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p>
+                                            <span class="fw-bold">Difficulty:</span>
+                                            <span th:text="${recipe.difficulty}"></span>
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p>
+                                            <span class="fw-bold">Servings:</span>
+                                            <span th:text="${recipe.servings}"></span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header"><h1>Ingredients</h1></div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li th:each="ingredient:${recipe.ingredients}"
-                                            th:text="${ingredient.amount}+' '+${ingredient.unitMeasure.description}+' '+${ingredient.description}"></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header"><h1>Directions</h1></div>
-                                <div class="card-body">
-                                    <p th:text="${recipe.directions}"></p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header"><h1>Notes</h1></div>
-                                <div class="card-body">
-                                    <p th:text="${recipe.notes.description}"></p>
+                                <div class="col-6">
+                                    <p><img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="300"
+                                            th:height="300" alt="image"></p>
                                 </div>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h1>Ingredients</h1></div>
+                        <div class="card-body">
+                            <ul>
+                                <li th:each="ingredient:${recipe.ingredients}"
+                                    th:text="${ingredient.amount}+' '+${ingredient.unitMeasure.description}+' '+${ingredient.description}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h1>Directions</h1></div>
+                        <div class="card-body">
+                            <p th:text="${recipe.directions}"></p>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header"><h1>Notes</h1></div>
+                        <div class="card-body">
+                            <p th:text="${recipe.notes.description}"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        function confirmDialog(modalType,url,laterFunction) {
+            $('#modalOverlay').load('/modal/'+modalType, function () {
+                let myModel = $('#myModal');
+                myModel.on('hidden.bs.modal', function () {
+                    this.remove();
+                    // to remove the modal
+                })
+                myModel.modal('show');
+                $('#btnOkDialog').click(function () {
+                    $.ajax(
+                        {
+                            type: "GET",
+                            data: null,//data to be sent
+                            cache: false,
+                            url: url,
+                            success: function(data)
+                            {
+                                //after
+                                myModel.modal('hide');
+                                laterFunction();
+                            },
+                            error: function()
+                            {
+                                //error
+                            }
+                        });
+                })
+            });
+
+        }
+    </script>
 </div>
