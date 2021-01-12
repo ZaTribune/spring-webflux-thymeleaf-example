@@ -1,8 +1,10 @@
 package zatribune.spring.cookmaster.controllers;
 
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +13,9 @@ import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Category;
 import zatribune.spring.cookmaster.data.entities.Recipe;
+import zatribune.spring.cookmaster.data.entities.UnitMeasure;
 import zatribune.spring.cookmaster.services.RecipeService;
+import zatribune.spring.cookmaster.services.UnitMeasureService;
 
 import java.util.Optional;
 
@@ -21,11 +25,13 @@ public class RecipesController {
 
     private final RecipeService recipeService;
     private final RecipeToRecipeCommand recipeToRecipeCommand;
+    private final UnitMeasureService unitMeasureService;
 
     @Autowired
-    public RecipesController(RecipeService recipeService,RecipeToRecipeCommand recipeToRecipeCommand) {
+    public RecipesController(RecipeService recipeService,RecipeToRecipeCommand recipeToRecipeCommand,UnitMeasureService unitMeasureService) {
         this.recipeService = recipeService;
         this.recipeToRecipeCommand=recipeToRecipeCommand;
+        this.unitMeasureService=unitMeasureService;
     }
 
     @RequestMapping("/recipes")
@@ -52,6 +58,7 @@ public class RecipesController {
     @RequestMapping("/createRecipe")
     public String createNewRecipe(Model model) {
         model.addAttribute("recipe", new RecipeCommand());
+        model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
         return "/recipes/createRecipe";
 
     }
@@ -60,6 +67,7 @@ public class RecipesController {
     public String updateRecipe(@PathVariable String id, Model model) {
         Optional<Recipe> optionalRecipe=recipeService.getRecipeById(Long.valueOf(id));
         optionalRecipe.ifPresent(element->model.addAttribute("recipe",recipeToRecipeCommand.convert(element)));
+        model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
         return "/recipes/createRecipe";
 
     }

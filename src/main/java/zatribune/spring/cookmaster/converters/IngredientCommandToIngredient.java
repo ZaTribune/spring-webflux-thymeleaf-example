@@ -7,6 +7,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import zatribune.spring.cookmaster.commands.IngredientCommand;
 import zatribune.spring.cookmaster.data.entities.Ingredient;
+import zatribune.spring.cookmaster.data.entities.Recipe;
+
 @Component
 public class IngredientCommandToIngredient implements Converter<IngredientCommand, Ingredient> {
 

@@ -1,7 +1,8 @@
 package zatribune.spring.cookmaster.data.entities;
 
-import lombok.*;
-import org.springframework.lang.Nullable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(exclude = {"notes","ingredients","categories"})
 @Entity
 public class Recipe {
@@ -30,7 +32,8 @@ public class Recipe {
     private String image;
     @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipe",fetch = FetchType.EAGER)
+    // orphanRemoval is the opposite of cascade as it enables a child entity to be removed
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipe",fetch = FetchType.EAGER,orphanRemoval = true)
     private Set<Ingredient> ingredients=new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -38,6 +41,10 @@ public class Recipe {
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category>categories=new HashSet<>();
+
+    public Recipe(Long recipeId) {
+        this.id=recipeId;
+    }
 
     public void setNotes(Notes notes) {
         notes.setRecipe(this);

@@ -36,7 +36,8 @@
                         </div>
                         <div class="row">
                             <label class="m-1">Difficulty:
-                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" th:field="*{difficulty}">
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect"
+                                        th:field="*{difficulty}">
                                     <option selected value="EASY">Easy</option>
                                     <option value="MODERATE">Moderate</option>
                                     <option value="HARD">Hard</option>
@@ -59,20 +60,22 @@
                                 <div id="categoriesListContainer" class="autocomplete-items list-group w-25">
                                 </div>
                             </div>
-                            <div id="selectedCategories" class="col-12 list-group mt-1">
-                                <a class="list-group-item d-flex justify-content-between p-1 align-items-center text-dark w-50"
+                            <div id="selectedCategories" class="col-lg-8 col-md-8 p-0 list-group mt-1">
+                                <a class="list-group-item d-flex justify-content-between p-1 align-items-center text-dark"
                                    xmlns:th="http://www.thymeleaf.org"
                                    th:each="category, stat : *{categories}"
                                    th:id="${category.id}">
                                     <i th:text="${category.description}"></i>
-                                    <button class='btn btn-secondary' onclick='this.closest("a").remove()'><i class='fa fa-trash p-1'></i></button>
+                                    <button class='btn btn-secondary' onclick='this.closest("a").remove()'><i
+                                            class='fa fa-trash p-1'></i></button>
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="col text-center">
                         <button class="btn btn-secondary"><i class="fa fa-image p-1"></i><i>Pic</i></button>
-                        <p><img src="../../static/images/camera.svg" th:src="@{/images/camera.svg}" th:width="300"
+                        <p><img class="img-fluid" src="../../static/images/camera.svg" th:src="@{/images/camera.svg}"
+                                th:width="300"
                                 th:height="300" alt="image"></p>
                     </div>
                 </div>
@@ -80,9 +83,51 @@
         </div>
         <div class="card">
             <div class="card-header"><h1>Ingredients</h1></div>
-            <div class="card-body">
-
-            </div>
+            <div class="card-body table-responsive">
+                <table id="ingredientsTable" class="table table-sm">
+                    <tr>
+                        <th>*</th>
+                        <th>Amount</th>
+                        <th>Unit</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr th:each="ing,ingStat :*{ingredients}" class="ingredient-row">
+                        <td class="p-0" style="vertical-align: middle">
+                            <input class="form-check-input me-1" type="checkbox" th:value="*{ingredients[__${ingStat.index}__].id}" aria-label="">
+                            <input type="hidden" class="ingredient-id" th:field="*{ingredients[__${ingStat.index}__].id}">
+                            <!-- Required!! put the index.id  not the eng.id-->
+                        </td>
+                        <td class="p-0"><input class="ingredient-amount"
+                                               th:field="*{ingredients[__${ingStat.index}__].amount}"
+                                               th:value="${ing.amount}" aria-label=""></td>
+                        <td class="p-0" style="vertical-align: middle">
+                            <select class="ingredient-unitMeasure-id custom-select mr-sm-2" aria-label=""
+                                    th:field="*{ingredients[__${ingStat.index}__].unitMeasure.id}">
+                                <!--       REMEMBER: compare using the ID -->
+                                <option
+                                        th:each="unit,unitStat:${unitMeasures}"
+                                        th:value="${unit.id}" th:text="${unit.description}"
+                                        th:selected="(${ing.unitMeasure.id} == ${unit.id})">
+                                </option>
+                            </select>
+                        </td>
+                        <td class="p-0"><input class="ingredient-description" th:field="*{ingredients[__${ingStat.index}__].description}"
+                                               type="text" th:value="${ing.description}" aria-label=""></td>
+                    </tr>
+                </table>
+                <div>
+                    <button class="btn btn-success"
+                            type="button"
+                            onclick="insertIngredient()">
+                        <i class="fa fa-plus d-table-cell"></i>
+                    </button>
+                    <button class="btn btn-warning"
+                            type="button"
+                            onclick='deleteTableRow($("#ingredientsTable"))'>
+                        <i class="fa fa-minus d-table-cell"></i>
+                    </button>
+                </div>
+            </div><!--END of ingredients edit ares-->
         </div>
         <div class="card">
             <div class="card-header"><h1>Directions</h1></div>
@@ -91,55 +136,119 @@
             </div>
         </div>
         <div class="card">
+            <div class="card-header"><h1>Notes</h1></div>
             <div class="card-body">
-                <label> Notes:
-                    <textarea class="form-control w-50" th:field="*{notes.description}"></textarea>
+                <label class="w-100 h-100">
+                    <script>
+                        $(document).ready(function () {
+                            resizeTextarea('textareaNotes')
+                        });
+                    </script>
+                    <textarea id="textareaNotes" class="form-control" onload="resizeTextarea(this.id)"
+                              onkeyup="resizeTextarea(this.id)" th:field="*{notes.description}"></textarea>
                 </label>
             </div>
         </div>
-        <script>
-            function closeAllLists() {
-                $('#categoriesListContainer').empty()
-            }
-
-            document.addEventListener("click", function (e) {
-                closeAllLists(e.target);
-            });
-
-            function sendData()
-            {
-                let selectedCategories=$('#selectedCategories');
-                selectedCategories.children('a').each(function (index, element) {
-                    $('<input />').attr('type', 'hidden')
-                        .attr('name', 'categories['+index+'].id')
-                        .attr('value', element.id)
-                        .appendTo('#createRecipeForm');
-                });
-                $.ajax(
-                    {
-                        type: "POST",
-                        data: $("#createRecipeForm").serialize(),
-                        cache: false,
-                        url: "/updateOrSaveRecipe",
-                        success: function(data)
-                        {
-                            getContent($('#container'),"/recipes")
-                            alert("Your changes have been saved");
-
-                        },
-                        error: function()
-                        {
-                            alert("Error - Data not saved");
-                        }
-                    });
-
-            }
-
-        </script>
     </form>
     <div class="card align-items-center">
-        <button id="btnSubmitRecipe" class="btn btn-primary w-25 m-2" th:height="50" type="submit" onclick="sendData()">Save</button>
+        <button id="btnSubmitRecipe" class="btn btn-primary w-25 m-2" th:height="50" type="submit" onclick="sendData()">
+            Save
+        </button>
     </div>
+
+    <script th:inline="javascript">
+        function deleteTableRow(table){
+            $('#'+table[0].id+' tbody tr td input:checkbox:checked').each(function (index, element) {
+                this.closest("tr").remove();
+            });
+            //reassign names --> example if we deleted #4
+            //ingredients[3].id: 26
+            //ingredients[3].amount:
+            //ingredients[3].unitMeasure.id: 3
+            //ingredients[3].description:
+            //ingredients[5].id: 13 .........
+
+            $('.'+'ingredient-id').each(function (index,element) {
+                element.setAttribute("id" , 'ingredients'+index+'.id');
+                element.setAttribute("name" , 'ingredients['+index+'].id');
+            })
+            $('.'+'ingredient-amount').each(function (index,element) {
+                element.setAttribute("name" , 'ingredients['+index+'].amount');
+                element.setAttribute("id" , 'ingredients'+index+'.amount');
+            })
+            $('.'+'ingredient-unitMeasure-id').each(function (index,element) {
+                element.setAttribute("name" , 'ingredients['+index+'].unitMeasure.id');
+                element.setAttribute("id" , 'ingredients'+index+'.unitMeasure.id');
+            })
+            $('.'+'ingredient-description').each(function (index,element) {
+                element.setAttribute("name" , 'ingredients['+index+'].description');
+                element.setAttribute("id" , 'ingredients'+index+'.description');
+            })
+        }
+        function insertIngredient() {
+            /*<![CDATA[*/
+            let unitMeasures = /*[[${unitMeasures}]]*/'default';
+            //returned object is like: [object Object],[object Object],[object Object]
+            /*]]>*/
+            let select = document.createElement("select");// Create with DOM
+            for (let i=0; i<unitMeasures.length; i++) {
+                select.innerHTML+='<option value='+unitMeasures[i]["id"]+'>'+unitMeasures[i]["description"]+'</option>';
+            }
+
+            let table=$('#ingredientsTable tbody');
+            //the array counts from 0 But!!! there's a header
+            //we need it to insert on the end
+            let rowCount = $('#ingredientsTable tr').length-1;
+            select.setAttribute('class',"custom-select mr-sm-2")
+            select.setAttribute('name',"ingredients["+rowCount+"].unitMeasure.id")
+            select.setAttribute('value',"ingredients["+rowCount+"].unitMeasure.id")
+            table.append('<tr>'+
+                '<td class="p-0" style="vertical-align: middle"><input class="form-check-input me-1" type="checkbox">' +
+                '<input type="hidden" name="ingredients['+rowCount+'].id">' +
+                '</td>' +
+                '<td class="p-0"><input name="ingredients['+rowCount+'].amount"></td>'+
+                '<td class="p-0" style="vertical-align: middle">' +
+                 select.outerHTML +
+                '</td>' +
+                '<td class="p-0"><input name="ingredients['+rowCount+'].description" ' +
+                'type="text"></td>' +
+                '</tr>')
+        }
+
+        function closeAllLists() {
+            $('#categoriesListContainer').empty()
+        }
+
+        document.addEventListener("click", function (e) {
+            closeAllLists(e.target);
+        });
+
+        function sendData() {
+            let selectedCategories = $('#selectedCategories');
+            selectedCategories.children('a').each(function (index, element) {
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', 'categories[' + index + '].id')
+                    .attr('value', element.id)
+                    .appendTo('#createRecipeForm');
+            });
+            $.ajax(
+                {
+                    type: "POST",
+                    data: $("#createRecipeForm").serialize(),
+                    cache: false,
+                    url: "/updateOrSaveRecipe",
+                    success: function (data) {
+                        getContent($('#container'), "/recipes")
+                        alert("Your changes have been saved");
+
+                    },
+                    error: function () {
+                        alert("Error - Data not saved");
+                    }
+                });
+        }
+    </script>
 </div>
+
 
 

@@ -3,6 +3,7 @@ package zatribune.spring.cookmaster.commands;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import zatribune.spring.cookmaster.data.entities.Recipe;
 
 import java.math.BigDecimal;
 @Setter
@@ -13,4 +14,5 @@ public class IngredientCommand {
     String description;
     BigDecimal amount;
     UnitMeasureCommand unitMeasure;
+    Recipe recipe;
 }

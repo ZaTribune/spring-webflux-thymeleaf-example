@@ -46,6 +46,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
         Recipe recipe = converter.convert(recipeCommand);
+        System.out.println(recipeCommand.getIngredients());
         if (recipe != null) {
             Long id =recipeRepository.save(recipe).getId();
             log.debug("returned recipe id = {}",id);

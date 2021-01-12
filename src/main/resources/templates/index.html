@@ -48,7 +48,6 @@
                 if (item.id===element.id){
                    invalid=true;
                    return false;
-
                 }
             });
             if (invalid===true)
@@ -56,11 +55,27 @@
             let selectedItem=$(item);
             //alert("parentID:"+parentId+"\nitemId:"+itemId+"\nitemText"+itemText);
             let btnDelete="<button class='btn btn-secondary' onclick='this.closest(\"a\").remove()'><i class='fa fa-trash p-1'></i></button>";
-            selectedItem.attr('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark w-50');
+            selectedItem.attr('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark');
             selectedItem.attr('onclick','');
             selectedItem.append(btnDelete);
             $(parentId).append(selectedItem);
         }
+
+        function resizeTextarea (id) {
+            let a = document.getElementById(id);
+            a.style.height = 'auto';
+            a.style.height = a.scrollHeight+'px';
+        }
+
+        function init() {
+            let a = document.getElementsByTagName('textarea');
+            for(let i=0,inb=a.length;i<inb;i++) {
+                if(a[i].getAttribute('data-resizable')==='true')
+                    resizeTextarea(a[i].id);
+            }
+        }
+
+        addEventListener('DOMContentLoaded', init);
 
     </script>
 

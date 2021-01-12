@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import zatribune.spring.cookmaster.data.entities.*;
 import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
 import zatribune.spring.cookmaster.data.repositories.RecipeRepository;
@@ -34,7 +35,9 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         initData();
     }
 
+    @Transactional
     void initData() {
+        log.info("bootstrap data");
         Optional<UnitMeasure> emptyUOM = unitMeasureRepository.findUnitOfMeasureByDescription("");
         Optional<UnitMeasure> teaspoon = unitMeasureRepository.findUnitOfMeasureByDescription("teaspoon");
         Optional<UnitMeasure> tablespoon = unitMeasureRepository.findUnitOfMeasureByDescription("tablespoon");

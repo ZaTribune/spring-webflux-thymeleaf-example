@@ -25,6 +25,7 @@ public class RecipeCommand {
     private Difficulty difficulty;
     private String image;
     private NotesCommand notes;
-    private Set<IngredientCommand> ingredients=new HashSet<>();
+    private List<IngredientCommand> ingredients=new ArrayList<>();
+    // because sets can't be indexed-->problems in http requests & parameters
     private List<CategoryCommand> categories=new ArrayList<>();
 }

@@ -9,11 +9,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(SpringExtension.class)
+// will only load data in data.sql file
 @DataJpaTest
+@ExtendWith(SpringExtension.class)
 class RecipeRepositoryIT {
 
     @Autowired
@@ -24,8 +27,16 @@ class RecipeRepositoryIT {
 
     @Test
     void findRecipeByTitle() {
-        Optional<Recipe> recipe= recipeRepository.findRecipeByTitle("Perfect Guacamole");
-        recipe.ifPresent(u->assertEquals("Perfect Guacamole",u.getTitle()));
+        Optional<Recipe> recipe= recipeRepository.findRecipeByTitle("Koshary");
+        recipe.ifPresent(u->assertEquals("Koshary",u.getTitle()));
+    }
+
+    @Test
+    void findAll(){
+        Set<Recipe> recipes= StreamSupport.stream(recipeRepository.findAll().spliterator(),false)
+                .collect(Collectors.toSet());
+        assertNotNull(recipes);
+        assertNotEquals(0, recipes.size());
     }
 
 }

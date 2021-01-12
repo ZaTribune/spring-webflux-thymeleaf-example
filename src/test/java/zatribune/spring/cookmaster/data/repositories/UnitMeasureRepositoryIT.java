@@ -12,6 +12,7 @@ import zatribune.spring.cookmaster.data.entities.UnitMeasure;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 //replaced @RunWith(SpringRunner.class) of JUnit 4
 @ExtendWith(SpringExtension.class)
@@ -33,6 +34,7 @@ class UnitMeasureRepositoryIT {
     void findUnitOfMeasureByDescription() {
         Optional<UnitMeasure>unitOfMeasure= unitMeasureRepository.findUnitOfMeasureByDescription("ounce");
         unitOfMeasure.ifPresent(u->assertEquals("ounce",u.getDescription()));
+        assertFalse(unitOfMeasure.isEmpty());
 
     }
 }

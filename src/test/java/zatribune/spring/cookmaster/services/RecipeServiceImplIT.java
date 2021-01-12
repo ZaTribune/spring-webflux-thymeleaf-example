@@ -9,6 +9,7 @@ import zatribune.spring.cookmaster.data.entities.Difficulty;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,6 +31,11 @@ public class RecipeServiceImplIT {
     private final Difficulty difficulty = Difficulty.MODERATE;
     private final String image = "a dummy recipe image";
 
+    @Test
+    void testGetAllRecipes(){
+        Set<Recipe> recipeSet=recipeService.getAllRecipes();
+        System.out.println(recipeSet.size());
+    }
 
     @Test
     void testSaveRecipeCommand() {
