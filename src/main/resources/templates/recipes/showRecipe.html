@@ -63,8 +63,22 @@
                     </div>
                 </div>
                 <div class="col">
-                    <p><img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="300"
-                            th:height="300" alt="image"></p>
+                    <p>
+                    <p th:switch="${recipe.image}">
+                        <img class="img-fluid"
+                             th:case="null"
+                             th:src="@{/images/camera.svg}"
+                             th:width="300"
+                             th:height="300" alt="image">
+                        <img class="img-fluid"
+                             th:case="*"
+                             th:src="@{'data:image/png;base64,'+${recipe.image}}"
+                             th:width="300"
+                             th:height="300" alt="image">
+                    </p>
+                        <!--<img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="300" th:height="300" alt="image">-->
+
+                    </p>
                 </div>
                 </div>
             </div>

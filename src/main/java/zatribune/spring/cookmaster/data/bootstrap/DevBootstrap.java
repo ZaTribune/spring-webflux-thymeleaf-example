@@ -139,11 +139,11 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         try {
             byte[] bytes1 = DevBootstrap.class.getResourceAsStream("/static/images/guacamole-perfect.jpg").readAllBytes();
             String string1 = Base64.getEncoder().encodeToString(bytes1);
-            recipe1.setImage(string1);
+            recipe1.setImage("data:image/png;base64,"+string1);
             byte[] bytes2 = DevBootstrap.class.getResourceAsStream("/static/images/spicy-grilled-chicken-tacos.jpg").readAllBytes();
             String string2 = Base64.getEncoder().encodeToString(bytes2);
-            recipe2.setImage(string2);
-        } catch (IOException e) {
+            recipe2.setImage("data:image/png;base64,"+string2);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

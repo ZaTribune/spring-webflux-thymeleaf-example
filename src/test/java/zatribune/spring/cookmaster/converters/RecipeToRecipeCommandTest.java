@@ -59,7 +59,9 @@ class RecipeToRecipeCommandTest {
         recipe.setPrepTime(prepTime);
         recipe.setServings(servings);
         recipe.setSource(source);
+        //todo:test
         recipe.setImage(image);
+
         recipe.setDirections(directions);
         recipe.setDifficulty(difficulty);
         recipe.setUrl(url);

@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import zatribune.spring.cookmaster.commands.CategoryCommand;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
@@ -17,6 +18,7 @@ import zatribune.spring.cookmaster.data.entities.UnitMeasure;
 import zatribune.spring.cookmaster.services.RecipeService;
 import zatribune.spring.cookmaster.services.UnitMeasureService;
 
+import java.util.Base64;
 import java.util.Optional;
 
 @Slf4j
@@ -69,7 +71,6 @@ public class RecipesController {
         optionalRecipe.ifPresent(element->model.addAttribute("recipe",recipeToRecipeCommand.convert(element)));
         model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
         return "/recipes/createRecipe";
-
     }
 
 
@@ -82,15 +83,16 @@ public class RecipesController {
 
 
     @PostMapping
-    @RequestMapping(value = "/updateOrSaveRecipe")
-    public @ResponseBody RecipeCommand saveOrUpdateRecipe(@ModelAttribute RecipeCommand recipeCommand, Model model) {
+    @RequestMapping(value = "/updateOrSaveRecipe") // @ModelAttribute to get the attribute{recipe}
+    // which we've passed to the view before
+    public @ResponseBody RecipeCommand saveOrUpdateRecipe(@ModelAttribute RecipeCommand recipeCommand,Model model) {
         log.info("categories "+recipeCommand.getCategories());
+        log.info("image {}",recipeCommand.getImage());
 
         //this annotation to tell spring to bind the form post parameters to the recipe
         //command object by the naming conventions of the properties automatically
         RecipeCommand returnedRecipeCommand = recipeService.saveRecipeCommand(recipeCommand);
         System.out.println(recipeCommand);
-
         //this is a command that tells spring framework to redirect to a specific url
         return returnedRecipeCommand;
     }

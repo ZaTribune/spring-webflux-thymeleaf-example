@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 
+import java.util.Base64;
 import java.util.Objects;
 
 @Component
@@ -30,29 +32,29 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
     public RecipeCommand convert(@Nullable Recipe source) {
         if (source == null)
             return null;
-        final RecipeCommand recipe = new RecipeCommand();
-        recipe.setId(source.getId());
-        recipe.setTitle(source.getTitle());
-        recipe.setCookTime(source.getCookTime());
-        recipe.setPrepTime(source.getPrepTime());
-        recipe.setServings(source.getServings());
-        recipe.setSource(source.getSource());
-        recipe.setImage(source.getImage());
-        recipe.setUrl(source.getUrl());
-        recipe.setDirections(source.getDirections());
-        recipe.setDifficulty(source.getDifficulty());
+        final RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(source.getId());
+        recipeCommand.setTitle(source.getTitle());
+        recipeCommand.setCookTime(source.getCookTime());
+        recipeCommand.setPrepTime(source.getPrepTime());
+        recipeCommand.setServings(source.getServings());
+        recipeCommand.setSource(source.getSource());
+        recipeCommand.setImage(source.getImage());
+        recipeCommand.setUrl(source.getUrl());
+        recipeCommand.setDirections(source.getDirections());
+        recipeCommand.setDifficulty(source.getDifficulty());
         if (source.getNotes() != null)
-            recipe.setNotes(Objects.requireNonNull(notesConverter.convert(source.getNotes())));
+            recipeCommand.setNotes(Objects.requireNonNull(notesConverter.convert(source.getNotes())));
         if (source.getCategories() != null && source.getCategories().size() > 0)
             source.getCategories().forEach(c ->
-                    recipe.getCategories().add(categoryConverter.convert(c))
+                    recipeCommand.getCategories().add(categoryConverter.convert(c))
             );
         if (source.getIngredients() != null && source.getIngredients().size() > 0)
             source.getIngredients().forEach(i ->
-                    recipe.getIngredients().add(Objects.requireNonNull(ingredientConverter.convert(i)))
+                    recipeCommand.getIngredients().add(Objects.requireNonNull(ingredientConverter.convert(i)))
             );
 
-        return recipe;
+        return recipeCommand;
 
     }
 }

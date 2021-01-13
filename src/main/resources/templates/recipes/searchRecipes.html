@@ -49,7 +49,7 @@
 
                         </div>
                         <div class="card-body container-fluid row">
-                            <div class="col-6">
+                            <div class="col">
                                 <div class="row">
                                     <div class="col fw-bold"><p>Categories:</p></div>
                                     <div class="col-md-9">
@@ -85,10 +85,22 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <p><img th:src="@{'data:image/png;base64,'+${recipe.image}}" th:width="300"
-                                        th:height="300" alt="image"></p>
+                            <div class="col text-center">
+                                <p th:switch="${recipe.image}">
+                                    <img class="img-fluid"
+                                         th:case="null"
+                                         th:src="@{/images/camera.svg}"
+                                         th:width="300"
+                                         th:height="300" alt="image">
+                                    <img class="img-fluid"
+                                         th:case="*"
+                                         th:src="@{${recipe.image}}"
+                                         th:width="300"
+                                         th:height="300" alt="image">
+                                    <!-- th:src="@{'data:image/png;base64,'+${recipe.image}}" -->
+                                </p>
                             </div>
+
                         </div>
                     </div>
                 </div>

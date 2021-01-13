@@ -8,6 +8,7 @@ import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Difficulty;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 
+import java.util.Base64;
 import java.util.Optional;
 import java.util.Set;
 
@@ -47,7 +48,9 @@ public class RecipeServiceImplIT {
         recipeCommand.setPrepTime(prepTime);
         recipeCommand.setServings(servings);
         recipeCommand.setSource(source);
+        //todo:test
         recipeCommand.setImage(image);
+
         recipeCommand.setDirections(directions);
         recipeCommand.setDifficulty(difficulty);
         recipeCommand.setUrl(url);

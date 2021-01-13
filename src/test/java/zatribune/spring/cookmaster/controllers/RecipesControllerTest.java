@@ -57,6 +57,7 @@ class RecipesControllerTest {
         mockMvc.perform(get("/recipe"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/recipe/all"));
+
     }
 
     @Test
@@ -84,5 +85,6 @@ class RecipesControllerTest {
         verify(model,times(1)).addAttribute(eq("recipes"),captor.capture());
         assertEquals(2,captor.getValue().size());
     }
+
 
 }

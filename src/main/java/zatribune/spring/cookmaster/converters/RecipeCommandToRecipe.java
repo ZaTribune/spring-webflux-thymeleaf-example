@@ -9,6 +9,7 @@ import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Ingredient;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;

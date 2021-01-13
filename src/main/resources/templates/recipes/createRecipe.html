@@ -1,10 +1,10 @@
 <div xmlns:th="http://www.thymeleaf.org">
-    <form
-            th:fragment="AddRecipeFragment"
+    <!--specify the encoding type to allow uploading images via html -->
+    <form th:fragment="AddRecipeFragment"
             th:object="${recipe}"
             th:action="@{/updateOrSaveRecipe}"
             id="createRecipeForm"
-            th:method="post"
+            method="POST"
             class="justify-content-center">
         <div class="card">
             <input type="hidden" th:field="*{id}">
@@ -73,10 +73,23 @@
                         </div>
                     </div>
                     <div class="col text-center">
-                        <button class="btn btn-secondary"><i class="fa fa-image p-1"></i><i>Pic</i></button>
-                        <p><img class="img-fluid" src="../../static/images/camera.svg" th:src="@{/images/camera.svg}"
-                                th:width="300"
-                                th:height="300" alt="image"></p>
+                        <input type="file" accept="image/*" class="file" onchange="getBase64($('#image'),$('#imgPreview'),this.files[0])"/>
+                        <input type="hidden" th:field="*{image}">
+                        <p th:switch="${recipe.image}">
+                            <img class="img-fluid"
+                                 th:case="null"
+                                 th:id="imgPreview"
+                                 th:src="@{/images/camera.svg}"
+                                 th:width="300"
+                                 th:height="300" alt="image">
+                            <img class="img-fluid"
+                                 th:case="*"
+                                 th:id="imgPreview"
+                                 th:src="@{${recipe.image}}"
+                                 th:width="300"
+                                 th:height="300" alt="image">
+                            <!-- th:src="@{'data:image/png;base64,'+${recipe.image}}" -->
+                        </p>
                     </div>
                 </div>
             </div>
@@ -93,8 +106,10 @@
                     </tr>
                     <tr th:each="ing,ingStat :*{ingredients}" class="ingredient-row">
                         <td class="p-0" style="vertical-align: middle">
-                            <input class="form-check-input me-1" type="checkbox" th:value="*{ingredients[__${ingStat.index}__].id}" aria-label="">
-                            <input type="hidden" class="ingredient-id" th:field="*{ingredients[__${ingStat.index}__].id}">
+                            <input class="form-check-input me-1" type="checkbox"
+                                   th:value="*{ingredients[__${ingStat.index}__].id}" aria-label="">
+                            <input type="hidden" class="ingredient-id"
+                                   th:field="*{ingredients[__${ingStat.index}__].id}">
                             <!-- Required!! put the index.id  not the eng.id-->
                         </td>
                         <td class="p-0"><input class="ingredient-amount"
@@ -111,7 +126,8 @@
                                 </option>
                             </select>
                         </td>
-                        <td class="p-0"><input class="ingredient-description" th:field="*{ingredients[__${ingStat.index}__].description}"
+                        <td class="p-0"><input class="ingredient-description"
+                                               th:field="*{ingredients[__${ingStat.index}__].description}"
                                                type="text" th:value="${ing.description}" aria-label=""></td>
                     </tr>
                 </table>
@@ -157,8 +173,20 @@
     </div>
 
     <script th:inline="javascript">
-        function deleteTableRow(table){
-            $('#'+table[0].id+' tbody tr td input:checkbox:checked').each(function (index, element) {
+        function getBase64(input,preview,file) {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                input.attr('value',reader.result);
+                preview.attr('src',reader.result);
+            };
+            reader.onerror = function (error) {
+                console.log('Error: ', error);
+            };
+        }
+
+        function deleteTableRow(table) {
+            $('#' + table[0].id + ' tbody tr td input:checkbox:checked').each(function (index, element) {
                 this.closest("tr").remove();
             });
             //reassign names --> example if we deleted #4
@@ -168,49 +196,50 @@
             //ingredients[3].description:
             //ingredients[5].id: 13 .........
 
-            $('.'+'ingredient-id').each(function (index,element) {
-                element.setAttribute("id" , 'ingredients'+index+'.id');
-                element.setAttribute("name" , 'ingredients['+index+'].id');
+            $('.' + 'ingredient-id').each(function (index, element) {
+                element.setAttribute("id", 'ingredients' + index + '.id');
+                element.setAttribute("name", 'ingredients[' + index + '].id');
             })
-            $('.'+'ingredient-amount').each(function (index,element) {
-                element.setAttribute("name" , 'ingredients['+index+'].amount');
-                element.setAttribute("id" , 'ingredients'+index+'.amount');
+            $('.' + 'ingredient-amount').each(function (index, element) {
+                element.setAttribute("name", 'ingredients[' + index + '].amount');
+                element.setAttribute("id", 'ingredients' + index + '.amount');
             })
-            $('.'+'ingredient-unitMeasure-id').each(function (index,element) {
-                element.setAttribute("name" , 'ingredients['+index+'].unitMeasure.id');
-                element.setAttribute("id" , 'ingredients'+index+'.unitMeasure.id');
+            $('.' + 'ingredient-unitMeasure-id').each(function (index, element) {
+                element.setAttribute("name", 'ingredients[' + index + '].unitMeasure.id');
+                element.setAttribute("id", 'ingredients' + index + '.unitMeasure.id');
             })
-            $('.'+'ingredient-description').each(function (index,element) {
-                element.setAttribute("name" , 'ingredients['+index+'].description');
-                element.setAttribute("id" , 'ingredients'+index+'.description');
+            $('.' + 'ingredient-description').each(function (index, element) {
+                element.setAttribute("name", 'ingredients[' + index + '].description');
+                element.setAttribute("id", 'ingredients' + index + '.description');
             })
         }
+
         function insertIngredient() {
             /*<![CDATA[*/
             let unitMeasures = /*[[${unitMeasures}]]*/'default';
             //returned object is like: [object Object],[object Object],[object Object]
             /*]]>*/
             let select = document.createElement("select");// Create with DOM
-            for (let i=0; i<unitMeasures.length; i++) {
-                select.innerHTML+='<option value='+unitMeasures[i]["id"]+'>'+unitMeasures[i]["description"]+'</option>';
+            for (let i = 0; i < unitMeasures.length; i++) {
+                select.innerHTML += '<option value=' + unitMeasures[i]["id"] + '>' + unitMeasures[i]["description"] + '</option>';
             }
 
-            let table=$('#ingredientsTable tbody');
+            let table = $('#ingredientsTable tbody');
             //the array counts from 0 But!!! there's a header
             //we need it to insert on the end
-            let rowCount = $('#ingredientsTable tr').length-1;
-            select.setAttribute('class',"custom-select mr-sm-2")
-            select.setAttribute('name',"ingredients["+rowCount+"].unitMeasure.id")
-            select.setAttribute('value',"ingredients["+rowCount+"].unitMeasure.id")
-            table.append('<tr>'+
+            let rowCount = $('#ingredientsTable tr').length - 1;
+            select.setAttribute('class', "custom-select mr-sm-2")
+            select.setAttribute('name', "ingredients[" + rowCount + "].unitMeasure.id")
+            select.setAttribute('value', "ingredients[" + rowCount + "].unitMeasure.id")
+            table.append('<tr>' +
                 '<td class="p-0" style="vertical-align: middle"><input class="form-check-input me-1" type="checkbox">' +
-                '<input type="hidden" name="ingredients['+rowCount+'].id">' +
+                '<input type="hidden" name="ingredients[' + rowCount + '].id">' +
                 '</td>' +
-                '<td class="p-0"><input name="ingredients['+rowCount+'].amount"></td>'+
+                '<td class="p-0"><input name="ingredients[' + rowCount + '].amount"></td>' +
                 '<td class="p-0" style="vertical-align: middle">' +
-                 select.outerHTML +
+                select.outerHTML +
                 '</td>' +
-                '<td class="p-0"><input name="ingredients['+rowCount+'].description" ' +
+                '<td class="p-0"><input name="ingredients[' + rowCount + '].description" ' +
                 'type="text"></td>' +
                 '</tr>')
         }
@@ -224,6 +253,9 @@
         });
 
         function sendData() {
+            //let myFile = $('#image').prop('files');
+            //console.log(typeof myFile);
+
             let selectedCategories = $('#selectedCategories');
             selectedCategories.children('a').each(function (index, element) {
                 $('<input />').attr('type', 'hidden')
@@ -233,6 +265,7 @@
             });
             $.ajax(
                 {
+                    //don't add contentType: false,processData: false,
                     type: "POST",
                     data: $("#createRecipeForm").serialize(),
                     cache: false,

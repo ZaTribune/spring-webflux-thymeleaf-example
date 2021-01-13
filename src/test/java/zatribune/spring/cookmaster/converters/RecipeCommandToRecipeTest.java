@@ -8,6 +8,8 @@ import zatribune.spring.cookmaster.commands.NotesCommand;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.*;
 
+import java.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,7 +64,9 @@ class RecipeCommandToRecipeTest {
         recipeCommand.setPrepTime(prepTime);
         recipeCommand.setServings(servings);
         recipeCommand.setSource(source);
+        //todo:test
         recipeCommand.setImage(image);
+
         recipeCommand.setDirections(directions);
         recipeCommand.setDifficulty(difficulty);
         recipeCommand.setUrl(url);
