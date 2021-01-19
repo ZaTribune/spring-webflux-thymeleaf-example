@@ -1,9 +1,9 @@
-insert into category (description) values ('American');
+insert into category (description,info) values ('American','from the home of most awesome recipes discover .....');
 insert into category (description) values ('Armenian');
 insert into category (description) values ('Austrian');
 insert into category (description) values ('Egyptian');
-insert into category (description) values ('Mexican');
-insert into category (description) values ('Italian');
+insert into category (description,info) values ('Mexican','from the home of taqella , discover .....');
+insert into category (description,info) values ('Italian','from the home of pizza discover .....');
 insert into category (description) values ('Fast Food');
 insert into unit_measure (description) values ('');
 insert into unit_measure (description) values ('teaspoon');

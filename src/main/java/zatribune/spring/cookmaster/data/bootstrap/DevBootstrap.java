@@ -49,6 +49,31 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         Optional<Category> american = categoryRepository.findCategoriesByDescription("American");
         Optional<Category> italian = categoryRepository.findCategoriesByDescription("Italian");
         Optional<Category> mexican = categoryRepository.findCategoriesByDescription("Mexican");
+        try {
+            byte[] usaBytes=DevBootstrap.class.getResourceAsStream("/static/images/usa.svg").readAllBytes();
+            byte[] italyBytes=DevBootstrap.class.getResourceAsStream("/static/images/italy.svg").readAllBytes();
+            byte[] mexicoBytes=DevBootstrap.class.getResourceAsStream("/static/images/mexico.svg").readAllBytes();
+            Byte[] usaImage=new Byte[usaBytes.length];
+            Byte[] italyImage=new Byte[italyBytes.length];
+            Byte[] mexicoImage=new Byte[mexicoBytes.length];
+            int i=0;
+            for (byte b:usaBytes)
+                usaImage[i++]=b;
+            i=0;
+            for (byte b:italyBytes)
+                italyImage[i++]=b;
+            i=0;
+            for (byte b:mexicoBytes)
+                mexicoImage[i++]=b;
+            american.ifPresent(e->e.setImage(usaImage));
+            italian.ifPresent(e->e.setImage(italyImage));
+            mexican.ifPresent(e->e.setImage(mexicoImage));
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
 
         Recipe recipe1 = new Recipe();
         recipe1.setTitle("Perfect Guacamole");

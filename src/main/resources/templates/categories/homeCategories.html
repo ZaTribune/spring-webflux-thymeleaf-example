@@ -1,27 +1,103 @@
 <div class="container-fluid" style="margin-top: 20px;"
      xmlns:th="http://www.thymeleaf.org"
      th:fragment="CategoriesFragment">
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-8 col-md-offset-3">
-            <div class="card">
-                <div class="card-header">
-                    My Categories
-                </div>
-                <div class="card-body" th:if="${not#lists.isEmpty(categories)}">
-                    <table class="table">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">View</th>
-                        </tr>
-                        <tr th:each="category:${categories}">
-                            <td><p th:text="${category.id}"></p></td>
-                            <td><p th:text="${category.description}"></p></td>
-                            <td><a href="#" th:href="@{'/showCategory/'+${category.id}}">View</a></td>
-                        </tr>
-                    </table>
-                </div>
+    <div class="row d-flex justify-content-center p-3">
+        <div class="col-3 list-group p-0" style="border-radius: 0" id="list-tab" role="tablist"
+             th:if="${not#lists.isEmpty(categories)}">
+            <a class="list-group-item list-group-item-action p-4 text-center"
+               th:each="category:${categories}"
+               th:id="'list-item-' + ${category.id}"
+               th:href="'#list-item-content-' + ${category.id}"
+               th:text="${category.description}"
+               data-bs-toggle="list" role="tab" aria-controls="home">Home</a>
+        </div>
+        <div class="col-9 tab-content" id="recipeTabContent">
+            <div class="tab-pane fade bg-light" role="tabpanel" th:each="category:${categories}"
+                 th:id="'list-item-content-' + ${category.id}" style="margin: auto;">
+                <section class="">
+                    <button type="button" class="btn btn-secondary"
+                            th:id="${category.id}"
+                            onclick="makeEditable(this.id)"
+                            style="padding: 30px;border: 0;border-radius: 0;display: grid;">
+                        <i class="fa fa-edit"></i>
+                        <i>Edit</i>
+                    </button>
+                </section>
+                <section>
+                    <div id="picControl" class="text-center" style="display: none">
+                        <form method="post" enctype="multipart/form-data" class="d-inline-block"
+                              th:attr="data-category=${category.id}">
+                            <input type="file" accept="image/*" name="imageFile" class="file"/>
+                            <!-- childNodes will return a Text object instead of an input -->
+                        </form>
+                        <button class="btn btn-primary m-2" th:height="50"
+                                type="submit" onclick="uploadImage(this.previousElementSibling)">
+                            Save
+                        </button>
+                    </div>
+                    <p th:switch="${category.image}" class="text-center">
+                        <img class="img-fluid"
+                             th:case="null"
+                             th:src="@{/images/camera.svg}"
+                             th:width="300"
+                             th:height="300" alt="image">
+                        <img class="img-fluid"
+                             th:case="*"
+                             th:src="@{${category.image}}"
+                             th:width="300"
+                             th:height="300" alt="image">
+                    </p>
+
+                </section>
+                <section class="text-center">
+                    <form method="post">
+                        <div>
+                    <textarea class="w-50" type="text" spellcheck="false"
+                              th:id="'category-description-'+${category.id}" th:text="${category.info}"
+                              readonly aria-label="description"></textarea>
+                            <button class="btn btn-primary m-2 position-absolute" th:height="50"
+                                    style="display: none"
+                                    th:id="'btn-category-info-'+${category.id}"
+                                    type="button" onclick="sendData()">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </section>
             </div>
         </div>
     </div>
+    <script>
+        function uploadImage(form) {
+            //let input=form.elements[0];
+            //let id = input.getAttribute("data-category");
+            let id=form.getAttribute("data-category");
+            $.ajax(
+                {
+                    //we specify the type:post cause it's GET by default in ajax.
+                    type: "POST",
+                    enctype:"multipart/form-data",
+                    url: "/category/" + id + "/uploadImage",
+                    data: new FormData(form),
+                    cache: false,
+                    // important or you'll get ->jquery.min.js:2 Uncaught TypeError: Illegal invocation.....
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert(data);
+                    },
+                    error: function () {
+                        alert("Error - Data not saved");
+                    }
+                });
+        }
+
+        function makeEditable(textareaId) {
+            $('#picControl').attr('style', 'display:block');
+            $('#btn-category-info-' + textareaId).attr('style', 'display:inline-block');
+            let textArea = $('#category-description-' + textareaId);
+            textArea.attr('readonly', false);
+            textArea.attr('spellcheck', true);
+        }
+    </script>
 </div>

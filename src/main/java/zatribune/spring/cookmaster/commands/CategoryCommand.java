@@ -13,5 +13,7 @@ import java.util.Set;
 public class CategoryCommand {
     Long id;
     String description;
+    String info;
+    Byte[] image;
     Set<RecipeCommand>recipes;
 }

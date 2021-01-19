@@ -16,9 +16,11 @@ public class CategoryToCategoryCommand implements Converter<Category, CategoryCo
     public CategoryCommand convert(@Nullable Category source) {
         if(source==null)
             return null;
-        final CategoryCommand category=new CategoryCommand();
-        category.setId(source.getId());
-        category.setDescription(source.getDescription());
-        return category;
+        final CategoryCommand categoryCommand=new CategoryCommand();
+        categoryCommand.setId(source.getId());
+        categoryCommand.setDescription(source.getDescription());
+        categoryCommand.setInfo(source.getInfo());
+        categoryCommand.setImage(source.getImage());
+        return categoryCommand;
     }
 }

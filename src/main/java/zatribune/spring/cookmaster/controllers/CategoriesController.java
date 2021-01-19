@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import zatribune.spring.cookmaster.commands.CategoryCommand;
 import zatribune.spring.cookmaster.converters.CategoryToCategoryCommand;
@@ -19,31 +18,26 @@ import java.util.stream.Collectors;
 @Controller
 public class CategoriesController {
     private final CategoryService categoryService;
-    private final CategoryToCategoryCommand categoryToCategoryCommandConverter;
+    private final CategoryToCategoryCommand categoryToCategoryCommand;
 
     @Autowired
-    public CategoriesController(CategoryService categoryService,CategoryToCategoryCommand categoryToCategoryCommandConverter) {
+    public CategoriesController(CategoryService categoryService,CategoryToCategoryCommand categoryToCategoryCommand) {
         this.categoryService = categoryService;
-        this.categoryToCategoryCommandConverter=categoryToCategoryCommandConverter;
+        this.categoryToCategoryCommand = categoryToCategoryCommand;
     }
 
     @RequestMapping("/categories")
     public String getCategoriesHomePage(Model model) {
+        log.info("Categories Home");
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "/categories/homeCategories";
     }
 
-    @RequestMapping("/searchCategories")
-    public String searchCategories(Model model) {
-        model.addAttribute("categories", categoryService.getAllCategories());
-        return "/categories/searchCategories";
-    }
-
-
     @RequestMapping("/listCategories")
-    public String stateItems(@RequestParam(required = false) String s, Model model) {
+    public String listCategories(@RequestParam(required = false) String s, Model model) {
         log.info("listCategories: " + s);
         Set<CategoryCommand> categories = categoryService.getAllCategories().stream()
-                .map(categoryToCategoryCommandConverter::convert)
+                .map(categoryToCategoryCommand::convert)
                 .limit(15)
                 .filter(Objects::nonNull)
                 .filter(category -> category.getDescription().startsWith(s))

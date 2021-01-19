@@ -5,6 +5,12 @@
 .card-header{
     border-radius: 0;
 }
+textarea[readonly]
+{
+    border: 0;
+    background-color: inherit;
+    resize: none;
+}
 .card-header:first-child{
     border-radius: 0;
 }
