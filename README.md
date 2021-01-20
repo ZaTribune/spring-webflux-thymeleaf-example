@@ -1,13 +1,12 @@
-
 # CookMaster
 Spring Boot Web Application. [In progress]
 <p align="center">
-  <img src="src/main/resources/static/images/logo.svg" height="300"/>
-  <img src="src/main/resources/static/images/spring.svg" height="300"/>
+  <img src="src/main/resources/static/images/logo.svg" width="300" height="300"/>
+  <img src="src/main/resources/static/images/spring.svg" width="300" height="300"/>
 </p>
 
 ## Overview  
-Just Another Web Application for recipes & cooking meals ; built mainly with Spring Boot.
+Just Another Web Application for recipes & cooking meals ; built mainly with Spring Boot.  
 This project is for educational purposes, as it contains several practices commonly used when developing spring boot web applications.
  
 ## Built With  
