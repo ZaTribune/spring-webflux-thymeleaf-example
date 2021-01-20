@@ -1,22 +1,30 @@
 <div xmlns:th="http://www.thymeleaf.org">
     <!--specify the encoding type to allow uploading images via html -->
     <form th:fragment="AddRecipeFragment"
-            th:object="${recipe}"
-            th:action="@{/updateOrSaveRecipe}"
-            id="createRecipeForm"
-            method="POST"
-            class="justify-content-center">
+          th:object="${recipe}"
+          th:action="@{/updateOrSaveRecipe}"
+          id="createRecipeForm"
+          method="POST"
+          class="justify-content-center">
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger m-0">
+            <p>Please, correct errors below.</p>
+        </div>
         <div class="card">
             <input type="hidden" th:field="*{id}">
             <div class="card-header"><h1>Main Information</h1></div>
             <div class="card-body container-fluid">
                 <div class="row">
                     <div class="col container-fluid">
-                        <div class="row">
+                        <div class="row position-relative">
                             <label class="m-1">Title:
                                 <input type="text" class="form-control w-50" id="inputTitle" placeholder="Recipe Name"
                                        th:field="*{title}">
                             </label>
+                            <div class="invalid-feedback d-inline-block" th:if="${#fields.hasErrors('title')}">
+                                <ul class="m-0">
+                                    <li th:each="err:${#fields.errors('title')}" th:text="${err}"></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="row">
                             <label class="m-1">
@@ -25,6 +33,11 @@
                                        placeholder="minutes"
                                        th:field="*{prepTime}">
                             </label>
+                            <div class="invalid-feedback d-inline-block" th:if="${#fields.hasErrors('prepTime')}">
+                                <ul class="m-0">
+                                    <li th:each="err:${#fields.errors('prepTime')}" th:text="${err}"></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="row">
                             <label class="m-1">
@@ -33,11 +46,16 @@
                                        placeholder="minutes"
                                        th:field="*{cookTime}">
                             </label>
+                            <div class="invalid-feedback d-inline-block" th:if="${#fields.hasErrors('cookTime')}">
+                                <ul class="m-0">
+                                    <li th:each="err:${#fields.errors('cookTime')}" th:text="${err}"></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="row">
                             <label class="m-1">Difficulty:
                                 <select class="custom-select mr-sm-2" id="inlineFormCustomSelect"
-                                        th:field="*{difficulty}">
+                                        th:field="*{difficulty}" required>
                                     <option selected value="EASY">Easy</option>
                                     <option value="MODERATE">Moderate</option>
                                     <option value="HARD">Hard</option>
@@ -51,11 +69,17 @@
                                        placeholder="times"
                                        th:field="*{servings}">
                             </label>
+                            <div class="invalid-feedback d-inline-block" th:if="${#fields.hasErrors('servings')}">
+                                <ul class="m-0">
+                                    <li th:each="err:${#fields.errors('servings')}" th:text="${err}"></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="row m-1">
                             <div class="col-12 fw-bold p-0">
                                 <label>Categories:<input type="text" class="form-control w-100" id="inputCategory"
-                                                         onkeyup="getContent($('#categoriesListContainer'),'/listCategories'+'?s='+this.value)">
+                                                         list="categoriesListContainer"
+                                                         onkeyup="$('#categoriesListContainer').load('/listCategories'+'?s='+this.value)">
                                 </label>
                                 <datalist id="categoriesListContainer" class="autocomplete-items list-group w-25">
                                 </datalist>
@@ -64,7 +88,7 @@
                                 <a class="list-group-item d-flex justify-content-between p-1 align-items-center text-dark"
                                    xmlns:th="http://www.thymeleaf.org"
                                    th:each="category, stat : *{categories}"
-                                   th:id="${category.id}">
+                                   th:attr="data-category-id=${category.id},data-category-description=${category.description}">
                                     <i th:text="${category.description}"></i>
                                     <button class='btn btn-secondary' onclick='this.closest("a").remove()'><i
                                             class='fa fa-trash p-1'></i></button>
@@ -73,7 +97,8 @@
                         </div>
                     </div>
                     <div class="col text-center">
-                        <input type="file" accept="image/*" class="file" onchange="getBase64($('#image'),$('#imgPreview'),this.files[0])"/>
+                        <input type="file" accept="image/*" class="file"
+                               onchange="getBase64($('#image'),$('#imgPreview'),this.files[0])"/>
                         <input type="hidden" th:field="*{image}">
                         <p th:switch="${recipe.image}">
                             <img class="img-fluid"
@@ -126,9 +151,11 @@
                                 </option>
                             </select>
                         </td>
-                        <td class="p-0"><input class="ingredient-description"
-                                               th:field="*{ingredients[__${ingStat.index}__].description}"
-                                               type="text" th:value="${ing.description}" aria-label=""></td>
+                        <td class="p-0">
+                            <input class="ingredient-description"
+                                   th:field="*{ingredients[__${ingStat.index}__].description}"
+                                   type="text" th:value="${ing.description}" aria-label="">
+                        </td>
                     </tr>
                 </table>
                 <div>
@@ -148,37 +175,49 @@
         <div class="card">
             <div class="card-header"><h1>Directions</h1></div>
             <div class="card-body">
-
+                    <textarea id="textareaDirections" class="form-control" onload="resizeTextarea(this.id)"
+                              aria-label=""
+                              onkeyup="resizeTextarea(this.id)" th:field="*{directions}"></textarea>
+                <div class="invalid-feedback d-inline-block" th:if="${#fields.hasErrors('directions')}">
+                    <ul class="m-0">
+                        <li th:each="err:${#fields.errors('directions')}" th:text="${err}"></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="card">
             <div class="card-header"><h1>Notes</h1></div>
             <div class="card-body">
-                <label class="w-100 h-100">
-                    <script>
-                        $(document).ready(function () {
-                            resizeTextarea('textareaNotes')
-                        });
-                    </script>
-                    <textarea id="textareaNotes" class="form-control" onload="resizeTextarea(this.id)"
+                    <textarea id="textareaNotes" class="form-control" onload="resizeTextarea(this.id)" aria-label=""
                               onkeyup="resizeTextarea(this.id)" th:field="*{notes.description}"></textarea>
-                </label>
+                <div class="invalid-feedback d-inline-block" th:if="${#fields.hasErrors('notes.description')}">
+                    <ul class="m-0">
+                        <li th:each="err:${#fields.errors('notes.description ')}" th:text="${err}"></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </form>
     <div class="card align-items-center">
-        <button id="btnSubmitRecipe" class="btn btn-primary w-25 m-2" th:height="50" type="submit" onclick="sendData()">
+        <button th:attr="data-recipe=${recipe.id}" id="btnSubmitRecipe"
+                class="btn btn-primary w-25 m-2" th:height="50" type="submit"
+                onclick="sendData(this.getAttribute('data-recipe'))">
             Save
         </button>
     </div>
 
     <script th:inline="javascript">
-        function getBase64(input,preview,file) {
+        $(document).ready(function () {
+            resizeTextarea('textareaNotes');
+            resizeTextarea('textareaDirections')
+        });
+
+        function getBase64(input, preview, file) {
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function () {
-                input.attr('value',reader.result);
-                preview.attr('src',reader.result);
+                input.attr('value', reader.result);
+                preview.attr('src', reader.result);
             };
             reader.onerror = function (error) {
                 console.log('Error: ', error);
@@ -252,7 +291,7 @@
             closeAllLists(e.target);
         });
 
-        function sendData() {
+        function sendData(recipeId) {
             //let myFile = $('#image').prop('files');
             //console.log(typeof myFile);
 
@@ -260,7 +299,11 @@
             selectedCategories.children('a').each(function (index, element) {
                 $('<input />').attr('type', 'hidden')
                     .attr('name', 'categories[' + index + '].id')
-                    .attr('value', element.id)
+                    .attr('value', element.getAttribute('data-category-id'))
+                    .appendTo('#createRecipeForm');
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', 'categories[' + index + '].description')
+                    .attr('value', element.getAttribute('data-category-description'))
                     .appendTo('#createRecipeForm');
             });
             $.ajax(
@@ -271,11 +314,9 @@
                     cache: false,
                     url: "/updateOrSaveRecipe",
                     success: function (data) {
-                        getContent($('#container'), "/recipes")
-                        alert("Your changes have been saved");
-
+                        $('#recipeTabContent').html(data);
                     },
-                    error: function () {
+                    error: function (data) {
                         alert("Error - Data not saved");
                     }
                 });

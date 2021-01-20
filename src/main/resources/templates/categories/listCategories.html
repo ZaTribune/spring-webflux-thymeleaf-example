@@ -2,6 +2,7 @@
    xmlns:th="http://www.thymeleaf.org"
    th:each="category, stat : ${categoriesSuggestions}"
    th:id="${category.id}"
-   onclick="insertListItem($('#selectedCategories'),this);closeAllLists();">
+   th:attr="data-category-id=${category.id},data-category-description=${category.description}"
+   onclick="insertListItem('selectedCategories',this);closeAllLists();">
     <i th:text="${category.description}"></i>
 </a>

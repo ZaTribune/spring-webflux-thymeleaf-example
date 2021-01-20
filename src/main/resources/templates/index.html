@@ -44,21 +44,24 @@
         }
         function insertListItem(parentId,item){
             let invalid = false;
-            parentId.children('a').each(function (index, element) {
-                if (item.id===element.id){
+            let parent=document.getElementById(parentId);
+            Array.from(parent.children).forEach((child,index)=>{
+                if (item.getAttribute("data-category-id")===child.getAttribute("data-category-id")){
                    invalid=true;
                    return false;
                 }
             });
             if (invalid===true)
                 return;
-            let selectedItem=$(item);
+
+            item.setAttribute('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark');
+            item.setAttribute('onclick','');
             //alert("parentID:"+parentId+"\nitemId:"+itemId+"\nitemText"+itemText);
-            let btnDelete="<button class='btn btn-secondary' onclick='this.closest(\"a\").remove()'><i class='fa fa-trash p-1'></i></button>";
-            selectedItem.attr('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark');
-            selectedItem.attr('onclick','');
-            selectedItem.append(btnDelete);
-            $(parentId).append(selectedItem);
+            let btnDelete=document.createElement('button');
+            item.appendChild(btnDelete);
+            //must have a parent before setting outerHTML
+            btnDelete.outerHTML="<button class='btn btn-secondary' onclick='this.closest(\"a\").remove()'><i class='fa fa-trash p-1'></i></button>";
+            parent.appendChild(item);
         }
 
         function resizeTextarea (id) {

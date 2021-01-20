@@ -8,22 +8,27 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import zatribune.spring.cookmaster.commands.RecipeCommand;
+import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 import zatribune.spring.cookmaster.services.RecipeService;
+import zatribune.spring.cookmaster.services.UnitMeasureService;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @ExtendWith(MockitoExtension.class)
 class RecipesControllerTest {
@@ -38,11 +43,11 @@ class RecipesControllerTest {
     ArgumentCaptor<Set<Recipe>> captor;
     @InjectMocks
     RecipesController recipesController;
-
     MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
+        //recipesController=new RecipesController(recipeService);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(recipesController)
                 // we have to specify it for exception handling
@@ -93,6 +98,23 @@ class RecipesControllerTest {
                .andExpect(view().name("/errors/404"));
         //side by side with the custom annotated exception class
         //and the double annotated exception handler function on the controller
+    }
+
+    @Test
+    public void postNewRecipeForm() throws Exception {
+
+        //when(recipeService.saveRecipeCommand(any())).thenReturn(recipeCommand);
+        mockMvc.perform(post("/updateOrSaveRecipe")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","20")
+                .param("title","xx")
+                .param("directions","")
+                .param("prepTime","0")
+                .param("cookTime","0")
+                 )
+                .andExpect(status().isOk())
+        .andReturn();
+
     }
 
 }
