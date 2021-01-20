@@ -2,15 +2,13 @@ package zatribune.spring.cookmaster.services;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Marker;
-import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.converters.RecipeCommandToRecipe;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.data.repositories.RecipeRepository;
+import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,8 +36,12 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Optional<Recipe> getRecipeById(Long id) {
-        return recipeRepository.findById(id);
+    public Recipe getRecipeById(Long id) {
+        Optional<Recipe>optionalRecipe=recipeRepository.findById(id);
+        if (optionalRecipe.isEmpty()){
+            throw new MyNotFoundException("Recipe not found for id value: "+id);
+        }
+        return optionalRecipe.get();
     }
 
 

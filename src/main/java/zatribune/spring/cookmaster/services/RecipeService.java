@@ -9,7 +9,7 @@ import java.util.Set;
 //this is an abstraction
 public interface RecipeService {
     Set<Recipe> getAllRecipes();
-    Optional<Recipe> getRecipeById(Long id);
+    Recipe getRecipeById(Long id);
     RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand);
     void deleteRecipe(Recipe recipe);
     void deleteRecipeById(Long id);

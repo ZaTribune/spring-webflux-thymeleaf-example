@@ -5,18 +5,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import zatribune.spring.cookmaster.commands.RecipeCommand;
-import zatribune.spring.cookmaster.data.entities.Difficulty;
+import zatribune.spring.cookmaster.converters.RecipeCommandToRecipe;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.data.repositories.RecipeRepository;
+import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @Slf4j
@@ -25,14 +25,22 @@ class RecipeServiceImplTest {
 
     @Mock
     RecipeServiceImpl recipeService;
+    @Mock
+    RecipeRepository recipeRepository;
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
 
-    private final Long idRecipe=14L;
-    private final String title="a dummy recipe title";
+    private Long idRecipe;
+    private String title;
 
     //we're using it to test business logic inside service layer
 
     @BeforeEach
     public void setUp() {
+        idRecipe=14L;
+        title="a dummy recipe title";
+        //to be linked together
+        recipeService=new RecipeServiceImpl(recipeRepository,recipeCommandToRecipe);
     }
 
 
@@ -58,19 +66,26 @@ class RecipeServiceImplTest {
     public void getRecipeByIdTest(){
         Recipe recipe=new Recipe();
         recipe.setId(idRecipe);
-        Optional<Recipe>optionalRecipe=Optional.of(recipe);
 
-        when(recipeService.getRecipeById(anyLong())).thenReturn(optionalRecipe);
+        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
 
-        Optional<Recipe> returnedRecipe=recipeService.getRecipeById(idRecipe);
+        Recipe returnedRecipe=recipeService.getRecipeById(idRecipe);
 
         assertNotNull(returnedRecipe);
-        returnedRecipe.ifPresent(value -> assertEquals(idRecipe, value.getId()));
+        assertEquals(idRecipe, returnedRecipe.getId());
 
         verify(recipeService,times(1)).getRecipeById(anyLong());
         verify(recipeService,never()).getAllRecipes();
+    }
 
-
+    @Test
+    public void getRecipeByIdNotFound(){
+        Optional<Recipe> recipeOptional = Optional.empty();
+        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        Exception exception = assertThrows(MyNotFoundException.class, () -> {
+            recipeService.getRecipeById(15L);
+        });
+        assertTrue(exception.getMessage().contains("Recipe Not Found"));
     }
 
 }

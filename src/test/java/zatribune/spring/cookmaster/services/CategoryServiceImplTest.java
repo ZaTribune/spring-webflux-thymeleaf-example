@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import zatribune.spring.cookmaster.converters.CategoryToCategoryCommand;
 import zatribune.spring.cookmaster.data.entities.Category;
 import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
 
@@ -18,13 +19,15 @@ class CategoryServiceImplTest {
 
     @Mock
     CategoryRepository categoryRepository;
+    @Mock
+    CategoryToCategoryCommand categoryToCategoryCommand;
 
     CategoryService categoryService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);//don't forget
-        categoryService=new CategoryServiceImpl(categoryRepository);
+        categoryService=new CategoryServiceImpl(categoryRepository,categoryToCategoryCommand);
     }
 
     @Test

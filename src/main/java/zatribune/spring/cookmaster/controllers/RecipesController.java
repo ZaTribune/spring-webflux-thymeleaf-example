@@ -1,25 +1,16 @@
 package zatribune.spring.cookmaster.controllers;
 
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import zatribune.spring.cookmaster.commands.CategoryCommand;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
-import zatribune.spring.cookmaster.data.entities.Category;
 import zatribune.spring.cookmaster.data.entities.Recipe;
-import zatribune.spring.cookmaster.data.entities.UnitMeasure;
 import zatribune.spring.cookmaster.services.RecipeService;
 import zatribune.spring.cookmaster.services.UnitMeasureService;
-
-import java.util.Base64;
-import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -48,10 +39,9 @@ public class RecipesController {
     }
 
     @RequestMapping("/showRecipe/{id}")
-    public String showRecipe(@PathVariable String id, Model model) {
-        Optional<Recipe> recipe = recipeService.getRecipeById(Long.valueOf(id));
-        recipe.ifPresent(r -> model.addAttribute("recipe", r));
-
+    public String showRecipe(@PathVariable String id, Model model)throws NumberFormatException{
+        Recipe recipe = recipeService.getRecipeById(Long.valueOf(id));
+        model.addAttribute("recipe", recipe);
         //Optional<Recipe>optionalRecipe=recipeService.getRecipeById()
         //model.addAttribute("recipe",recipeService.getRecipeById().get());
         return "/recipes/showRecipe";
@@ -66,16 +56,16 @@ public class RecipesController {
     }
 
     @RequestMapping("/updateRecipe/{id}")
-    public String updateRecipe(@PathVariable String id, Model model) {
-        Optional<Recipe> optionalRecipe=recipeService.getRecipeById(Long.valueOf(id));
-        optionalRecipe.ifPresent(element->model.addAttribute("recipe",recipeToRecipeCommand.convert(element)));
+    public String updateRecipe(@PathVariable String id, Model model) throws NumberFormatException{
+        Recipe recipe=recipeService.getRecipeById(Long.valueOf(id));
+        model.addAttribute("recipe",recipeToRecipeCommand.convert(recipe));
         model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
         return "/recipes/createRecipe";
     }
 
 
     @RequestMapping("/deleteRecipe/{id}")
-    public @ResponseBody String deleteRecipe(@PathVariable String id, Model model) {
+    public @ResponseBody String deleteRecipe(@PathVariable String id)throws NumberFormatException {
         log.info("deleting recipe: "+id);
         recipeService.deleteRecipeById(Long.valueOf(id));
         return "ok";
@@ -85,7 +75,7 @@ public class RecipesController {
     @PostMapping
     @RequestMapping(value = "/updateOrSaveRecipe") // @ModelAttribute to get the attribute{recipe}
     // which we've passed to the view before
-    public @ResponseBody RecipeCommand saveOrUpdateRecipe(@ModelAttribute RecipeCommand recipeCommand,Model model) {
+    public @ResponseBody RecipeCommand saveOrUpdateRecipe(@ModelAttribute RecipeCommand recipeCommand) {
         log.info("categories "+recipeCommand.getCategories());
         log.info("image {}",recipeCommand.getImage());
 

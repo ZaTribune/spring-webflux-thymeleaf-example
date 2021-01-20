@@ -41,38 +41,47 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         Optional<UnitMeasure> emptyUOM = unitMeasureRepository.findUnitOfMeasureByDescription("");
         Optional<UnitMeasure> teaspoon = unitMeasureRepository.findUnitOfMeasureByDescription("teaspoon");
         Optional<UnitMeasure> tablespoon = unitMeasureRepository.findUnitOfMeasureByDescription("tablespoon");
-        Optional<UnitMeasure> cup = unitMeasureRepository.findUnitOfMeasureByDescription("cup");
-        Optional<UnitMeasure> pinch = unitMeasureRepository.findUnitOfMeasureByDescription("pinch");
-        Optional<UnitMeasure> ounce = unitMeasureRepository.findUnitOfMeasureByDescription("ounce");
-        Optional<UnitMeasure> dash = unitMeasureRepository.findUnitOfMeasureByDescription("dash");
+        //Optional<UnitMeasure> cup = unitMeasureRepository.findUnitOfMeasureByDescription("cup");
+        //Optional<UnitMeasure> pinch = unitMeasureRepository.findUnitOfMeasureByDescription("pinch");
+        //Optional<UnitMeasure> ounce = unitMeasureRepository.findUnitOfMeasureByDescription("ounce");
+        //Optional<UnitMeasure> dash = unitMeasureRepository.findUnitOfMeasureByDescription("dash");
 
         Optional<Category> american = categoryRepository.findCategoriesByDescription("American");
         Optional<Category> italian = categoryRepository.findCategoriesByDescription("Italian");
         Optional<Category> mexican = categoryRepository.findCategoriesByDescription("Mexican");
         try {
-            byte[] usaBytes=DevBootstrap.class.getResourceAsStream("/static/images/usa.svg").readAllBytes();
-            byte[] italyBytes=DevBootstrap.class.getResourceAsStream("/static/images/italy.svg").readAllBytes();
-            byte[] mexicoBytes=DevBootstrap.class.getResourceAsStream("/static/images/mexico.svg").readAllBytes();
-            Byte[] usaImage=new Byte[usaBytes.length];
-            Byte[] italyImage=new Byte[italyBytes.length];
-            Byte[] mexicoImage=new Byte[mexicoBytes.length];
-            int i=0;
-            for (byte b:usaBytes)
-                usaImage[i++]=b;
-            i=0;
-            for (byte b:italyBytes)
-                italyImage[i++]=b;
-            i=0;
-            for (byte b:mexicoBytes)
-                mexicoImage[i++]=b;
-            american.ifPresent(e->e.setImage(usaImage));
-            italian.ifPresent(e->e.setImage(italyImage));
-            mexican.ifPresent(e->e.setImage(mexicoImage));
+            byte[] usaBytes = DevBootstrap.class.getResourceAsStream("/static/images/usa.png").readAllBytes();
 
-        }catch (IOException e){
+            byte[] italyBytes = DevBootstrap.class.getResourceAsStream("/static/images/italy.png").readAllBytes();
+            byte[] mexicoBytes = DevBootstrap.class.getResourceAsStream("/static/images/mexico.png").readAllBytes();
+            Byte[] usaImage = new Byte[usaBytes.length];
+            Byte[] italyImage = new Byte[italyBytes.length];
+            Byte[] mexicoImage = new Byte[mexicoBytes.length];
+            int i = 0;
+            for (byte b : usaBytes)
+                usaImage[i++] = b;
+            i = 0;
+            for (byte b : italyBytes)
+                italyImage[i++] = b;
+            i = 0;
+            for (byte b : mexicoBytes)
+                mexicoImage[i++] = b;
+
+            american.ifPresent(e -> {
+                e.setImage(usaImage);
+                categoryRepository.save(e);
+            });
+            italian.ifPresent(e -> {
+                e.setImage(italyImage);
+                categoryRepository.save(e);
+            });
+            mexican.ifPresent(e -> {
+                e.setImage(mexicoImage);
+                categoryRepository.save(e);
+            });
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
 
 
         Recipe recipe1 = new Recipe();
@@ -164,14 +173,14 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         try {
             byte[] bytes1 = DevBootstrap.class.getResourceAsStream("/static/images/guacamole-perfect.jpg").readAllBytes();
             String string1 = Base64.getEncoder().encodeToString(bytes1);
-            recipe1.setImage("data:image/png;base64,"+string1);
+            recipe1.setImage("data:image/png;base64," + string1);
             byte[] bytes2 = DevBootstrap.class.getResourceAsStream("/static/images/spicy-grilled-chicken-tacos.jpg").readAllBytes();
             String string2 = Base64.getEncoder().encodeToString(bytes2);
-            recipe2.setImage("data:image/png;base64,"+string2);
+            recipe2.setImage("data:image/png;base64," + string2);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        recipeRepository.saveAll(Arrays.asList(recipe1,recipe2));
+        recipeRepository.saveAll(Arrays.asList(recipe1, recipe2));
     }
 }

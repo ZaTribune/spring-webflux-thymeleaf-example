@@ -7,9 +7,8 @@ import zatribune.spring.cookmaster.commands.NotesCommand;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Difficulty;
 import zatribune.spring.cookmaster.data.entities.Recipe;
+import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 
-import java.util.Base64;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,8 +32,8 @@ public class RecipeServiceImplIT {
     private final String image = "a dummy recipe image";
 
     @Test
-    void testGetAllRecipes(){
-        Set<Recipe> recipeSet=recipeService.getAllRecipes();
+    void testGetAllRecipes() {
+        Set<Recipe> recipeSet = recipeService.getAllRecipes();
         System.out.println(recipeSet.size());
     }
 
@@ -81,22 +80,23 @@ public class RecipeServiceImplIT {
 
     @Test
     void deleteRecipe() {
-        Optional<Recipe> recipe = recipeService.getRecipeById(1L);
-        assertTrue(recipe.isPresent());
-        recipe.ifPresent(u -> {
-            recipeService.deleteRecipe(u);
-        });
-        Optional<Recipe> recipe2 = recipeService.getRecipeById(1L);
-        assertEquals(Optional.empty(), recipe2);
+        //todo:check
+        Recipe recipe = recipeService.getRecipeById(1L);
+        assertNotNull(recipe);
+        recipeService.deleteRecipe(recipe);
+        Exception exception=assertThrows(MyNotFoundException.class,()->recipeService.getRecipeById(1L));
+        // just an extra part for checking nothing more.
+        assertTrue(exception.getMessage().contains("Recipe Not Found"));
     }
 
     @Test
     void deleteRecipeById() {
-        Optional<Recipe> recipe = recipeService.getRecipeById(1L);
-        assertTrue(recipe.isPresent());
+        Recipe recipe = recipeService.getRecipeById(1L);
+        assertNotNull(recipe);
         recipeService.deleteRecipeById(1L);
-        Optional<Recipe> recipe2 = recipeService.getRecipeById(1L);
-        assertEquals(Optional.empty(), recipe2);
+        Exception exception=assertThrows(MyNotFoundException.class,()->recipeService.getRecipeById(1L));
+        // just an extra part for checking nothing more.
+        assertTrue(exception.getMessage().contains("Recipe Not Found"));
     }
 
 }

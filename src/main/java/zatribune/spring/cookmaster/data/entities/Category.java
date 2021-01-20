@@ -19,6 +19,7 @@ public class Category {
 
     private String info;
 
+    @Lob
     private Byte[] image;
 
     @ManyToMany(mappedBy = "categories")// the name on the other side of the relationship
