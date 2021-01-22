@@ -42,27 +42,6 @@
                 //navbar.removeClass('show');
             }
         }
-        function insertListItem(parentId,item){
-            let invalid = false;
-            let parent=document.getElementById(parentId);
-            Array.from(parent.children).forEach((child,index)=>{
-                if (item.getAttribute("data-category-id")===child.getAttribute("data-category-id")){
-                   invalid=true;
-                   return false;
-                }
-            });
-            if (invalid===true)
-                return;
-
-            item.setAttribute('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark');
-            item.setAttribute('onclick','');
-            //alert("parentID:"+parentId+"\nitemId:"+itemId+"\nitemText"+itemText);
-            let btnDelete=document.createElement('button');
-            item.appendChild(btnDelete);
-            //must have a parent before setting outerHTML
-            btnDelete.outerHTML="<button class='btn btn-secondary' onclick='this.closest(\"a\").remove()'><i class='fa fa-trash p-1'></i></button>";
-            parent.appendChild(item);
-        }
 
         function resizeTextarea (id) {
             let a = document.getElementById(id);
@@ -92,12 +71,12 @@
         </section>
 
         <section class="col text-end align-self-center p-1">
-            <button class="btn btn-outline-light" href="#" title="Login/Register">Login/Register</button>
+            <button class="btn btn-outline-light" href="#" th:text="#{loginOrRegister}"></button>
         </section>
     </header>
     <nav class="row navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Menu</a>
+            <a class="navbar-brand" th:text="#{menu}"></a>
             <button class="navbar-toggler collapsed" type="button" id="btnNavbar"
                     data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
                     aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -107,21 +86,21 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#"
-                           onclick="getContent($('#container'),'/home')">Home</a>
+                           onclick="getContent($('#container'),'/home')" th:text="#{home}"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="getContent($('#container'),'/categories')">Categories</a>
+                        <a class="nav-link" th:text="#{categories}" onclick="getContent($('#container'),'/categories')"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="getContent($('#container'),'/recipes')">Recipes</a>
+                        <a class="nav-link" th:text="#{recipes}" onclick="getContent($('#container'),'/recipes')"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" th:text="#{about}"></a>
                     </li>
                 </ul>
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-light" type="submit">Search</button>
+                    <button class="btn btn-outline-light" type="submit" th:text="#{search}"></button>
                 </form>
             </div>
         </div>
