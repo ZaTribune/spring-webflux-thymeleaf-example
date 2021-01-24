@@ -8,20 +8,20 @@ jobs:
       # Customize the VM max heap limit
       MVN_OPTS: -Xm3200m
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{checksum "pom.xml"}}
-            - v1-dependencies-
+    - checkout
+    - restore_cache:
+        keys:
+          - v1-dependencies-{{checksum "pom.xml"}}
+          - v1-dependencies-
       #this will install the modules to the local maven cache
       #and because this is a multi-module project and one module is
       #dependent on the other so
       #by default, maven skips the compiled and source code and
       #looks for the jars and m2 cache
-      - run: mvn install -DskipTests
-      - run: mvn dependency:go-offline
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-dependencies-{{checksum "pom.xml"}}
-      - run: mvn integration-test
+    - run: mvn install -DskipTests
+    - run: mvn dependency:go-offline
+    - save_cache:
+        paths:
+          - ~/.m2
+        key: v1-dependencies-{{checksum "pom.xml"}}
+    - run: mvn integration-test
