@@ -89,7 +89,7 @@ class ImageControllerTest {
     void showProductImageBadId()throws Exception{
         mockMvc.perform(get("/category/mmm/image"))
                 .andExpect(status().isBadRequest())
-                .andExpect(view().name("/errors/400"));
+                .andExpect(view().name("errors/400"));
     }
 
     @Test
