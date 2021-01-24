@@ -1,12 +1,5 @@
 version: 2
 workflows:
-  build-and-test:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only:
-                - circleci
 jobs:
   build:
     docker:
