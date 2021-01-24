@@ -61,7 +61,7 @@ class RecipesControllerTest {
         //webAppContextSetup will bring the Spring context therefore our test will no longer be a unit testing
         mockMvc.perform(get("/recipes"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/recipes/homeRecipes"));
+                .andExpect(view().name("recipes/homeRecipes"));
 
     }
 
@@ -69,7 +69,7 @@ class RecipesControllerTest {
     void getSearchRecipesPage() { // this is an example of test-driven-development {given-when-then}
 
         //************ given ************
-        String expectedURL = "/recipes/searchRecipes";
+        String expectedURL = "recipes/searchRecipes";
         Set<Recipe> recipes = new HashSet<>();
         Recipe recipe1 = new Recipe();
         recipe1.setTitle("recipe 1");
@@ -95,7 +95,7 @@ class RecipesControllerTest {
         when(recipeService.getRecipeById(anyLong())).thenThrow(MyNotFoundException.class);
         mockMvc.perform(get("/showRecipe/15"))
                .andExpect(status().isNotFound())
-               .andExpect(view().name("/errors/404"));
+               .andExpect(view().name("errors/404"));
         //side by side with the custom annotated exception class
         //and the double annotated exception handler function on the controller
     }

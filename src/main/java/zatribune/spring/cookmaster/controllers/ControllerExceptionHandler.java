@@ -19,7 +19,7 @@ public class ControllerExceptionHandler {
     public ModelAndView handleRecipeNotFound(Exception e){
         log.error(e.getMessage());
         ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("/errors/404");
+        modelAndView.setViewName("errors/404");
         modelAndView.addObject("exception",e);
         return modelAndView;
     }
@@ -29,7 +29,7 @@ public class ControllerExceptionHandler {
     public ModelAndView handleBadRecipeIdValue(Exception e){
         log.error(e.getMessage());
         ModelAndView modelAndView=new ModelAndView();
-        modelAndView.setViewName("/errors/400");
+        modelAndView.setViewName("errors/400");
         modelAndView.addObject("exception",e);
         return modelAndView;
     }
