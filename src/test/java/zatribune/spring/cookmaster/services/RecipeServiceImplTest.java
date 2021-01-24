@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import zatribune.spring.cookmaster.converters.RecipeCommandToRecipe;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.data.repositories.RecipeRepository;
@@ -23,7 +25,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class RecipeServiceImplTest {
 
-    @Mock
+    @InjectMocks
     RecipeServiceImpl recipeService;
     @Mock
     RecipeRepository recipeRepository;
@@ -39,8 +41,6 @@ class RecipeServiceImplTest {
     public void setUp() {
         idRecipe=14L;
         title="a dummy recipe title";
-        //to be linked together
-        recipeService=new RecipeServiceImpl(recipeRepository,recipeCommandToRecipe);
     }
 
 
@@ -59,7 +59,7 @@ class RecipeServiceImplTest {
         log.debug(""+recipes.iterator().next().getTitle());
         assertEquals(recipes.size(), mockSet.size());
         //to verify it's called once
-        verify(recipeService,times(1)).getAllRecipes();
+        verify(recipeRepository,times(1)).findAll();
 
     }
     @Test
@@ -67,15 +67,15 @@ class RecipeServiceImplTest {
         Recipe recipe=new Recipe();
         recipe.setId(idRecipe);
 
-        when(recipeService.getRecipeById(anyLong())).thenReturn(recipe);
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
 
         Recipe returnedRecipe=recipeService.getRecipeById(idRecipe);
 
         assertNotNull(returnedRecipe);
         assertEquals(idRecipe, returnedRecipe.getId());
 
-        verify(recipeService,times(1)).getRecipeById(anyLong());
-        verify(recipeService,never()).getAllRecipes();
+        verify(recipeRepository,times(1)).findById(anyLong());
+        verify(recipeRepository,never()).findAll();
     }
 
     @Test
@@ -85,7 +85,7 @@ class RecipeServiceImplTest {
         Exception exception = assertThrows(MyNotFoundException.class, () -> {
             recipeService.getRecipeById(15L);
         });
-        assertTrue(exception.getMessage().contains("Recipe Not Found"));
+        assertTrue(exception.getMessage().contains("Recipe not found"));
     }
 
 }

@@ -18,6 +18,7 @@ import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 import zatribune.spring.cookmaster.services.RecipeService;
+import zatribune.spring.cookmaster.services.RecipeServiceImpl;
 import zatribune.spring.cookmaster.services.UnitMeasureService;
 
 import java.util.HashSet;
@@ -35,7 +36,7 @@ class RecipesControllerTest {
     //When using Mockito, all arguments have to be provided by matchers.
     //the mockito methods only work on objects annotated with @Mock
     @Mock
-    RecipeService recipeService;
+    RecipeServiceImpl recipeService;
     @Mock
     Model model;
     // to fix unchecked assignment problems
@@ -56,19 +57,19 @@ class RecipesControllerTest {
     }
 
     @Test
-    void testMockMVC() throws Exception {
+    void getIndexPage() throws Exception {
         //webAppContextSetup will bring the Spring context therefore our test will no longer be a unit testing
-        mockMvc.perform(get("/recipe"))
+        mockMvc.perform(get("/recipes"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/recipe/all"));
+                .andExpect(view().name("/recipes/homeRecipes"));
 
     }
 
     @Test
-    void getIndexPage() { // this is an example of test-driven-development {given-when-then}
+    void getSearchRecipesPage() { // this is an example of test-driven-development {given-when-then}
 
         //************ given ************
-        String expectedIndexString = "/recipe/all";
+        String expectedURL = "/recipes/searchRecipes";
         Set<Recipe> recipes = new HashSet<>();
         Recipe recipe1 = new Recipe();
         recipe1.setTitle("recipe 1");
@@ -80,9 +81,8 @@ class RecipesControllerTest {
         //************ when ************
         when(recipeService.getAllRecipes()).thenReturn(recipes);
 
-
         //************ then ************
-        assertEquals(expectedIndexString, recipesController.getRecipesHomePage(model));
+        assertEquals(expectedURL, recipesController.searchRecipes(model));
         verify(recipeService, times(1)).getAllRecipes();
         //this verifies that addAttribute() is called once.
         //the captor is to make sure that the argument passed to the function is the right one/type

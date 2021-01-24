@@ -19,7 +19,8 @@ public class IndexController {
     @RequestMapping({"","/","/index"})
     public String getIndexPage(Model model){
         log.debug("Now, I'm mapping the root page.");
-
+        //when deploying on a docker image, remove the leading slash->it has no use anyways but will fire errors on
+        //the running os,template might not exist or might not be accessible by any of the configured Template Resolvers]
         return "index";
     }
     @RequestMapping("/modal/{type}")
@@ -39,7 +40,7 @@ public class IndexController {
                 break;
         }
 
-        return "/fragments/modal";
+        return "fragments/modal";
     }
 
 

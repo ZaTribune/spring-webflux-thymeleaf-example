@@ -9,6 +9,6 @@ public class HomeController {
 
    @RequestMapping("/home")
    public String getHomePage(Model model){
-       return "/home";
+       return "home";
    }
 }

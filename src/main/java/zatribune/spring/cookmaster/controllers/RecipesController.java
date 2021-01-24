@@ -34,13 +34,13 @@ public class RecipesController {
 
     @RequestMapping("/recipes")
     public String getRecipesHomePage(Model model) {
-        return "/recipes/homeRecipes";
+        return "recipes/homeRecipes";
     }
 
     @RequestMapping("/searchRecipes")
     public String searchRecipes(Model model) {
         model.addAttribute("recipes", recipeService.getAllRecipes());
-        return "/recipes/searchRecipes";
+        return "recipes/searchRecipes";
     }
 
     @RequestMapping("/showRecipe/{id}")
@@ -49,14 +49,14 @@ public class RecipesController {
         model.addAttribute("recipe", recipe);
         //Optional<Recipe>optionalRecipe=recipeService.getRecipeById()
         //model.addAttribute("recipe",recipeService.getRecipeById().get());
-        return "/recipes/showRecipe";
+        return "recipes/showRecipe";
     }
 
     @RequestMapping("/createRecipe")
     public String createNewRecipe(Model model) {
         model.addAttribute("recipe", new RecipeCommand());
         model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
-        return "/recipes/createRecipe";
+        return "recipes/createRecipe";
 
     }
 
@@ -65,7 +65,7 @@ public class RecipesController {
         Recipe recipe=recipeService.getRecipeById(Long.valueOf(id));
         model.addAttribute("recipe",recipeToRecipeCommand.convert(recipe));
         model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
-        return "/recipes/createRecipe";
+        return "recipes/createRecipe";
     }
 
 
@@ -86,13 +86,13 @@ public class RecipesController {
         log.info("title {} for recipe",recipeCommand.getTitle());
         if (bindingResult.hasErrors()){
             bindingResult.getAllErrors().forEach(objectError -> log.error(objectError.toString()));
-            return "/recipes/createRecipe";
+            return "recipes/createRecipe";
         }
         //this annotation to tell spring to bind the form post parameters to the recipe
         //command object by the naming conventions of the properties automatically
         //this "redirect:" is a command that tells spring framework to redirect to a specific url
         recipeService.saveRecipeCommand(recipeCommand);
-        return "/recipes/showRecipe";
+        return "recipes/showRecipe";
     }
 
 }

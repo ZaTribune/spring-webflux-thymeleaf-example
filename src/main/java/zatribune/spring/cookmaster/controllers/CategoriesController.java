@@ -38,7 +38,7 @@ public class CategoriesController {
     public String getCategoriesHomePage(Model model) {
         log.info("Categories Home");
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "/categories/homeCategories";
+        return "categories/homeCategories";
     }
 
     @RequestMapping("/listCategories")
@@ -51,14 +51,14 @@ public class CategoriesController {
                 .filter(category -> category.getDescription().startsWith(s))
                 .collect(Collectors.toSet());
         model.addAttribute("categoriesSuggestions", categories);
-        return "/categories/listCategories";
+        return "categories/listCategories";
     }
 
     @RequestMapping("/showCategory/{id}")
     public String showCategory(@PathVariable String id, Model model) throws NumberFormatException{
         Optional<Category> optionalCategory = categoryService.getCategoryById(Long.valueOf(id));
         optionalCategory.ifPresent(category -> model.addAttribute("category", category));
-        return "/categories/showCategory";
+        return "categories/showCategory";
     }
 
     @PostMapping("/updateOrSaveCategory")
