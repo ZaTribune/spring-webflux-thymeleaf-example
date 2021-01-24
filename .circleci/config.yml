@@ -6,8 +6,7 @@ jobs:
        
     filters:
       branches:
-        only:
-          - circleci
+        only: circleci
     working_directory: ~/repo
     environment:
       # Customize the VM max heap limit
