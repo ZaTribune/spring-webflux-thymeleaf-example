@@ -1,12 +1,16 @@
 version: 2
+workflows:
+  build-and-test:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - circleci
 jobs:
   build:
     docker:
       - image: circleci/openjdk:11-jdk-node
-    filters:
-      branches:
-        only:
-          - circleci
     working_directory: ~/repo
     environment:
       # Customize the VM max heap limit
