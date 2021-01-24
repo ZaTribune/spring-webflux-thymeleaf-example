@@ -1,4 +1,4 @@
-# CookMaster
+# CookMaster [![CircleCI](https://circleci.com/gh/ZaTribune/cookmaster.svg?style=svg)](https://circleci.com/gh/ZaTribune/cookmaster)
 Spring Boot Web Application. [In progress]
 <p align="center">
   <img src="src/main/resources/static/images/logo.svg" width="300" height="300"/>
