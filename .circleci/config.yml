@@ -21,7 +21,7 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{checksum "pom.xml"}}
       #changed from [- run: mvn integration-test] for circleci build issues
-      - run: mvn integration-test #cobertura:cobertura
+      - run: mvn integration-test
       #!!!because CodeCov.io doesn't support jdk 11
       #- store_test_results:
           #path: target/surfire-reports

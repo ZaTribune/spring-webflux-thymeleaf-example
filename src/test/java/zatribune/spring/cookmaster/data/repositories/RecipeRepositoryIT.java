@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.*;
-// will only load data in data.sql file
+// will only load data in data-h2.sql file
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 class RecipeRepositoryIT {

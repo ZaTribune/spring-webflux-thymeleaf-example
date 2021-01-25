@@ -1,7 +1,7 @@
 while performing integrated tests you'll notice that
 
-- testing repositories -> the springJPA will only load the data in the "data.sql" file.
-- testing services -> the springJPA will load the data from both the "data.sql" anf the bootstrap class.
+- testing repositories -> the springJPA will only load the data in the "data-h2.sql" file.
+- testing services -> the springJPA will load the data from both the "data-h2.sql" anf the bootstrap class.
 
   Note: repositories' tests are annotated with @DataJpaTest wheres services' tests are annotated with @SpringBootTest
   Note: the repository interface is not annotated with any spring boot Stereotype annotations wheres services do.

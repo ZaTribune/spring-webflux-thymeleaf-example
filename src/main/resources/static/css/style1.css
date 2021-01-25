@@ -5,6 +5,13 @@
 .card-header{
     border-radius: 0;
 }
+
+.list-group-item {
+    cursor: default;
+}
+.list-group-item-action {
+    cursor: default;
+}
 textarea[readonly]
 {
     border: 0;

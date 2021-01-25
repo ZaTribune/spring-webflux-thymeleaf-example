@@ -3,6 +3,7 @@ package zatribune.spring.cookmaster.data.bootstrap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +18,14 @@ import java.util.*;
 
 @Slf4j
 @Component
-public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
+@Profile("default")//only active with the default profile with h2 database
+public class H2Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     private final RecipeRepository recipeRepository;
     private final CategoryRepository categoryRepository;
     private final UnitMeasureRepository unitMeasureRepository;
 
     @Autowired
-    public DevBootstrap(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitMeasureRepository unitMeasureRepository) {
+    public H2Bootstrap(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitMeasureRepository unitMeasureRepository) {
         log.debug("I'm at the Bootstrap phase");
         this.recipeRepository = recipeRepository;
         this.categoryRepository = categoryRepository;
@@ -50,10 +52,10 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         Optional<Category> italian = categoryRepository.findCategoriesByDescription("Italian");
         Optional<Category> mexican = categoryRepository.findCategoriesByDescription("Mexican");
         try {
-            byte[] usaBytes = DevBootstrap.class.getResourceAsStream("/static/images/usa.png").readAllBytes();
+            byte[] usaBytes = H2Bootstrap.class.getResourceAsStream("/static/images/usa.png").readAllBytes();
 
-            byte[] italyBytes = DevBootstrap.class.getResourceAsStream("/static/images/italy.png").readAllBytes();
-            byte[] mexicoBytes = DevBootstrap.class.getResourceAsStream("/static/images/mexico.png").readAllBytes();
+            byte[] italyBytes = H2Bootstrap.class.getResourceAsStream("/static/images/italy.png").readAllBytes();
+            byte[] mexicoBytes = H2Bootstrap.class.getResourceAsStream("/static/images/mexico.png").readAllBytes();
             Byte[] usaImage = new Byte[usaBytes.length];
             Byte[] italyImage = new Byte[italyBytes.length];
             Byte[] mexicoImage = new Byte[mexicoBytes.length];
@@ -171,10 +173,10 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
                 "You could also easily double or even triple this recipe for a larger party. A taco and a cold beer on a warm day? Now that’s living!\n");
 
         try {
-            byte[] bytes1 = DevBootstrap.class.getResourceAsStream("/static/images/guacamole-perfect.jpg").readAllBytes();
+            byte[] bytes1 = H2Bootstrap.class.getResourceAsStream("/static/images/guacamole-perfect.jpg").readAllBytes();
             String string1 = Base64.getEncoder().encodeToString(bytes1);
             recipe1.setImage("data:image/png;base64," + string1);
-            byte[] bytes2 = DevBootstrap.class.getResourceAsStream("/static/images/spicy-grilled-chicken-tacos.jpg").readAllBytes();
+            byte[] bytes2 = H2Bootstrap.class.getResourceAsStream("/static/images/spicy-grilled-chicken-tacos.jpg").readAllBytes();
             String string2 = Base64.getEncoder().encodeToString(bytes2);
             recipe2.setImage("data:image/png;base64," + string2);
         } catch (Exception e) {

@@ -24,5 +24,4 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories")// the name on the other side of the relationship
     private Set<Recipe>recipes=new HashSet<>();
-
 }

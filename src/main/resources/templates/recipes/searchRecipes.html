@@ -13,6 +13,7 @@
                    th:attr="data-recipe=${recipe.id}"
                    th:text="${recipe.title}"
                    data-bs-toggle="list"
+                   role="button"
                    onclick="$('#recipeTabContent').load('/showRecipe/'+this.getAttribute('data-recipe'));"></a>
             </div>
         </div>
