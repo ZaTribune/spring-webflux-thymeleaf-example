@@ -2,9 +2,11 @@ package zatribune.spring.cookmaster.services;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import zatribune.spring.cookmaster.commands.NotesCommand;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
+import zatribune.spring.cookmaster.data.bootstrap.DevBootstrap;
 import zatribune.spring.cookmaster.data.entities.Difficulty;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
@@ -13,10 +15,10 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+//as tests start from bottom to top the deleteRecipe() will fail
+//if we used the same title for testing
 @SpringBootTest
 public class RecipeServiceImplIT {
-
 
     @Autowired
     RecipeService recipeService;
@@ -34,7 +36,7 @@ public class RecipeServiceImplIT {
     @Test
     void testGetAllRecipes() {
         Set<Recipe> recipeSet = recipeService.getAllRecipes();
-        System.out.println(recipeSet.size());
+        System.out.println("recipeSet.size() "+recipeSet.size());
     }
 
     @Test
@@ -79,22 +81,22 @@ public class RecipeServiceImplIT {
     @Test
     void deleteRecipe() {
         //todo:check
-        Recipe recipe = recipeService.getRecipeById("0x456456");
+        Recipe recipe = recipeService.getRecipeByTitle("Grilled Chicken Tacos");
         assertNotNull(recipe);
         recipeService.deleteRecipe(recipe);
         Exception exception=assertThrows(MyNotFoundException.class,()->recipeService.getRecipeById("0x456456"));
         // just an extra part for checking nothing more.
-        assertTrue(exception.getMessage().contains("Recipe Not Found"));
+        assertTrue(exception.getMessage().contains("Recipe not found"));
     }
 
     @Test
     void deleteRecipeById() {
-        Recipe recipe = recipeService.getRecipeById("0x456456");
+        Recipe recipe = recipeService.getRecipeByTitle("Perfect Guacamole");
         assertNotNull(recipe);
-        recipeService.deleteRecipeById("0x456456");
+        recipeService.deleteRecipeById(recipe.getId().toString());
         Exception exception=assertThrows(MyNotFoundException.class,()->recipeService.getRecipeById("0x456456"));
         // just an extra part for checking nothing more.
-        assertTrue(exception.getMessage().contains("Recipe Not Found"));
+        assertTrue(exception.getMessage().contains("Recipe not found"));
     }
 
 }

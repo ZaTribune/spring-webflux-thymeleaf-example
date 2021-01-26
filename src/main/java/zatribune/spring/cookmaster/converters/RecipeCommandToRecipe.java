@@ -36,13 +36,14 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
         if (source == null)
             return null;
         final Recipe recipe = new Recipe();
-        recipe.setId(new ObjectId(source.getId()));
+        if (source.getId() != null)//cases like creating a new recipe --> on the website
+            recipe.setId(new ObjectId(source.getId()));
         recipe.setTitle(source.getTitle());
         recipe.setCookTime(source.getCookTime());
         recipe.setPrepTime(source.getPrepTime());
         recipe.setServings(source.getServings());
         recipe.setSource(source.getSource());
-        if (source.getImage()!=null&&!source.getImage().isEmpty())
+        if (source.getImage() != null && !source.getImage().isEmpty())
             recipe.setImage(source.getImage());
         recipe.setUrl(source.getUrl());
         recipe.setDirections(source.getDirections());

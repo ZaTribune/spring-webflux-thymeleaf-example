@@ -16,10 +16,11 @@ public class NotesCommandToNotes implements Converter<NotesCommand, Notes> {
     @Synchronized
     @Override
     public Notes convert(@Nullable NotesCommand source) {
-        if (source==null)
-        return null;
-        final Notes notes=new Notes();
-        notes.setId(new ObjectId(source.getId()));
+        if (source == null)
+            return null;
+        final Notes notes = new Notes();
+        if (source.getId() != null)
+            notes.setId(new ObjectId(source.getId()));
         notes.setDescription(source.getDescription());
         return notes;
     }

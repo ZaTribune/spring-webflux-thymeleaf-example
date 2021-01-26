@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import zatribune.spring.cookmaster.data.bootstrap.DevBootstrap;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 
 import java.util.Optional;
@@ -22,14 +22,24 @@ class RecipeRepositoryIT {
 
     @Autowired
     RecipeRepository recipeRepository;
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    UnitMeasureRepository unitMeasureRepository;
     @BeforeEach
     void setUp() {
+        recipeRepository.deleteAll();
+        categoryRepository.deleteAll();
+        unitMeasureRepository.deleteAll();
+        DevBootstrap devBootstrap=new DevBootstrap(recipeRepository,categoryRepository,unitMeasureRepository);
+        devBootstrap.onApplicationEvent(null);
     }
 
     @Test
     void findRecipeByTitle() {
-        Optional<Recipe> recipe= recipeRepository.findRecipeByTitle("Koshary");
-        recipe.ifPresent(u->assertEquals("Koshary",u.getTitle()));
+        Optional<Recipe> recipe= recipeRepository.findRecipeByTitle("Perfect Guacamole");
+        recipe.ifPresent(u->assertEquals("Perfect Guacamole",u.getTitle()));
+        assertFalse(recipe.isEmpty());
     }
 
     @Test

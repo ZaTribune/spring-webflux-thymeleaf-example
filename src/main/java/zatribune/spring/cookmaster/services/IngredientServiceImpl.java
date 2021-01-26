@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import zatribune.spring.cookmaster.data.entities.Ingredient;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.data.repositories.IngredientRepository;
+import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 
 import java.util.Optional;
 import java.util.Set;
@@ -22,8 +23,12 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Optional<Ingredient> getIngredientById(String id) {
-        return repository.findById(id);
+    public Ingredient getIngredientById(String id) {
+        Optional<Ingredient> ingredient=repository.findById(id);
+        if (ingredient.isEmpty()){
+            throw new MyNotFoundException("Ingredient not found for id value: "+id);
+        }
+        return ingredient.get();
     }
 
     @Override

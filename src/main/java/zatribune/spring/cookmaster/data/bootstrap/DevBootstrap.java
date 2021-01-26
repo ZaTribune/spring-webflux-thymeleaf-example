@@ -6,10 +6,12 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import zatribune.spring.cookmaster.data.entities.*;
 import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
+import zatribune.spring.cookmaster.data.repositories.IngredientRepository;
 import zatribune.spring.cookmaster.data.repositories.RecipeRepository;
 import zatribune.spring.cookmaster.data.repositories.UnitMeasureRepository;
 
@@ -34,7 +36,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     @Override
-    public void onApplicationEvent(@NonNull ContextRefreshedEvent contextRefreshedEvent) {
+    public void onApplicationEvent(@Nullable ContextRefreshedEvent contextRefreshedEvent) {
         initData();
     }
 
@@ -55,6 +57,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         ounce.setDescription("ounce");
         UnitMeasure dash =new UnitMeasure();
         dash.setDescription("dash");
+
 
         unitMeasureRepository.saveAll(Arrays.asList(emptyUOM,teaspoon,tablespoon,cup,pinch,ounce,dash));
         Category american=new Category();

@@ -44,6 +44,15 @@ public class RecipeServiceImpl implements RecipeService {
         return optionalRecipe.get();
     }
 
+    @Override
+    public Recipe getRecipeByTitle(String title) {
+        Optional<Recipe>optionalRecipe=recipeRepository.findRecipeByTitle(title);
+        if (optionalRecipe.isEmpty()){
+            throw new MyNotFoundException("Recipe not found for title value: "+title);
+        }
+        return optionalRecipe.get();
+    }
+
 
     @Override
     public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
