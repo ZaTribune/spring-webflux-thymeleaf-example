@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class RecipeToRecipeCommandTest {
 
     private RecipeToRecipeCommand recipeToRecipeCommandConverter;
-    private final String idRecipe="0x555555";
     private final String title="a dummy recipe title";
     private final Integer prepTime=10;
     private final Integer cookTime=20;
@@ -26,14 +25,11 @@ class RecipeToRecipeCommandTest {
     private final String image="a dummy recipe image";
     private Notes notes;
     private final String descriptionNotes="a dummy notes description";
-    private final String idNotes="0x444444";
     private Category category;
-    private final String idCategory="0x333333";
     private final String descriptionCategory="a dummy Category description";
     private Ingredient ingredient1;
     private Ingredient ingredient2;
-    private final String idIngredient1="0x777777";
-    private final String idIngredient2="0x999999";
+
     @BeforeEach
     void setUp() {
         recipeToRecipeCommandConverter =new RecipeToRecipeCommand(
@@ -56,7 +52,7 @@ class RecipeToRecipeCommandTest {
     @Test
     void convert() {
         Recipe recipe=new Recipe();
-        recipe.setId(new ObjectId(idRecipe));
+        recipe.setId(new ObjectId());
         recipe.setTitle(title);
         recipe.setCookTime(cookTime);
         recipe.setPrepTime(prepTime);
@@ -69,23 +65,23 @@ class RecipeToRecipeCommandTest {
         recipe.setDifficulty(difficulty);
         recipe.setUrl(url);
         notes=new Notes();
-        notes.setId(new ObjectId(idNotes));
+        notes.setId(new ObjectId());
         notes.setDescription(descriptionNotes);
         recipe.setNotes(notes);
         category=new Category();
-        category.setId(new ObjectId(idCategory));
+        category.setId(new ObjectId());
         category.setDescription(descriptionCategory);
         recipe.getCategories().add(category);
         ingredient1=new Ingredient();
-        ingredient1.setId(new ObjectId(idIngredient1));
+        ingredient1.setId(new ObjectId());
         ingredient2=new Ingredient();
-        ingredient2.setId(new ObjectId(idIngredient2));
+        ingredient2.setId(new ObjectId());
         recipe.addIngredient(ingredient1).addIngredient(ingredient2);
 
         RecipeCommand recipeCommand= recipeToRecipeCommandConverter.convert(recipe);
 
         assertNotNull(recipeCommand);
-        assertEquals(idRecipe,recipeCommand.getId());
+        assertEquals(recipe.getId().toString(),recipeCommand.getId());
         assertEquals(title,recipeCommand.getTitle());
         assertEquals(prepTime,recipeCommand.getPrepTime());
         assertEquals(cookTime,recipeCommand.getCookTime());
@@ -96,7 +92,7 @@ class RecipeToRecipeCommandTest {
         assertEquals(url,recipeCommand.getUrl());
         assertEquals(difficulty,recipeCommand.getDifficulty());
 
-        assertEquals(notes.getId(),recipeCommand.getNotes().getId());
+        assertEquals(notes.getId().toString(),recipeCommand.getNotes().getId());
         assertEquals(notes.getDescription(),recipeCommand.getNotes().getDescription());
 
 

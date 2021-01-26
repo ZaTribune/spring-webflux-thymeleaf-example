@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.converters;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.cookmaster.commands.CategoryCommand;
@@ -12,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class NotesCommandToNotesTest {
 
     private NotesCommandToNotes converter;
-    private final String id="0x122564";
     private final String description="a dummy notes description";
 
     @BeforeEach
@@ -34,13 +34,13 @@ class NotesCommandToNotesTest {
     @Test
     void convert() {
         NotesCommand input=new NotesCommand();
-        input.setId(id);
+        input.setId(new ObjectId().toString());
         input.setDescription(description);
 
         Notes output=converter.convert(input);
 
         assertNotNull(output);
-        assertEquals(id,output.getId());
+        assertEquals(input.getId(),output.getId().toString());
         assertEquals(description,output.getDescription());
     }
 }

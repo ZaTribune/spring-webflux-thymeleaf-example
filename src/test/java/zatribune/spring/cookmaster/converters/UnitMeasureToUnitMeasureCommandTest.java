@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UnitMeasureToUnitMeasureCommandTest {
     private final String description="a dummy description";
-    private final String aLong="0x454589";
     private UnitMeasureToUnitMeasureCommand converter;
 
     @BeforeEach
@@ -29,13 +28,13 @@ class UnitMeasureToUnitMeasureCommandTest {
     @Test
     void convert() {
         UnitMeasure unitMeasure=new UnitMeasure();
-        unitMeasure.setId(new ObjectId(aLong));
+        unitMeasure.setId(new ObjectId());
         unitMeasure.setDescription(description);
 
         UnitMeasureCommand unitMeasureCommand=converter.convert(unitMeasure);
 
         assertNotNull(unitMeasureCommand);
-        assertEquals(aLong,unitMeasureCommand.getId());
+        assertEquals(unitMeasure.getId().toString(),unitMeasureCommand.getId());
         assertEquals(description,unitMeasureCommand.getDescription());
     }
 }

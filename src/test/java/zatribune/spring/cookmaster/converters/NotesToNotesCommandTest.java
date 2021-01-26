@@ -12,7 +12,6 @@ class NotesToNotesCommandTest {
 
 
     private NotesToNotesCommand converter;
-    private final String id="0x278456";
     private final String description="a dummy notes description";
 
     @BeforeEach
@@ -34,13 +33,13 @@ class NotesToNotesCommandTest {
     @Test
     void convert() {
         Notes input=new Notes();
-        input.setId(new ObjectId(id));
+        input.setId(new ObjectId());
         input.setDescription(description);
 
         NotesCommand output=converter.convert(input);
 
         assertNotNull(output);
-        assertEquals(id,output.getId());
+        assertEquals(input.getId().toString(),output.getId());
         assertEquals(description,output.getDescription());
     }
 

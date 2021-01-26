@@ -20,10 +20,11 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
     @Synchronized
     @Override
     public IngredientCommand convert(@Nullable Ingredient source) {
-        if (source==null)
+        if (source == null)
             return null;
-        final IngredientCommand ingredient=new IngredientCommand();
-        ingredient.setId(source.getId().toString());
+        final IngredientCommand ingredient = new IngredientCommand();
+        if (source.getId() != null)
+            ingredient.setId(source.getId().toString());
         ingredient.setAmount(source.getAmount());
         ingredient.setDescription(source.getDescription());
         ingredient.setUnitMeasure(unitMeasureConverter.convert(source.getUnitMeasure()));

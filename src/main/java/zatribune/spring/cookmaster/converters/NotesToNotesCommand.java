@@ -14,10 +14,11 @@ public class NotesToNotesCommand implements Converter<Notes, NotesCommand> {
     @Synchronized
     @Override
     public NotesCommand convert(@Nullable Notes source) {
-        if (source==null)
+        if (source == null)
             return null;
-        final NotesCommand notesCommand=new NotesCommand();
-        notesCommand.setId(source.getId().toString());
+        final NotesCommand notesCommand = new NotesCommand();
+        if (source.getId() != null)//for test testEmptyObject()
+            notesCommand.setId(source.getId().toString());
         notesCommand.setDescription(source.getDescription());
         return notesCommand;
     }

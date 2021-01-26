@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.converters;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.cookmaster.commands.CategoryCommand;
@@ -11,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class CategoryCommandToCategoryTest {
 
     private CategoryCommandToCategory converter;
-    private final String id="0x875454";
     private final String description="a dummy category description";
 
     @BeforeEach
@@ -33,13 +33,13 @@ class CategoryCommandToCategoryTest {
     @Test
     void convert() {
         CategoryCommand source=new CategoryCommand();
-        source.setId(id);
+        source.setId(new ObjectId().toString());
         source.setDescription(description);
 
         Category category=converter.convert(source);
 
         assertNotNull(category);
-        assertEquals(id,category.getId());
+        assertEquals(source.getId(),category.getId().toString());
         assertEquals(description,category.getDescription());
     }
 }

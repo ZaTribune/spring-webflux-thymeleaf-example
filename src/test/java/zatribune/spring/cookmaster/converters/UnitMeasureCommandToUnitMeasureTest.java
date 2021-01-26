@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.converters;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.cookmaster.commands.UnitMeasureCommand;
@@ -10,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class UnitMeasureCommandToUnitMeasureTest {
 
     private final String description="a dummy description";
-    private final String aLong="0x458978";
     private UnitMeasureCommandToUnitMeasure converter;
 
     @BeforeEach
@@ -29,13 +29,13 @@ class UnitMeasureCommandToUnitMeasureTest {
     @Test
     void convert() {
         UnitMeasureCommand command=new UnitMeasureCommand();
-        command.setId(aLong);
+        command.setId(new ObjectId().toString());
         command.setDescription(description);
 
         UnitMeasure unitMeasure=converter.convert(command);
 
         assertNotNull(unitMeasure);
-        assertEquals(aLong,unitMeasure.getId());
+        assertEquals(command.getId(),unitMeasure.getId().toString());
         assertEquals(description,unitMeasure.getDescription());
     }
 }

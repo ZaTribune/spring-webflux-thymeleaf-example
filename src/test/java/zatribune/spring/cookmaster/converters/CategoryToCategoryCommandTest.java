@@ -34,13 +34,13 @@ class CategoryToCategoryCommandTest {
     @Test
     void convert() {
         Category source=new Category();
-        source.setId(new ObjectId(id));
+        source.setId(new ObjectId());
         source.setDescription(description);
 
         CategoryCommand category=converter.convert(source);
 
         assertNotNull(category);
-        assertEquals(id,category.getId());
+        assertEquals(source.getId().toString(),category.getId());
         assertEquals(description,category.getDescription());
     }
 

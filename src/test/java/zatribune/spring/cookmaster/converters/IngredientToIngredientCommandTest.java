@@ -19,9 +19,7 @@ class IngredientToIngredientCommandTest {
     private final String descriptionIngredient ="a dummy ingredient description";
     private final BigDecimal amount=BigDecimal.valueOf(20);
     private UnitMeasure unitMeasure;
-    private final String idUnitMeasure="0x844454";
     private final String descriptionUnitMeasure="a dummy unit measure description";
-    private final String idIngredient="0x899994";
 
     @BeforeEach
     void setUp() {
@@ -42,21 +40,21 @@ class IngredientToIngredientCommandTest {
     @Test
     void convert() {
         ingredient =new Ingredient();
-        ingredient.setId(new ObjectId(idIngredient));
+        ingredient.setId(new ObjectId());
         ingredient.setDescription(descriptionIngredient);
         ingredient.setAmount(amount);
         unitMeasure=new UnitMeasure();
-        unitMeasure.setId(new ObjectId(idUnitMeasure));
+        unitMeasure.setId(new ObjectId());
         unitMeasure.setDescription(descriptionUnitMeasure);
         ingredient.setUnitMeasure(unitMeasure);
 
         IngredientCommand ingredientCommand= ingredientToIngredientCommandConverter.convert(ingredient);
 
         assertNotNull(ingredientCommand);
-        assertEquals(idIngredient,ingredientCommand.getId());
+        assertEquals(ingredient.getId().toString(),ingredientCommand.getId());
         assertEquals(descriptionIngredient,ingredientCommand.getDescription());
         assertEquals(amount,ingredientCommand.getAmount());
-        assertEquals(idUnitMeasure,ingredientCommand.getUnitMeasure().getId());
+        assertEquals(unitMeasure.getId().toString(),ingredientCommand.getUnitMeasure().getId());
         assertEquals(descriptionUnitMeasure,ingredientCommand.getUnitMeasure().getDescription());
 
 

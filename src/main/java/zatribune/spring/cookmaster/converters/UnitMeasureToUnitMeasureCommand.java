@@ -15,6 +15,7 @@ public class UnitMeasureToUnitMeasureCommand implements Converter<UnitMeasure, U
         if (source==null)
             return null;
         final UnitMeasureCommand unitMeasure=new UnitMeasureCommand();
+        if (source.getId()!=null)
         unitMeasure.setId(source.getId().toString());
         unitMeasure.setDescription(source.getDescription());
         return unitMeasure;

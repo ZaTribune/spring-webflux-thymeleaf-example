@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.converters;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.cookmaster.commands.IngredientCommand;
@@ -15,7 +16,6 @@ class IngredientCommandToIngredientTest {
     private IngredientCommandToIngredient ingredientCommandToIngredientConverter;
 
     private IngredientCommand ingredientCommand;
-    private final String id="0x875454";
     private final String descriptionIngredient ="a dummy ingredient description";
     private final BigDecimal amount=BigDecimal.valueOf(20);
     private UnitMeasureCommand unitMeasure;
@@ -42,21 +42,21 @@ class IngredientCommandToIngredientTest {
     @Test
     void convert() {
         ingredientCommand =new IngredientCommand();
-        ingredientCommand.setId(idIngredient);
+        ingredientCommand.setId(new ObjectId().toString());
         ingredientCommand.setDescription(descriptionIngredient);
         ingredientCommand.setAmount(amount);
         unitMeasure=new UnitMeasureCommand();
-        unitMeasure.setId(idUnitMeasure);
+        unitMeasure.setId(new ObjectId().toString());
         unitMeasure.setDescription(descriptionUnitMeasure);
         ingredientCommand.setUnitMeasure(unitMeasure);
 
         Ingredient ingredient=ingredientCommandToIngredientConverter.convert(ingredientCommand);
 
         assertNotNull(ingredient);
-        assertEquals(idIngredient,ingredient.getId());
+        assertEquals(ingredientCommand.getId(),ingredient.getId().toString());
         assertEquals(descriptionIngredient,ingredient.getDescription());
         assertEquals(amount,ingredient.getAmount());
-        assertEquals(idUnitMeasure,ingredient.getUnitMeasure().getId());
+        assertEquals(unitMeasure.getId(),ingredient.getUnitMeasure().getId().toString());
         assertEquals(descriptionUnitMeasure,ingredient.getUnitMeasure().getDescription());
 
 
