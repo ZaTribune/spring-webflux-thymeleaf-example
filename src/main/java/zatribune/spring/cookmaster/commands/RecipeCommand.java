@@ -19,7 +19,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 public class RecipeCommand {
-    private Long id;
+    private String id;
     @NotBlank
     @Size(min = 3,max = 255)// by default hibernate on the database creates this column with a length of 255
     private String title;

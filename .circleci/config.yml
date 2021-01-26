@@ -10,9 +10,11 @@ jobs:
       MVN_OPTS: -Xm3200m
     steps:
       - checkout
+      #download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{checksum "pom.xml"}}
+            #fallback to using the latest cache if no exist match is found
             - v1-dependencies-
 
       - run: mvn dependency:go-offline
@@ -20,11 +22,11 @@ jobs:
           paths:
             - ~/.m2
           key: v1-dependencies-{{checksum "pom.xml"}}
-      #changed from [- run: mvn integration-test] for circleci build issues
+      #run tests and generate code coverage
       - run: mvn integration-test
-      #!!!because CodeCov.io doesn't support jdk 11
-      #- store_test_results:
-          #path: target/surfire-reports
-      #- run:
-          #name: Send To CodeCov
-          #command: bash <(curl -s https://codecov.io/bash)
+      - store_test_results:
+          path: target/surfire-reports
+
+      - run:
+          name: Send To CodeCov
+          command: bash <(curl -s https://codecov.io/bash)

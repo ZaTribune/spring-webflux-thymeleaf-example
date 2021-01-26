@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UnitMeasureToUnitMeasureCommandTest {
     private final String description="a dummy description";
-    private final Long aLong=15L;
+    private final String aLong="0x454589";
     private UnitMeasureToUnitMeasureCommand converter;
 
     @BeforeEach

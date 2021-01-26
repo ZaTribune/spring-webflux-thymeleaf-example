@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 public class CategoryCommand {
-    Long id;
+    String id;
     String description;
     String info;
     Byte[] image;

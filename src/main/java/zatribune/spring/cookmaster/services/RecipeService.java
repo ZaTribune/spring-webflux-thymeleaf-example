@@ -9,8 +9,8 @@ import java.util.Set;
 //this is an abstraction
 public interface RecipeService {
     Set<Recipe> getAllRecipes();
-    Recipe getRecipeById(Long id);
+    Recipe getRecipeById(String id);
     RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand);
     void deleteRecipe(Recipe recipe);
-    void deleteRecipeById(Long id);
+    void deleteRecipeById(String id);
 }

@@ -21,7 +21,7 @@ public class UnitMeasureServiceImpl implements UnitMeasureService {
     }
 
     @Override
-    public Optional<UnitMeasure> getUnitMeasureById(Long id) {
+    public Optional<UnitMeasure> getUnitMeasureById(String id) {
         return repository.findById(id);
     }
 
@@ -36,7 +36,7 @@ public class UnitMeasureServiceImpl implements UnitMeasureService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
        repository.deleteById(id);
     }
 

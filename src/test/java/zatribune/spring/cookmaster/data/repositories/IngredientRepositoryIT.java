@@ -27,7 +27,7 @@ class IngredientRepositoryIT {
 
     @Test
     void findIngredientById() {
-        Optional<Ingredient> ing= repository.findById(1L);
+        Optional<Ingredient> ing= repository.findById("0x025154");
         Set<Ingredient>ingredientSet= StreamSupport.stream(repository.findAll().spliterator(),false)
                 .collect(Collectors.toSet());
         ingredientSet.forEach(ingredient -> System.out.println(ingredient.getDescription()));

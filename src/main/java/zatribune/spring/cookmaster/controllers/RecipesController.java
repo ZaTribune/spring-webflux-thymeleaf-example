@@ -44,8 +44,8 @@ public class RecipesController {
     }
 
     @RequestMapping("/showRecipe/{id}")
-    public String showRecipe(@PathVariable String id, Model model)throws NumberFormatException{
-        Recipe recipe = recipeService.getRecipeById(Long.valueOf(id));
+    public String showRecipe(@PathVariable String id, Model model){
+        Recipe recipe = recipeService.getRecipeById(id);
         model.addAttribute("recipe", recipe);
         //Optional<Recipe>optionalRecipe=recipeService.getRecipeById()
         //model.addAttribute("recipe",recipeService.getRecipeById().get());
@@ -61,8 +61,8 @@ public class RecipesController {
     }
 
     @RequestMapping("/updateRecipe/{id}")
-    public String updateRecipe(@PathVariable String id, Model model) throws NumberFormatException{
-        Recipe recipe=recipeService.getRecipeById(Long.valueOf(id));
+    public String updateRecipe(@PathVariable String id, Model model){
+        Recipe recipe=recipeService.getRecipeById(id);
         model.addAttribute("recipe",recipeToRecipeCommand.convert(recipe));
         model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
         return "recipes/createRecipe";
@@ -70,9 +70,9 @@ public class RecipesController {
 
 
     @RequestMapping("/deleteRecipe/{id}")
-    public @ResponseBody String deleteRecipe(@PathVariable String id)throws NumberFormatException {
+    public @ResponseBody String deleteRecipe(@PathVariable String id) {
         log.info("deleting recipe: "+id);
-        recipeService.deleteRecipeById(Long.valueOf(id));
+        recipeService.deleteRecipeById(id);
         return "ok";
     }
 

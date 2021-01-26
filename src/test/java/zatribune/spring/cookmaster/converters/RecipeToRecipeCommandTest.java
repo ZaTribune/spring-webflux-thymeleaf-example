@@ -2,6 +2,9 @@ package zatribune.spring.cookmaster.converters;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import zatribune.spring.cookmaster.commands.CategoryCommand;
+import zatribune.spring.cookmaster.commands.IngredientCommand;
+import zatribune.spring.cookmaster.commands.NotesCommand;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.*;
 
@@ -10,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RecipeToRecipeCommandTest {
 
     private RecipeToRecipeCommand recipeToRecipeCommandConverter;
-    private final Long idRecipe=14L;
+    private final String idRecipe="0x555555";
     private final String title="a dummy recipe title";
     private final Integer prepTime=10;
     private final Integer cookTime=20;
@@ -22,15 +25,14 @@ class RecipeToRecipeCommandTest {
     private final String image="a dummy recipe image";
     private Notes notes;
     private final String descriptionNotes="a dummy notes description";
-    private final Long idNotes=66L;
+    private final String idNotes="0x444444";
     private Category category;
-    private final Long idCategory=33L;
+    private final String idCategory="0x333333";
     private final String descriptionCategory="a dummy Category description";
     private Ingredient ingredient1;
     private Ingredient ingredient2;
-    private final Long idIngredient1=77L;
-    private final Long idIngredient2=78L;
-
+    private final String idIngredient1="0x777777";
+    private final String idIngredient2="0x999999";
     @BeforeEach
     void setUp() {
         recipeToRecipeCommandConverter =new RecipeToRecipeCommand(

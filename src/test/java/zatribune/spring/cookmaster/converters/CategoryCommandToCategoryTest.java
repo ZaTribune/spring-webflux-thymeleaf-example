@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CategoryCommandToCategoryTest {
 
     private CategoryCommandToCategory converter;
-    private final Long id=15L;
+    private final String id="0x875454";
     private final String description="a dummy category description";
 
     @BeforeEach

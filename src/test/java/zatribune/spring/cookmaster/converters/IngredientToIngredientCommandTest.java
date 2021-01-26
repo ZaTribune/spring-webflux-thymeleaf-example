@@ -15,12 +15,12 @@ class IngredientToIngredientCommandTest {
     private IngredientToIngredientCommand ingredientToIngredientCommandConverter;
 
     private Ingredient ingredient;
-    private final Long idIngredient=77L;
     private final String descriptionIngredient ="a dummy ingredient description";
     private final BigDecimal amount=BigDecimal.valueOf(20);
     private UnitMeasure unitMeasure;
-    private final Long idUnitMeasure=44L;
+    private final String idUnitMeasure="0x844454";
     private final String descriptionUnitMeasure="a dummy unit measure description";
+    private final String idIngredient="0x899994";
 
     @BeforeEach
     void setUp() {

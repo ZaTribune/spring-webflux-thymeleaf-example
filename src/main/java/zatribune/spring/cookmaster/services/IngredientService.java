@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface IngredientService {
-   Optional<Ingredient> getIngredientById(Long id);
+   Optional<Ingredient> getIngredientById(String id);
    Set<Ingredient>getIngredientsByRecipe(Recipe recipe);
    void deleteIngredient(Ingredient ingredient);
-   void deleteIngredientById(Long id);
+   void deleteIngredientById(String id);
 }

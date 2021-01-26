@@ -51,15 +51,14 @@ class CategoryServiceImplTest {
     @Test
     void getCategoryById() {
         Category category1=new Category();
-        Long id=15L;
+        String id="0x456456";
         category1.setId(id);
         category1.setDescription("Russian");
-        Optional<Category>optionalCategory=Optional.of(category1);
 
-        when(categoryService.getCategoryById(id)).thenReturn(optionalCategory);
-        Optional<Category>returnedCategory=categoryService.getCategoryById(id);
+        when(categoryRepository.findById(id)).thenReturn(Optional.of(category1));
+        Category returnedCategory=categoryService.getCategoryById(id);
 
-        returnedCategory.ifPresent(c->assertEquals(category1,c));
+        assertEquals(category1,returnedCategory);
         verify(categoryRepository,times(1)).findById(id);
         verify(categoryRepository,never()).findAll();
 

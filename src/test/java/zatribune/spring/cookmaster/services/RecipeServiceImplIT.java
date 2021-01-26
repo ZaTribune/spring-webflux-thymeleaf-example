@@ -74,27 +74,25 @@ public class RecipeServiceImplIT {
 
         assertNotNull(returnedRecipeCommand.getNotes());
         assertEquals(notes.getDescription(), returnedRecipeCommand.getNotes().getDescription());
-
-
     }
 
     @Test
     void deleteRecipe() {
         //todo:check
-        Recipe recipe = recipeService.getRecipeById(1L);
+        Recipe recipe = recipeService.getRecipeById("0x456456");
         assertNotNull(recipe);
         recipeService.deleteRecipe(recipe);
-        Exception exception=assertThrows(MyNotFoundException.class,()->recipeService.getRecipeById(1L));
+        Exception exception=assertThrows(MyNotFoundException.class,()->recipeService.getRecipeById("0x456456"));
         // just an extra part for checking nothing more.
         assertTrue(exception.getMessage().contains("Recipe Not Found"));
     }
 
     @Test
     void deleteRecipeById() {
-        Recipe recipe = recipeService.getRecipeById(1L);
+        Recipe recipe = recipeService.getRecipeById("0x456456");
         assertNotNull(recipe);
-        recipeService.deleteRecipeById(1L);
-        Exception exception=assertThrows(MyNotFoundException.class,()->recipeService.getRecipeById(1L));
+        recipeService.deleteRecipeById("0x456456");
+        Exception exception=assertThrows(MyNotFoundException.class,()->recipeService.getRecipeById("0x456456"));
         // just an extra part for checking nothing more.
         assertTrue(exception.getMessage().contains("Recipe Not Found"));
     }

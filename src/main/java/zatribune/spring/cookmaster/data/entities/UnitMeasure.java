@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class UnitMeasure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String description;
 
     public UnitMeasure(String description) {

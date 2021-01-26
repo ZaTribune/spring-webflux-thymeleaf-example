@@ -8,16 +8,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class CategoryTest {
 
     Category category;
+    String id;
 
     @BeforeEach
     void setUp() {
+        id="0x456897";
         category=new Category();
-        category.setId(44L);
+        category.setId(id);
     }
 
     @Test
     void getId() {
-        Long id=44L;
         assertEquals(id,category.getId());
     }
 

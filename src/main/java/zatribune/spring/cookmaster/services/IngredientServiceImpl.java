@@ -22,7 +22,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Optional<Ingredient> getIngredientById(Long id) {
+    public Optional<Ingredient> getIngredientById(String id) {
         return repository.findById(id);
     }
 
@@ -38,7 +38,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteIngredientById(Long id) {
+    public void deleteIngredientById(String id) {
           repository.deleteById(id);
     }
 }

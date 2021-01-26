@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import zatribune.spring.cookmaster.data.entities.Category;
 import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
+import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void saveImageFile(Long id, MultipartFile file) {
+    public void saveImageFile(String id, MultipartFile file) {
             log.info("received an Image file: " + file.getResource().getFilename());
             Optional<Category> optionalCategory= categoryRepository.findById(id);
             optionalCategory.ifPresent(category -> {
@@ -39,5 +40,6 @@ public class ImageServiceImpl implements ImageService {
                     e.printStackTrace();
                 }
             });
+
     }
 }

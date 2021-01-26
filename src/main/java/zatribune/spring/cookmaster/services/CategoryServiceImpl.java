@@ -6,6 +6,7 @@ import zatribune.spring.cookmaster.commands.CategoryCommand;
 import zatribune.spring.cookmaster.converters.CategoryToCategoryCommand;
 import zatribune.spring.cookmaster.data.entities.Category;
 import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
+import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 
 import java.util.Optional;
 import java.util.Set;
@@ -31,19 +32,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Optional<Category> getCategoryById(Long id) {
-        return repository.findById(id);
+    public Category getCategoryById(String id) {
+        //System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        Optional<Category>optionalCategory=repository.findById(id);
+        if (optionalCategory.isEmpty()){
+            throw new MyNotFoundException("Category not found for id value: "+id);
+        }
+        return optionalCategory.get();
     }
 
     @Override
-    public CategoryCommand getCategoryCommandById(Long id) {
-        Optional<Category>optionalCategory=getCategoryById(id);
-        /*
-        if (optionalCategory.isPresent()){
-            return categoryToCategoryCommand.convert(optionalCategory.get());
-        }
-        return null;
-        */
-        return optionalCategory.map(categoryToCategoryCommand::convert).orElse(null);
+    public CategoryCommand getCategoryCommandById(String id) {
+        return categoryToCategoryCommand.convert(getCategoryById(id));
     }
 }

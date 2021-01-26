@@ -55,9 +55,9 @@ public class CategoriesController {
     }
 
     @RequestMapping("/showCategory/{id}")
-    public String showCategory(@PathVariable String id, Model model) throws NumberFormatException{
-        Optional<Category> optionalCategory = categoryService.getCategoryById(Long.valueOf(id));
-        optionalCategory.ifPresent(category -> model.addAttribute("category", category));
+    public String showCategory(@PathVariable String id, Model model){
+        Category category = categoryService.getCategoryById(id);
+        model.addAttribute("category", category);
         return "categories/showCategory";
     }
 

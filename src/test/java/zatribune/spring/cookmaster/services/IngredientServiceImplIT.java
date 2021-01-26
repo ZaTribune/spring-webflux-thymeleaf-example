@@ -25,7 +25,7 @@ class IngredientServiceImplIT {
 
     @Test
     void getIngredientById() {
-        Long id=1L;
+        String id="0x456456";
         Optional<Ingredient>ingredient=ingredientService.getIngredientById(id);
         assertFalse(ingredient.isEmpty());// = assertTrue(ingredient.isPresent());
         ingredient.ifPresent(ing->assertEquals(id,ingredient.get().getId()));
@@ -35,7 +35,7 @@ class IngredientServiceImplIT {
     @Test
     void getIngredientsByRecipe() {
         //the first two has no ingredients
-        Long recipeId=3L;
+        String recipeId="0x456456";
         Set<Ingredient>ingredientSet=ingredientService.getIngredientsByRecipe(new Recipe(recipeId));
         assertFalse(ingredientSet.isEmpty());
     }

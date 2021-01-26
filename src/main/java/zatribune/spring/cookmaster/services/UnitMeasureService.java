@@ -6,9 +6,9 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface UnitMeasureService {
-    Optional<UnitMeasure>getUnitMeasureById(Long id);
+    Optional<UnitMeasure>getUnitMeasureById(String id);
     UnitMeasure saveOrUpdate(UnitMeasure unitMeasure);
     void delete(UnitMeasure unitMeasure);
-    void deleteById(Long id);
+    void deleteById(String id);
     Set<UnitMeasure> getAllUnitMeasures();
 }

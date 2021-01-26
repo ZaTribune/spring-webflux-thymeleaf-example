@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RecipeCommandToRecipeTest {
     private RecipeCommandToRecipe recipeCommandToRecipeConverter;
-    private final Long idRecipe=14L;
+    private final String idRecipe="0x555555";
     private final String title="a dummy recipe title";
     private final Integer prepTime=10;
     private final Integer cookTime=20;
@@ -27,14 +27,14 @@ class RecipeCommandToRecipeTest {
     private final String image="a dummy recipe image";
     private NotesCommand notes;
     private final String descriptionNotes="a dummy notes description";
-    private final Long idNotes=66L;
+    private final String idNotes="0x444444";
     private CategoryCommand category;
-    private final Long idCategory=33L;
+    private final String idCategory="0x333333";
     private final String descriptionCategory="a dummy Category description";
     private IngredientCommand ingredient1;
     private IngredientCommand ingredient2;
-    private final Long idIngredient1=77L;
-    private final Long idIngredient2=78L;
+    private final String idIngredient1="0x777777";
+    private final String idIngredient2="0x999999";
 
     @BeforeEach
     void setUp() {

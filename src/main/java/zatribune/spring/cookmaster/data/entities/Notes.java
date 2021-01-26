@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Notes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     @OneToOne
     private Recipe recipe;
     @Lob

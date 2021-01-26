@@ -8,6 +8,6 @@ import java.util.Set;
 
 public interface CategoryService {
     Set<Category> getAllCategories();
-    Optional<Category>getCategoryById(Long id);
-    CategoryCommand getCategoryCommandById(Long id);
+    Category getCategoryById(String id);
+    CategoryCommand getCategoryCommandById(String id);
 }

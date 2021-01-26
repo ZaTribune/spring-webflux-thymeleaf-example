@@ -6,8 +6,6 @@ import zatribune.spring.cookmaster.data.entities.Recipe;
 
 import java.util.Optional;
 
-public interface IngredientRepository extends CrudRepository<Ingredient,Long> {
-    Optional<Ingredient> findById(Long id);
-    void deleteById(Long id);
+public interface IngredientRepository extends CrudRepository<Ingredient,String> {
     Iterable<Ingredient> findAllByRecipe(Recipe recipe);
 }

@@ -36,7 +36,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe getRecipeById(Long id) {
+    public Recipe getRecipeById(String id) {
         Optional<Recipe>optionalRecipe=recipeRepository.findById(id);
         if (optionalRecipe.isEmpty()){
             throw new MyNotFoundException("Recipe not found for id value: "+id);
@@ -50,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe = converter.convert(recipeCommand);
         System.out.println(recipeCommand.getIngredients());
         if (recipe != null) {
-            Long id =recipeRepository.save(recipe).getId();
+            String id =recipeRepository.save(recipe).getId();
             log.debug("returned recipe id = {}",id);
             log.info("returned recipe id = {}",id);
             recipeCommand.setId(id);
@@ -64,7 +64,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void deleteRecipeById(Long id) {
+    public void deleteRecipeById(String id) {
         recipeRepository.deleteById(id);
     }
 }

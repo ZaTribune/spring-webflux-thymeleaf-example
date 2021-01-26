@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -11,18 +12,16 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import zatribune.spring.cookmaster.commands.CategoryCommand;
+import zatribune.spring.cookmaster.converters.CategoryToCategoryCommand;
 import zatribune.spring.cookmaster.data.entities.Category;
 import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
-import zatribune.spring.cookmaster.services.CategoryService;
+import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 import zatribune.spring.cookmaster.services.CategoryServiceImpl;
-import zatribune.spring.cookmaster.services.ImageService;
 import zatribune.spring.cookmaster.services.ImageServiceImpl;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -34,22 +33,24 @@ class ImageControllerTest {
 
     ImageController controller;
 
-    @Mock
-    ImageService imageService;
-    @Mock
-    CategoryService categoryService;
+    @InjectMocks
+    ImageServiceImpl imageService;//the image service will be injected with the category service
+    @InjectMocks
+    CategoryServiceImpl categoryService;//the categoryService will be injected with the repository
     @Mock
     CategoryRepository categoryRepository;
+    @Mock
+    CategoryToCategoryCommand categoryToCategoryCommand;
 
     MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         controller = new ImageController(imageService,categoryService);
+
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
-        imageService=new ImageServiceImpl(categoryRepository);
     }
 
     @Test
@@ -65,7 +66,7 @@ class ImageControllerTest {
 
 
 
-        Long id=15L;
+        String id="0x875454";
         Category category=new Category();
         category.setId(id);
         category.setDescription("Atlasian");
@@ -87,29 +88,36 @@ class ImageControllerTest {
 
     @Test
     void showProductImageBadId()throws Exception{
-        mockMvc.perform(get("/category/mmm/image"))
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("errors/400"));
+        String id="zzzzzzz";
+        //when(categoryRepository.findById(id)).thenThrow(new MyNotFoundException());
+        mockMvc.perform(get("/category/"+id+"/image"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("errors/404"));
     }
 
     @Test
     void renderImageFromDB() throws Exception {
+        String id="0x875454";
+        String description="Atlasian";
+        Category category=new Category();
+        category.setId(id);
+        category.setDescription(description);
         CategoryCommand categoryCommand=new CategoryCommand();
-        Long id=15L;
         categoryCommand.setId(id);
-        categoryCommand.setDescription("Atlasian");
+        categoryCommand.setDescription(description);
         String fakeImageTxt="Dummy image txt";
         Byte[]wrapperBytes=new Byte[fakeImageTxt.getBytes().length];
         int i=0;
         for(byte b:fakeImageTxt.getBytes())
             wrapperBytes[i++]=b;
-
         categoryCommand.setImage(wrapperBytes);
-
+        category.setImage(wrapperBytes);
+        when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
         when(categoryService.getCategoryCommandById(id)).thenReturn(categoryCommand);
 
+        System.out.println(""+categoryRepository.findById(id));
         // if shown in a separate page
-        MockHttpServletResponse response=mockMvc.perform(get("/category/15/image"))
+        MockHttpServletResponse response=mockMvc.perform(get("/category/"+id+"/image"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
 

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class NotesCommandToNotesTest {
 
     private NotesCommandToNotes converter;
-    private final Long id=15L;
+    private final String id="0x122564";
     private final String description="a dummy notes description";
 
     @BeforeEach

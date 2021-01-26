@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 public class IngredientCommand {
-    Long id;
+    String id;
     String description;
     BigDecimal amount;
     UnitMeasureCommand unitMeasure;

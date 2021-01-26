@@ -11,7 +11,7 @@ class NotesToNotesCommandTest {
 
 
     private NotesToNotesCommand converter;
-    private final Long id=15L;
+    private final String id="0x278456";
     private final String description="a dummy notes description";
 
     @BeforeEach
