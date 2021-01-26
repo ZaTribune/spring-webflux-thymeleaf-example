@@ -42,7 +42,6 @@ class IngredientServiceImplIT {
         assertEquals(ing.getId(), ingredient.getId());
 
     }
-
     @Test
     void getIngredientsByRecipe() {
         //the first two has no ingredients
