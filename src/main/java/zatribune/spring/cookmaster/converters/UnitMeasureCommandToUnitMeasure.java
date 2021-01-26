@@ -3,6 +3,7 @@ package zatribune.spring.cookmaster.converters;
 
 import lombok.NonNull;
 import lombok.Synchronized;
+import org.bson.types.ObjectId;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -15,10 +16,11 @@ public class UnitMeasureCommandToUnitMeasure implements Converter<UnitMeasureCom
     @Synchronized//thread safe
     @Override
     public UnitMeasure convert(@Nullable UnitMeasureCommand source) {
-        if (source==null)
+        if (source == null)
             return null;
-        final UnitMeasure unitMeasure=new UnitMeasure();
-        unitMeasure.setId(source.getId());
+        final UnitMeasure unitMeasure = new UnitMeasure();
+        if (source.getId() != null)
+            unitMeasure.setId(new ObjectId(source.getId()));
         unitMeasure.setDescription(source.getDescription());
         return unitMeasure;
     }

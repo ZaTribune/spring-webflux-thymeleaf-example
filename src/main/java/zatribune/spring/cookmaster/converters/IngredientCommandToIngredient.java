@@ -1,6 +1,7 @@
 package zatribune.spring.cookmaster.converters;
 
 import lombok.Synchronized;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
@@ -22,10 +23,11 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
     @Synchronized
     @Override
     public Ingredient convert(@Nullable IngredientCommand source) {
-        if (source==null)
-        return null;
-        final Ingredient ingredient=new Ingredient();
-        ingredient.setId(source.getId());
+        if (source == null)
+            return null;
+        final Ingredient ingredient = new Ingredient();
+        if (source.getId() != null)
+            ingredient.setId(new ObjectId(source.getId()));
         ingredient.setAmount(source.getAmount());
         ingredient.setDescription(source.getDescription());
         ingredient.setUnitMeasure(unitMeasureConverter.convert(source.getUnitMeasure()));

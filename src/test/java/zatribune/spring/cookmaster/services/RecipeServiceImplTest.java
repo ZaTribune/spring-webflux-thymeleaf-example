@@ -1,6 +1,7 @@
 package zatribune.spring.cookmaster.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,14 +66,14 @@ class RecipeServiceImplTest {
     @Test
     public void getRecipeByIdTest(){
         Recipe recipe=new Recipe();
-        recipe.setId(idRecipe);
+        recipe.setId(new ObjectId(idRecipe));
 
         when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
 
         Recipe returnedRecipe=recipeService.getRecipeById(idRecipe);
 
         assertNotNull(returnedRecipe);
-        assertEquals(idRecipe, returnedRecipe.getId());
+        assertEquals(new ObjectId(idRecipe), returnedRecipe.getId());
 
         verify(recipeRepository,times(1)).findById(anyString());
         verify(recipeRepository,never()).findAll();

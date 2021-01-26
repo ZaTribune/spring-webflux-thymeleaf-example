@@ -50,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe recipe = converter.convert(recipeCommand);
         System.out.println(recipeCommand.getIngredients());
         if (recipe != null) {
-            String id =recipeRepository.save(recipe).getId();
+            String id =recipeRepository.save(recipe).getId().toString();
             log.debug("returned recipe id = {}",id);
             log.info("returned recipe id = {}",id);
             recipeCommand.setId(id);

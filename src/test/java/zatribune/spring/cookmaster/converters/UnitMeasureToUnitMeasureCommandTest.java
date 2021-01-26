@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.converters;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.cookmaster.commands.UnitMeasureCommand;
@@ -28,7 +29,7 @@ class UnitMeasureToUnitMeasureCommandTest {
     @Test
     void convert() {
         UnitMeasure unitMeasure=new UnitMeasure();
-        unitMeasure.setId(aLong);
+        unitMeasure.setId(new ObjectId(aLong));
         unitMeasure.setDescription(description);
 
         UnitMeasureCommand unitMeasureCommand=converter.convert(unitMeasure);

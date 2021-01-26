@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.services;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -52,7 +53,7 @@ class CategoryServiceImplTest {
     void getCategoryById() {
         Category category1=new Category();
         String id="0x456456";
-        category1.setId(id);
+        category1.setId(new ObjectId(id));
         category1.setDescription("Russian");
 
         when(categoryRepository.findById(id)).thenReturn(Optional.of(category1));

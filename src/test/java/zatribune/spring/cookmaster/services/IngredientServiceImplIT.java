@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.services;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ class IngredientServiceImplIT {
     void getIngredientsByRecipe() {
         //the first two has no ingredients
         String recipeId="0x456456";
-        Set<Ingredient>ingredientSet=ingredientService.getIngredientsByRecipe(new Recipe(recipeId));
+        Set<Ingredient>ingredientSet=ingredientService.getIngredientsByRecipe(new Recipe(new ObjectId(recipeId)));
         assertFalse(ingredientSet.isEmpty());
     }
 

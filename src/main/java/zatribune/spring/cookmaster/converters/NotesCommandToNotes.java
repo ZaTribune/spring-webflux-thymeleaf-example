@@ -1,6 +1,7 @@
 package zatribune.spring.cookmaster.converters;
 
 import lombok.Synchronized;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
@@ -18,7 +19,7 @@ public class NotesCommandToNotes implements Converter<NotesCommand, Notes> {
         if (source==null)
         return null;
         final Notes notes=new Notes();
-        notes.setId(source.getId());
+        notes.setId(new ObjectId(source.getId()));
         notes.setDescription(source.getDescription());
         return notes;
     }

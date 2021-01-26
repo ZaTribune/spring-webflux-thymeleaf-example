@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import zatribune.spring.cookmaster.data.entities.*;
@@ -19,13 +20,13 @@ import java.util.*;
 @Slf4j
 @Component
 @Profile("default")//only active with the default profile with h2 database
-public class H2Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
+public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
     private final RecipeRepository recipeRepository;
     private final CategoryRepository categoryRepository;
     private final UnitMeasureRepository unitMeasureRepository;
 
     @Autowired
-    public H2Bootstrap(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitMeasureRepository unitMeasureRepository) {
+    public DevBootstrap(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitMeasureRepository unitMeasureRepository) {
         log.debug("I'm at the Bootstrap phase");
         this.recipeRepository = recipeRepository;
         this.categoryRepository = categoryRepository;
@@ -33,29 +34,39 @@ public class H2Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+    public void onApplicationEvent(@NonNull ContextRefreshedEvent contextRefreshedEvent) {
         initData();
     }
 
     @Transactional
     void initData() {
         log.info("bootstrap data");
-        Optional<UnitMeasure> emptyUOM = unitMeasureRepository.findUnitOfMeasureByDescription("");
-        Optional<UnitMeasure> teaspoon = unitMeasureRepository.findUnitOfMeasureByDescription("teaspoon");
-        Optional<UnitMeasure> tablespoon = unitMeasureRepository.findUnitOfMeasureByDescription("tablespoon");
-        //Optional<UnitMeasure> cup = unitMeasureRepository.findUnitOfMeasureByDescription("cup");
-        //Optional<UnitMeasure> pinch = unitMeasureRepository.findUnitOfMeasureByDescription("pinch");
-        //Optional<UnitMeasure> ounce = unitMeasureRepository.findUnitOfMeasureByDescription("ounce");
-        //Optional<UnitMeasure> dash = unitMeasureRepository.findUnitOfMeasureByDescription("dash");
+        UnitMeasure emptyUOM=new UnitMeasure();
+        emptyUOM.setDescription("");
+        UnitMeasure teaspoon =new UnitMeasure();
+        teaspoon.setDescription("teaspoon");
+        UnitMeasure tablespoon =new UnitMeasure("tablespoon");
+        tablespoon.setDescription("tablespoon");
+        UnitMeasure cup =new UnitMeasure();
+        cup.setDescription("cup");
+        UnitMeasure pinch =new UnitMeasure();
+        pinch.setDescription("pinch");
+        UnitMeasure ounce =new UnitMeasure();
+        ounce.setDescription("ounce");
+        UnitMeasure dash =new UnitMeasure();
+        dash.setDescription("dash");
 
-        Optional<Category> american = categoryRepository.findCategoriesByDescription("American");
-        Optional<Category> italian = categoryRepository.findCategoriesByDescription("Italian");
-        Optional<Category> mexican = categoryRepository.findCategoriesByDescription("Mexican");
+        unitMeasureRepository.saveAll(Arrays.asList(emptyUOM,teaspoon,tablespoon,cup,pinch,ounce,dash));
+        Category american=new Category();
+        american.setDescription("American");
+        Category italian=new Category();
+        italian.setDescription("Italian");
+        Category mexican=new Category();
+        mexican.setDescription("Mexican");
         try {
-            byte[] usaBytes = H2Bootstrap.class.getResourceAsStream("/static/images/usa.png").readAllBytes();
-
-            byte[] italyBytes = H2Bootstrap.class.getResourceAsStream("/static/images/italy.png").readAllBytes();
-            byte[] mexicoBytes = H2Bootstrap.class.getResourceAsStream("/static/images/mexico.png").readAllBytes();
+            byte[] usaBytes = DevBootstrap.class.getResourceAsStream("/static/images/usa.png").readAllBytes();
+            byte[] italyBytes = DevBootstrap.class.getResourceAsStream("/static/images/italy.png").readAllBytes();
+            byte[] mexicoBytes = DevBootstrap.class.getResourceAsStream("/static/images/mexico.png").readAllBytes();
             Byte[] usaImage = new Byte[usaBytes.length];
             Byte[] italyImage = new Byte[italyBytes.length];
             Byte[] mexicoImage = new Byte[mexicoBytes.length];
@@ -69,18 +80,10 @@ public class H2Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
             for (byte b : mexicoBytes)
                 mexicoImage[i++] = b;
 
-            american.ifPresent(e -> {
-                e.setImage(usaImage);
-                categoryRepository.save(e);
-            });
-            italian.ifPresent(e -> {
-                e.setImage(italyImage);
-                categoryRepository.save(e);
-            });
-            mexican.ifPresent(e -> {
-                e.setImage(mexicoImage);
-                categoryRepository.save(e);
-            });
+            american.setImage(usaImage);
+            italian.setImage(italyImage);
+            mexican.setImage(mexicoImage);
+            categoryRepository.saveAll(Arrays.asList(american,italian,mexican));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,16 +93,17 @@ public class H2Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         recipe1.setTitle("Perfect Guacamole");
         recipe1.setPrepTime(10);
         recipe1.setCookTime(15);
-        recipe1.setNotes(new Notes("To slice open an avocado, cut it in half lengthwise with a sharp chef’s knife and twist apart the sides. One side will have the pit. To remove it, you can do one of two things:\n" +
+        Notes notes1=new Notes("To slice open an avocado, cut it in half lengthwise with a sharp chef’s knife and twist apart the sides. One side will have the pit. To remove it, you can do one of two things:\n" +
                 "\n" +
                 "    Method #1: Gently tap the pit with your chef’s knife so the knife gets wedged into the pit. Twist your knife slightly to dislodge the pit and lift to remove. If you use this method, first protect your hand with a thick kitchen towel before proceeding.\n" +
                 "    Method #2: Cut the side with the pit in half again, exposing more of the pit. Use your fingers or a spoon to remove the pit\n" +
                 "\n" +
-                "Once the pit is removed, just cut the avocado into chunks right inside the peel and use a spoon to scoop them out."));
+                "Once the pit is removed, just cut the avocado into chunks right inside the peel and use a spoon to scoop them out.");
+        recipe1.setNotes(notes1);
         recipe1.setDifficulty(Difficulty.EASY);
         HashSet<Category> recipe1Categories = new HashSet<>();
-        american.ifPresent(recipe1Categories::add);
-        italian.ifPresent(recipe1Categories::add);
+        recipe1Categories.add(american);
+        recipe1Categories.add(italian);
         recipe1.setCategories(recipe1Categories);
         recipe1.setServings(4);
 
@@ -107,43 +111,42 @@ public class H2Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         recipe2.setTitle("Grilled Chicken Tacos");
         recipe2.setPrepTime(20);
         recipe2.setCookTime(25);
-        recipe2.setNotes(new Notes("The ancho chiles I use in the marinade are named for their wide shape. They are large, have a deep reddish brown color when dried, and are mild in flavor with just a hint of heat. You can find ancho chile powder at any markets that sell Mexican ingredients, or online.\n" +
+        Notes notes2=new Notes("The ancho chiles I use in the marinade are named for their wide shape. They are large, have a deep reddish brown color when dried, and are mild in flavor with just a hint of heat. You can find ancho chile powder at any markets that sell Mexican ingredients, or online.\n" +
                 "\n" +
                 "I like to put all the toppings in little bowls on a big platter at the center of the table: avocados, radishes, tomatoes, red onions, wedges of lime, and a sour cream sauce. I add arugula, as well – this green isn’t traditional for tacos, but we always seem to have some in the fridge and I think it adds a nice green crunch to the tacos.\n" +
                 "\n" +
                 "Everyone can grab a warm tortilla from the pile and make their own tacos just they way they like them.\n" +
                 "\n" +
-                "You could also easily double or even triple this recipe for a larger party. A taco and a cold beer on a warm day? Now that’s living!"));
+                "You could also easily double or even triple this recipe for a larger party. A taco and a cold beer on a warm day? Now that’s living!");
+        recipe2.setNotes(notes2);
         recipe2.setDifficulty(Difficulty.MODERATE);
         HashSet<Category> recipe2Categories = new HashSet<>();
-        mexican.ifPresent(recipe2Categories::add);
+        recipe2Categories.add(mexican);
         recipe2.setCategories(recipe2Categories);
         recipe2.setServings(3);
+            recipe1.addIngredient(new Ingredient(BigDecimal.valueOf(2), emptyUOM, "ripe advocates"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(0.25), teaspoon, "salt"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), tablespoon, "fresh lime juice or lemon juice"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon, "of minced red onion or thinly sliced green onion"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM, "serrano chiles, stems and seeds removed, minced"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon, "cilantro (leaves and tender stems), finely chopped"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM, "freshly grated black peppe"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(0.5), emptyUOM, "ripe tomato, seeds and pulp removed, chopped"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(0), emptyUOM, "Red radishes or jicama, to garnish"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(0), emptyUOM, "Tortilla chips, to serve"));
 
-        if (emptyUOM.isPresent() && teaspoon.isPresent() && tablespoon.isPresent()) {
-            recipe1.addIngredient(new Ingredient(BigDecimal.valueOf(2), emptyUOM.get(), "ripe advocates"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(0.25), teaspoon.get(), "salt"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), tablespoon.get(), "fresh lime juice or lemon juice"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon.get(), "of minced red onion or thinly sliced green onion"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM.get(), "serrano chiles, stems and seeds removed, minced"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon.get(), "cilantro (leaves and tender stems), finely chopped"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM.get(), "freshly grated black peppe"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(0.5), emptyUOM.get(), "ripe tomato, seeds and pulp removed, chopped"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(0), emptyUOM.get(), "Red radishes or jicama, to garnish"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(0), emptyUOM.get(), "Tortilla chips, to serve"));
+            recipe2.addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon, "ancho chili powder"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon, "dried oregano"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon, "dried cumin"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon, "sugar"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(0.5), teaspoon, "salt"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM, "clove garlic, finely chopped"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), tablespoon, "finely grated orange zest"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(3), tablespoon, "fresh-squeezed orange juice"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon, "olive oil"))
+                    .addIngredient(new Ingredient(BigDecimal.valueOf(4), emptyUOM, "skinless, boneless chicken thighs "));
 
-            recipe2.addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon.get(), "ancho chili powder"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon.get(), "dried oregano"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon.get(), "dried cumin"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon.get(), "sugar"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(0.5), teaspoon.get(), "salt"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM.get(), "clove garlic, finely chopped"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(1), tablespoon.get(), "finely grated orange zest"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(3), tablespoon.get(), "fresh-squeezed orange juice"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon.get(), "olive oil"))
-                    .addIngredient(new Ingredient(BigDecimal.valueOf(4), emptyUOM.get(), "skinless, boneless chicken thighs "));
 
-        }
 
         recipe1.setDirections("1 Cut the avocado, remove flesh: Cut the avocados in half. Remove the pit. Score the inside of the avocado with a blunt knife and scoop out the flesh with a spoon. (See How to Cut and Peel an Avocado.) Place in a bowl.\n" +
                 "\n" +
@@ -173,10 +176,10 @@ public class H2Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
                 "You could also easily double or even triple this recipe for a larger party. A taco and a cold beer on a warm day? Now that’s living!\n");
 
         try {
-            byte[] bytes1 = H2Bootstrap.class.getResourceAsStream("/static/images/guacamole-perfect.jpg").readAllBytes();
+            byte[] bytes1 = DevBootstrap.class.getResourceAsStream("/static/images/guacamole-perfect.jpg").readAllBytes();
             String string1 = Base64.getEncoder().encodeToString(bytes1);
             recipe1.setImage("data:image/png;base64," + string1);
-            byte[] bytes2 = H2Bootstrap.class.getResourceAsStream("/static/images/spicy-grilled-chicken-tacos.jpg").readAllBytes();
+            byte[] bytes2 = DevBootstrap.class.getResourceAsStream("/static/images/spicy-grilled-chicken-tacos.jpg").readAllBytes();
             String string2 = Base64.getEncoder().encodeToString(bytes2);
             recipe2.setImage("data:image/png;base64," + string2);
         } catch (Exception e) {

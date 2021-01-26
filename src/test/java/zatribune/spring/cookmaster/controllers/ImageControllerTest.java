@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.controllers;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,7 +69,7 @@ class ImageControllerTest {
 
         String id="0x875454";
         Category category=new Category();
-        category.setId(id);
+        category.setId(new ObjectId(id));
         category.setDescription("Atlasian");
         Optional<Category>optionalCategory=Optional.of(category);
 
@@ -100,7 +101,7 @@ class ImageControllerTest {
         String id="0x875454";
         String description="Atlasian";
         Category category=new Category();
-        category.setId(id);
+        category.setId(new ObjectId(id));
         category.setDescription(description);
         CategoryCommand categoryCommand=new CategoryCommand();
         categoryCommand.setId(id);

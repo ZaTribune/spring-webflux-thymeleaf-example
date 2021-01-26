@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.data.entities;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ class CategoryTest {
     void setUp() {
         id="0x456897";
         category=new Category();
-        category.setId(id);
+        category.setId(new ObjectId(id));
     }
 
     @Test

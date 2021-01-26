@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.converters;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.cookmaster.commands.IngredientCommand;
@@ -41,11 +42,11 @@ class IngredientToIngredientCommandTest {
     @Test
     void convert() {
         ingredient =new Ingredient();
-        ingredient.setId(idIngredient);
+        ingredient.setId(new ObjectId(idIngredient));
         ingredient.setDescription(descriptionIngredient);
         ingredient.setAmount(amount);
         unitMeasure=new UnitMeasure();
-        unitMeasure.setId(idUnitMeasure);
+        unitMeasure.setId(new ObjectId(idUnitMeasure));
         unitMeasure.setDescription(descriptionUnitMeasure);
         ingredient.setUnitMeasure(unitMeasure);
 

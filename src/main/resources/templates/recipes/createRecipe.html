@@ -28,7 +28,7 @@
                         </div>
                         <div class="row">
                             <label class="m-1"><span th:text="#{recipe.prepTime}"></span>
-                                <input type="text" class="form-control w-25" id="inputPrepTime"
+                                <input type="number" class="form-control w-25" id="inputPrepTime"
                                        placeholder="minutes"
                                        th:field="*{prepTime}">
                             </label>
@@ -40,7 +40,7 @@
                         </div>
                         <div class="row">
                             <label class="m-1"><span th:text="#{recipe.cookTime}"></span>
-                                <input type="text" class="form-control w-25" id="inputCockTime"
+                                <input type="number" class="form-control w-25" id="inputCockTime"
                                        placeholder="minutes"
                                        th:field="*{cookTime}">
                             </label>
@@ -140,7 +140,8 @@
                                                th:value="${ing.amount}" aria-label=""></td>
                         <td class="p-0" style="vertical-align: middle">
                             <select class="ingredient-unitMeasure-id custom-select mr-sm-2" aria-label=""
-                                    th:field="*{ingredients[__${ingStat.index}__].unitMeasure.id}">
+                                    th:field="*{ingredients[__${ingStat.index}__].unitMeasure.id}"
+                                    onchange="selectUnitMeasure(this,this.parentElement.lastElementChild)"><!-- to pass the hidden field-->
                                 <!--       REMEMBER: compare using the ID -->
                                 <option
                                         th:each="unit,unitStat:${unitMeasures}"
@@ -148,6 +149,7 @@
                                         th:selected="(${ing.unitMeasure.id} == ${unit.id})">
                                 </option>
                             </select>
+                            <input type="hidden" class="ingredient-unitMeasure-description" th:name="'ingredients['+__${ingStat.index}__+'].unitMeasure.description'">
                         </td>
                         <td class="p-0">
                             <input class="ingredient-description"
@@ -186,6 +188,7 @@
         <div class="card">
             <div class="card-header"><h1 th:text="#{notes}"></h1></div>
             <div class="card-body">
+                <input type="hidden" th:field="*{notes.id}">
                     <textarea id="textareaNotes" class="form-control" onload="resizeTextarea(this.id)" aria-label=""
                               onkeyup="resizeTextarea(this.id)" th:field="*{notes.description}"></textarea>
                 <div class="invalid-feedback d-inline-block" th:if="${#fields.hasErrors('notes.description')}">
@@ -245,6 +248,10 @@
                 element.setAttribute("name", 'ingredients[' + index + '].unitMeasure.id');
                 element.setAttribute("id", 'ingredients' + index + '.unitMeasure.id');
             })
+            $('.' + 'ingredient-unitMeasure-description').each(function (index, element) {
+                element.setAttribute("name", 'ingredients[' + index + '].unitMeasure.description');
+                element.setAttribute("id", 'ingredients' + index + '.unitMeasure.description');
+            })
             $('.' + 'ingredient-description').each(function (index, element) {
                 element.setAttribute("name", 'ingredients[' + index + '].description');
                 element.setAttribute("id", 'ingredients' + index + '.description');
@@ -301,6 +308,10 @@
                 '<td class="p-0"><input name="ingredients[' + rowCount + '].description" ' +
                 'type="text"></td>' +
                 '</tr>')
+        }
+
+        function selectUnitMeasure(select,unitMeasureDescriptionField) {
+            unitMeasureDescriptionField.setAttribute('value',select.options[select.selectedIndex].text)
         }
 
         function closeAllLists() {

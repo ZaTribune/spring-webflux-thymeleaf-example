@@ -6,10 +6,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 import zatribune.spring.cookmaster.data.entities.Difficulty;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,9 +22,11 @@ public class RecipeCommand {
     private String title;
     @Min(1)
     @Max(999)
+    @NotNull
     private Integer prepTime;
     @Min(1)
     @Max(999)
+    @NotNull
     private Integer cookTime;
     @Min(1)
     @Max(100)

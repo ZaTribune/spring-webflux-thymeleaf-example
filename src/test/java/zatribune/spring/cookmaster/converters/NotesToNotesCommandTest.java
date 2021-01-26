@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.converters;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.cookmaster.commands.NotesCommand;
@@ -33,7 +34,7 @@ class NotesToNotesCommandTest {
     @Test
     void convert() {
         Notes input=new Notes();
-        input.setId(id);
+        input.setId(new ObjectId(id));
         input.setDescription(description);
 
         NotesCommand output=converter.convert(input);

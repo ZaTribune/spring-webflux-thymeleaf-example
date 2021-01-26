@@ -1,6 +1,7 @@
 package zatribune.spring.cookmaster.converters;
 
 import lombok.Synchronized;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
@@ -35,7 +36,7 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
         if (source == null)
             return null;
         final Recipe recipe = new Recipe();
-        recipe.setId(source.getId());
+        recipe.setId(new ObjectId(source.getId()));
         recipe.setTitle(source.getTitle());
         recipe.setCookTime(source.getCookTime());
         recipe.setPrepTime(source.getPrepTime());

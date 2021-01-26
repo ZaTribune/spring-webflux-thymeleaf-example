@@ -2,7 +2,6 @@ package zatribune.spring.cookmaster.controllers;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +13,6 @@ import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.services.RecipeService;
 import zatribune.spring.cookmaster.services.UnitMeasureService;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @Slf4j

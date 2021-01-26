@@ -1,25 +1,26 @@
 package zatribune.spring.cookmaster.data.entities;
 
 import lombok.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 
-@Data
-@EqualsAndHashCode(exclude = {"recipe"})
-@Entity
+@Getter
+@Setter
+@Document
+@NoArgsConstructor
 public class Notes {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-    @OneToOne
+    private ObjectId id;
+    @DBRef
     private Recipe recipe;
-    @Lob
     private String description;
 
-    public Notes() {
-    }
-
     public Notes(String description) {
+        //when inserted on the fly from a new recipe otherwise,it won't have an id
+        this.id=new ObjectId();
         this.description=description;
     }
 }

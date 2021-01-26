@@ -16,9 +16,9 @@ public class NotesToNotesCommand implements Converter<Notes, NotesCommand> {
     public NotesCommand convert(@Nullable Notes source) {
         if (source==null)
             return null;
-        final NotesCommand notes=new NotesCommand();
-        notes.setId(source.getId());
-        notes.setDescription(source.getDescription());
-        return notes;
+        final NotesCommand notesCommand=new NotesCommand();
+        notesCommand.setId(source.getId().toString());
+        notesCommand.setDescription(source.getDescription());
+        return notesCommand;
     }
 }

@@ -1,5 +1,6 @@
 package zatribune.spring.cookmaster.converters;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.cookmaster.commands.CategoryCommand;
@@ -55,7 +56,7 @@ class RecipeToRecipeCommandTest {
     @Test
     void convert() {
         Recipe recipe=new Recipe();
-        recipe.setId(idRecipe);
+        recipe.setId(new ObjectId(idRecipe));
         recipe.setTitle(title);
         recipe.setCookTime(cookTime);
         recipe.setPrepTime(prepTime);
@@ -68,17 +69,17 @@ class RecipeToRecipeCommandTest {
         recipe.setDifficulty(difficulty);
         recipe.setUrl(url);
         notes=new Notes();
-        notes.setId(idNotes);
+        notes.setId(new ObjectId(idNotes));
         notes.setDescription(descriptionNotes);
         recipe.setNotes(notes);
         category=new Category();
-        category.setId(idCategory);
+        category.setId(new ObjectId(idCategory));
         category.setDescription(descriptionCategory);
         recipe.getCategories().add(category);
         ingredient1=new Ingredient();
-        ingredient1.setId(idIngredient1);
+        ingredient1.setId(new ObjectId(idIngredient1));
         ingredient2=new Ingredient();
-        ingredient2.setId(idIngredient2);
+        ingredient2.setId(new ObjectId(idIngredient2));
         recipe.addIngredient(ingredient1).addIngredient(ingredient2);
 
         RecipeCommand recipeCommand= recipeToRecipeCommandConverter.convert(recipe);
