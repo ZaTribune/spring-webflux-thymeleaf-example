@@ -67,17 +67,17 @@ class ImageControllerTest {
 
 
 
-        String id="0x875454";
+        ObjectId id=new ObjectId();
         Category category=new Category();
-        category.setId(new ObjectId(id));
+        category.setId(id);
         category.setDescription("Atlasian");
         Optional<Category>optionalCategory=Optional.of(category);
 
         //because it needs an existing category entity
-        when(categoryRepository.findById(id)).thenReturn(optionalCategory);
+        when(categoryRepository.findById(id.toString())).thenReturn(optionalCategory);
         ArgumentCaptor<Category>captor=ArgumentCaptor.forClass(Category.class);
         //when
-        imageService.saveImageFile(id,multipartFile);
+        imageService.saveImageFile(id.toString(),multipartFile);
 
         //verify(imageService,times(1)).saveImageFile(anyLong(),any());
         verify(categoryRepository,times(1)).save(captor.capture());
@@ -89,7 +89,7 @@ class ImageControllerTest {
 
     @Test
     void showProductImageBadId()throws Exception{
-        String id="zzzzzzz";
+        ObjectId id=new ObjectId();
         //when(categoryRepository.findById(id)).thenThrow(new MyNotFoundException());
         mockMvc.perform(get("/category/"+id+"/image"))
                 .andExpect(status().isNotFound())
@@ -98,13 +98,13 @@ class ImageControllerTest {
 
     @Test
     void renderImageFromDB() throws Exception {
-        String id="0x875454";
+        ObjectId id=new ObjectId();
         String description="Atlasian";
         Category category=new Category();
-        category.setId(new ObjectId(id));
+        category.setId(id);
         category.setDescription(description);
         CategoryCommand categoryCommand=new CategoryCommand();
-        categoryCommand.setId(id);
+        categoryCommand.setId(id.toString());
         categoryCommand.setDescription(description);
         String fakeImageTxt="Dummy image txt";
         Byte[]wrapperBytes=new Byte[fakeImageTxt.getBytes().length];
@@ -113,10 +113,10 @@ class ImageControllerTest {
             wrapperBytes[i++]=b;
         categoryCommand.setImage(wrapperBytes);
         category.setImage(wrapperBytes);
-        when(categoryRepository.findById(id)).thenReturn(Optional.of(category));
-        when(categoryService.getCategoryCommandById(id)).thenReturn(categoryCommand);
+        when(categoryRepository.findById(id.toString())).thenReturn(Optional.of(category));
+        when(categoryService.getCategoryCommandById(id.toString())).thenReturn(categoryCommand);
 
-        System.out.println(""+categoryRepository.findById(id));
+        System.out.println(""+categoryRepository.findById(id.toString()));
         // if shown in a separate page
         MockHttpServletResponse response=mockMvc.perform(get("/category/"+id+"/image"))
                 .andExpect(status().isOk())

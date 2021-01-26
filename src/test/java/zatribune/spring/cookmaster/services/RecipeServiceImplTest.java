@@ -33,14 +33,14 @@ class RecipeServiceImplTest {
     @Mock
     RecipeCommandToRecipe recipeCommandToRecipe;
 
-    private String idRecipe;
+    private ObjectId idRecipe;
     private String title;
 
     //we're using it to test business logic inside service layer
 
     @BeforeEach
     public void setUp() {
-        idRecipe="0x456456";
+        idRecipe=new ObjectId();
         title="a dummy recipe title";
     }
 
@@ -66,14 +66,14 @@ class RecipeServiceImplTest {
     @Test
     public void getRecipeByIdTest(){
         Recipe recipe=new Recipe();
-        recipe.setId(new ObjectId(idRecipe));
+        recipe.setId(idRecipe);
 
         when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
 
-        Recipe returnedRecipe=recipeService.getRecipeById(idRecipe);
+        Recipe returnedRecipe=recipeService.getRecipeById(idRecipe.toString());
 
         assertNotNull(returnedRecipe);
-        assertEquals(new ObjectId(idRecipe), returnedRecipe.getId());
+        assertEquals(idRecipe, returnedRecipe.getId());
 
         verify(recipeRepository,times(1)).findById(anyString());
         verify(recipeRepository,never()).findAll();
@@ -83,9 +83,7 @@ class RecipeServiceImplTest {
     public void getRecipeByIdNotFound(){
         Optional<Recipe> recipeOptional = Optional.empty();
         when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
-        Exception exception = assertThrows(MyNotFoundException.class, () -> {
-            recipeService.getRecipeById("0x456456");
-        });
+        Exception exception = assertThrows(MyNotFoundException.class, () -> recipeService.getRecipeById("0x456456"));
         assertTrue(exception.getMessage().contains("Recipe not found"));
     }
 

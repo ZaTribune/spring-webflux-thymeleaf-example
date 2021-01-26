@@ -9,13 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class CategoryTest {
 
     Category category;
-    String id;
+    ObjectId id;
 
     @BeforeEach
     void setUp() {
-        id="0x456897";
+        id=new ObjectId();
         category=new Category();
-        category.setId(new ObjectId(id));
+        category.setId(id);
     }
 
     @Test

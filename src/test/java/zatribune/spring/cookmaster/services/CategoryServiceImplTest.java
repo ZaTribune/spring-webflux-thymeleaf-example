@@ -52,15 +52,15 @@ class CategoryServiceImplTest {
     @Test
     void getCategoryById() {
         Category category1=new Category();
-        String id="0x456456";
-        category1.setId(new ObjectId(id));
+        ObjectId id=new ObjectId();
+        category1.setId(id);
         category1.setDescription("Russian");
 
-        when(categoryRepository.findById(id)).thenReturn(Optional.of(category1));
-        Category returnedCategory=categoryService.getCategoryById(id);
+        when(categoryRepository.findById(id.toString())).thenReturn(Optional.of(category1));
+        Category returnedCategory=categoryService.getCategoryById(id.toString());
 
         assertEquals(category1,returnedCategory);
-        verify(categoryRepository,times(1)).findById(id);
+        verify(categoryRepository,times(1)).findById(id.toString());
         verify(categoryRepository,never()).findAll();
 
     }
