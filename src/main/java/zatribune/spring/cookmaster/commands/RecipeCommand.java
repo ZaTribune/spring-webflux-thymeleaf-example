@@ -42,4 +42,5 @@ public class RecipeCommand {
     private List<IngredientCommand> ingredients=new ArrayList<>();
     // because sets can't be indexed-->problems in http requests & parameters
     private List<CategoryCommand> categories=new ArrayList<>();
+    private List<UnitMeasureCommand>unitMeasures=new ArrayList<>();
 }

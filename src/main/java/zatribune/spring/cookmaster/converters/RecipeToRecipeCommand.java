@@ -3,13 +3,10 @@ package zatribune.spring.cookmaster.converters;
 import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Recipe;
-
-import java.util.Base64;
 import java.util.Objects;
 
 @Component
@@ -29,9 +26,8 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
 
     @Synchronized
     @Override
-    public RecipeCommand convert(@Nullable Recipe source) {
-        if (source == null)
-            return null;
+    public @NonNull
+    RecipeCommand convert(Recipe source) {
         final RecipeCommand recipeCommand = new RecipeCommand();
         if (source.getId() != null)
             recipeCommand.setId(source.getId().toString());

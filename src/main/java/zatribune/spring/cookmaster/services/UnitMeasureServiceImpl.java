@@ -2,47 +2,25 @@ package zatribune.spring.cookmaster.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import zatribune.spring.cookmaster.data.entities.UnitMeasure;
-import zatribune.spring.cookmaster.data.repositories.UnitMeasureRepository;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import reactor.core.publisher.Flux;
+import zatribune.spring.cookmaster.commands.UnitMeasureCommand;
+import zatribune.spring.cookmaster.converters.UnitMeasureToUnitMeasureCommand;
+import zatribune.spring.cookmaster.data.repositories.UnitMeasureReactiveRepository;
 
 @Service
 public class UnitMeasureServiceImpl implements UnitMeasureService {
 
-    private final UnitMeasureRepository repository;
+    private final UnitMeasureReactiveRepository repository;
+    private final UnitMeasureToUnitMeasureCommand converter;
 
     @Autowired
-    public UnitMeasureServiceImpl(UnitMeasureRepository repository) {
+    public UnitMeasureServiceImpl(UnitMeasureReactiveRepository repository,UnitMeasureToUnitMeasureCommand converter) {
         this.repository = repository;
+        this.converter=converter;
     }
 
     @Override
-    public Optional<UnitMeasure> getUnitMeasureById(String id) {
-        return repository.findById(id);
-    }
-
-    @Override
-    public UnitMeasure saveOrUpdate(UnitMeasure unitMeasure) {
-        return repository.save(unitMeasure);
-    }
-
-    @Override
-    public void delete(UnitMeasure unitMeasure) {
-        repository.delete(unitMeasure);
-    }
-
-    @Override
-    public void deleteById(String id) {
-       repository.deleteById(id);
-    }
-
-    @Override
-    public Set<UnitMeasure> getAllUnitMeasures() {
-        return StreamSupport.stream(repository.findAll().spliterator(),false)
-                .collect(Collectors.toSet());
+    public Flux<UnitMeasureCommand> getAllUnitMeasures() {
+        return repository.findAll().map(converter::convert);
     }
 }

@@ -6,6 +6,15 @@
           id="createRecipeForm"
           method="POST"
           class="justify-content-center">
+        <!-- to fix ingredient.unitMeasure options removed when validation errors happen-->
+        <div class="d-none" >
+            <input type="hidden" th:each="unit,stat:*{unitMeasures}"
+                   th:name="'unitMeasures['+__${stat.index}__+'].id'"
+                   th:value="*{unitMeasures[__${stat.index}__].id}">
+            <input type="hidden" th:each="unit,stat:*{unitMeasures}"
+                   th:name="'unitMeasures['+__${stat.index}__+'].description'"
+                   th:value="*{unitMeasures[__${stat.index}__].description}">
+        </div>
         <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger m-0">
             <p>Please, correct errors below.</p>
         </div>
@@ -79,8 +88,8 @@
                                                          list="categoriesListContainer"
                                                          onkeyup="$('#categoriesListContainer').load('/listCategories'+'?s='+this.value)">
                                 </label>
-                                <datalist id="categoriesListContainer" class="autocomplete-items list-group w-25">
-                                </datalist>
+                                <div id="categoriesListContainer" class="autocomplete-items list-group w-25">
+                                </div>
                             </div>
                             <div id="selectedCategories" class="col-lg-8 col-md-8 p-0 list-group mt-1">
                                 <a class="list-group-item d-flex justify-content-between p-1 align-items-center text-dark"
@@ -141,15 +150,16 @@
                         <td class="p-0" style="vertical-align: middle">
                             <select class="ingredient-unitMeasure-id custom-select mr-sm-2" aria-label=""
                                     th:field="*{ingredients[__${ingStat.index}__].unitMeasure.id}"
-                                    onchange="selectUnitMeasure(this,this.parentElement.lastElementChild)"><!-- to pass the hidden field-->
+                                    onchange="selectUnitMeasure(this,this.parentElement.lastElementChild)" required><!-- to pass the hidden field-->
                                 <!--       REMEMBER: compare using the ID -->
                                 <option
-                                        th:each="unit,unitStat:${unitMeasures}"
+                                        th:each="unit,unitStat:*{unitMeasures}"
                                         th:value="${unit.id}" th:text="${unit.description}"
                                         th:selected="(${ing.unitMeasure.id} == ${unit.id})">
                                 </option>
                             </select>
-                            <input type="hidden" class="ingredient-unitMeasure-description" th:name="'ingredients['+__${ingStat.index}__+'].unitMeasure.description'">
+                            <input type="hidden" class="ingredient-unitMeasure-description"
+                                   th:name="'ingredients['+__${ingStat.index}__+'].unitMeasure.description'">
                         </td>
                         <td class="p-0">
                             <input class="ingredient-description"
@@ -282,7 +292,7 @@
 
         function insertIngredient() {
             /*<![CDATA[*/
-            let unitMeasures = /*[[${unitMeasures}]]*/'default';
+            let unitMeasures = /*[[${recipe.unitMeasures}]]*/'default';
             //returned object is like: [object Object],[object Object],[object Object]
             /*]]>*/
             let select = document.createElement("select");// Create with DOM
@@ -297,6 +307,7 @@
             select.setAttribute('class', "custom-select mr-sm-2")
             select.setAttribute('name', "ingredients[" + rowCount + "].unitMeasure.id")
             select.setAttribute('value', "ingredients[" + rowCount + "].unitMeasure.id")
+            select.setAttribute('onchange',"selectUnitMeasure(this,this.parentElement.lastElementChild)")
             table.append('<tr>' +
                 '<td class="p-0" style="vertical-align: middle"><input class="form-check-input me-1" type="checkbox">' +
                 '<input type="hidden" name="ingredients[' + rowCount + '].id">' +
@@ -304,9 +315,12 @@
                 '<td class="p-0"><input name="ingredients[' + rowCount + '].amount"></td>' +
                 '<td class="p-0" style="vertical-align: middle">' +
                 select.outerHTML +
+                '<input type="hidden" class="ingredient-unitMeasure-description" '+
+                'name="ingredients['+rowCount+'].unitMeasure.description">'+
                 '</td>' +
                 '<td class="p-0"><input name="ingredients[' + rowCount + '].description" ' +
-                'type="text"></td>' +
+                'type="text">' +
+                '</td>' +
                 '</tr>')
         }
 
@@ -337,6 +351,13 @@
                     .attr('value', element.getAttribute('data-category-description'))
                     .appendTo('#createRecipeForm');
             });
+            /*<![CDATA[*/
+            let unitMeasures = /*[[${recipe.unitMeasures}]]*/'default';
+            //returned object is like: [object Object],[object Object],[object Object]
+            /*]]>*/
+            $('.' + 'ingredient-unitMeasure-description').each(function (index, element) {
+                element.setAttribute("value", unitMeasures[element.previousElementSibling.selectedIndex]["description"]);
+            })
             $.ajax(
                 {
                     //don't add contentType: false,processData: false,

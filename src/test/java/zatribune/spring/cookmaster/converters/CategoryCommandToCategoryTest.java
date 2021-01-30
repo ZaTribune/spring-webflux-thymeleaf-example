@@ -25,12 +25,6 @@ class CategoryCommandToCategoryTest {
     }
 
     @Test
-    void testNullObject(){
-        assertNull(converter.convert(null));
-    }
-
-
-    @Test
     void convert() {
         CategoryCommand source=new CategoryCommand();
         source.setId(new ObjectId().toString());

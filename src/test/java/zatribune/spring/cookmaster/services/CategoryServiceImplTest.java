@@ -3,23 +3,24 @@ package zatribune.spring.cookmaster.services;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import zatribune.spring.cookmaster.converters.CategoryToCategoryCommand;
 import zatribune.spring.cookmaster.data.entities.Category;
-import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
+import zatribune.spring.cookmaster.data.repositories.CategoryReactiveRepository;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CategoryServiceImplTest {
 
     @Mock
-    CategoryRepository categoryRepository;
+    CategoryReactiveRepository categoryRepository;
     @Mock
     CategoryToCategoryCommand categoryToCategoryCommand;
 
@@ -27,7 +28,6 @@ class CategoryServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);//don't forget
         categoryService=new CategoryServiceImpl(categoryRepository,categoryToCategoryCommand);
     }
 
@@ -37,13 +37,11 @@ class CategoryServiceImplTest {
         category1.setDescription("Egyptian");
         Category category2=new Category();
         category2.setDescription("Australian");
-        Set<Category>categories=new HashSet<>();
-        categories.add(category1);
-        categories.add(category2);
 
-        when(categoryService.getAllCategories()).thenReturn(categories);
+        when(categoryService.getAllCategories()).thenReturn(Flux.just(category1,category2));
 
-        Set<Category>returnedSet=categoryService.getAllCategories();
+        List<Category> returnedSet=categoryService.getAllCategories().collectList().block();
+        assertNotNull(returnedSet);
         assertEquals(2,returnedSet.size());
         verify(categoryRepository,times(1)).findAll();
 
@@ -56,8 +54,8 @@ class CategoryServiceImplTest {
         category1.setId(id);
         category1.setDescription("Russian");
 
-        when(categoryRepository.findById(id.toString())).thenReturn(Optional.of(category1));
-        Category returnedCategory=categoryService.getCategoryById(id.toString());
+        when(categoryRepository.findById(id.toString())).thenReturn(Mono.just(category1));
+        Category returnedCategory=categoryService.getCategoryById(id.toString()).block();
 
         assertEquals(category1,returnedCategory);
         verify(categoryRepository,times(1)).findById(id.toString());

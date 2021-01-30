@@ -1,14 +1,11 @@
 package zatribune.spring.cookmaster.services;
 
+import reactor.core.publisher.Mono;
+import zatribune.spring.cookmaster.commands.IngredientCommand;
 import zatribune.spring.cookmaster.data.entities.Ingredient;
-import zatribune.spring.cookmaster.data.entities.Recipe;
-
-import java.util.Optional;
-import java.util.Set;
 
 public interface IngredientService {
-   Ingredient getIngredientById(String id);
-   Set<Ingredient>getIngredientsByRecipe(Recipe recipe);
+   Mono<IngredientCommand> getIngredientById(String id);
    void deleteIngredient(Ingredient ingredient);
    void deleteIngredientById(String id);
 }

@@ -47,11 +47,6 @@ class RecipeCommandToRecipeTest {
     }
 
     @Test
-    void testNullObject(){
-        assertNull(recipeCommandToRecipeConverter.convert(null));
-    }
-
-    @Test
     void convert() {
         RecipeCommand recipeCommand=new RecipeCommand();
         recipeCommand.setId(new ObjectId().toString());

@@ -17,9 +17,4 @@ public class UnitMeasure {
     private ObjectId id;
     private String description;
 
-    public UnitMeasure(String description) {
-        //when inserted on the fly from a new recipe otherwise,it won't have an id
-        this.id=new ObjectId();
-        this.description=description;
-    }
 }

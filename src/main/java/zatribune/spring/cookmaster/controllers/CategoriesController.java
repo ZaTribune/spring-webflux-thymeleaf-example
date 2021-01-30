@@ -44,19 +44,19 @@ public class CategoriesController {
     @RequestMapping("/listCategories")
     public String listCategories(@RequestParam(required = false) String s, Model model) {
         log.info("listCategories: " + s);
-        Set<CategoryCommand> categories = categoryService.getAllCategories().stream()
+        List<CategoryCommand> categories = categoryService.getAllCategories()
                 .map(categoryToCategoryCommand::convert)
-                .limit(15)
+                .limitRate(15)
                 .filter(Objects::nonNull)
                 .filter(category -> category.getDescription().startsWith(s))
-                .collect(Collectors.toSet());
+                .collectList().block();
         model.addAttribute("categoriesSuggestions", categories);
         return "categories/listCategories";
     }
 
     @RequestMapping("/showCategory/{id}")
     public String showCategory(@PathVariable String id, Model model){
-        Category category = categoryService.getCategoryById(id);
+        Category category = categoryService.getCategoryById(id).block();
         model.addAttribute("category", category);
         return "categories/showCategory";
     }

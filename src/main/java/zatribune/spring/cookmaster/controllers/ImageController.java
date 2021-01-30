@@ -34,8 +34,8 @@ public class ImageController {
     public @ResponseBody
     String uploadImage(@PathVariable("id") String id,
                        @RequestParam("imageFile") MultipartFile multipartFile) {
-        log.info("xxxxx");
-        imageService.saveImageFile(id, multipartFile);
+        log.info("uploadImage() for category : {}",id);
+        imageService.saveImageFile(id, multipartFile).block();
         return "NICE!!";
     }
 
@@ -44,7 +44,8 @@ public class ImageController {
             throws IOException, MyNotFoundException {
         //you may also want to consider running a HEAD request on the URL and getting the real content type from that.
         //response.setContentType("image/jpeg"); // Or whatever format you wanna use
-        CategoryCommand categoryCommand = categoryService.getCategoryCommandById(id);
+        CategoryCommand categoryCommand = categoryService.getCategoryCommandById(id).block();
+        assert categoryCommand != null;
         if (categoryCommand.getImage() != null) {
             byte[] unboxedBytes = new byte[categoryCommand.getImage().length];
             int i = 0;

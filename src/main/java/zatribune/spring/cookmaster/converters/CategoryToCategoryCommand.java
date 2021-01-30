@@ -3,6 +3,7 @@ package zatribune.spring.cookmaster.converters;
 import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import zatribune.spring.cookmaster.commands.CategoryCommand;
@@ -13,9 +14,8 @@ public class CategoryToCategoryCommand implements Converter<Category, CategoryCo
 
     @Synchronized
     @Override
-    public CategoryCommand convert(@Nullable Category source) {
-        if (source == null)
-            return null;
+    public @NonNull
+    CategoryCommand convert(Category source) {
         final CategoryCommand categoryCommand = new CategoryCommand();
         if (source.getId() != null)
             categoryCommand.setId(source.getId().toString());

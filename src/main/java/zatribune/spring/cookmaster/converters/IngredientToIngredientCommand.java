@@ -3,6 +3,7 @@ package zatribune.spring.cookmaster.converters;
 import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import zatribune.spring.cookmaster.commands.IngredientCommand;
@@ -19,15 +20,15 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
 
     @Synchronized
     @Override
-    public IngredientCommand convert(@Nullable Ingredient source) {
-        if (source == null)
-            return null;
+    public @NonNull
+    IngredientCommand convert(Ingredient source) {
         final IngredientCommand ingredient = new IngredientCommand();
         if (source.getId() != null)
             ingredient.setId(source.getId().toString());
         ingredient.setAmount(source.getAmount());
         ingredient.setDescription(source.getDescription());
-        ingredient.setUnitMeasure(unitMeasureConverter.convert(source.getUnitMeasure()));
+        if (source.getUnitMeasure() != null)
+            ingredient.setUnitMeasure(unitMeasureConverter.convert(source.getUnitMeasure()));
         return ingredient;
     }
 }

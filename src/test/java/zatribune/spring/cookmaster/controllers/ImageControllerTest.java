@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,22 +13,18 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Mono;
 import zatribune.spring.cookmaster.commands.CategoryCommand;
-import zatribune.spring.cookmaster.converters.CategoryToCategoryCommand;
 import zatribune.spring.cookmaster.data.entities.Category;
-import zatribune.spring.cookmaster.data.repositories.CategoryRepository;
-import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
+import zatribune.spring.cookmaster.data.repositories.CategoryReactiveRepository;
 import zatribune.spring.cookmaster.services.CategoryServiceImpl;
 import zatribune.spring.cookmaster.services.ImageServiceImpl;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @ExtendWith(MockitoExtension.class)
 class ImageControllerTest {
@@ -35,15 +32,17 @@ class ImageControllerTest {
     ImageController controller;
 
     @InjectMocks
-    ImageServiceImpl imageService;//the image service will be injected with the category service
-    @InjectMocks
-    CategoryServiceImpl categoryService;//the categoryService will be injected with the repository
+    ImageServiceImpl imageService;//will be injected with the category service
     @Mock
-    CategoryRepository categoryRepository;
+    CategoryServiceImpl categoryService;//will be injected with the repository and the converter
     @Mock
-    CategoryToCategoryCommand categoryToCategoryCommand;
+    CategoryReactiveRepository categoryRepository;
+    @Captor
+    ArgumentCaptor<Category> captor;
 
     MockMvc mockMvc;
+    ObjectId id;
+    String description="Atlasian";
 
     @BeforeEach
     void setUp() {
@@ -52,57 +51,39 @@ class ImageControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new ControllerExceptionHandler())
                 .build();
+        id=new ObjectId();
     }
 
     @Test
-    void handleImagePost() throws Exception {
+    void uploadImage() throws Exception {
+
+        Category category=new Category();
+        category.setId(id);
+        category.setDescription("Atlasian");
+
         // name:-> the parameter name that's specified on the @RequestParameter
         MockMultipartFile multipartFile = new MockMultipartFile("imageFile",
                 "texting.txt",
                 "text/plain", "zatribune.spring".getBytes());
-        mockMvc.perform(multipart("/category/1/uploadImage").file(multipartFile))
+        //because it needs an existing category entity
+        when(categoryRepository.findById(id.toString())).thenReturn(Mono.just(category));
+        when(categoryRepository.save(any())).thenReturn(Mono.just(category));
+
+        mockMvc.perform(multipart("/category/"+id.toString()+"/uploadImage").file(multipartFile))
                 //.andExpect(status().is3xxRedirection()) // if there's a redirection
                 //.andExpect(header().string("Location","/category/1/show")) // if displayed on a separate page
                 .andExpect(status().isOk());
 
-
-
-        ObjectId id=new ObjectId();
-        Category category=new Category();
-        category.setId(id);
-        category.setDescription("Atlasian");
-        Optional<Category>optionalCategory=Optional.of(category);
-
-        //because it needs an existing category entity
-        when(categoryRepository.findById(id.toString())).thenReturn(optionalCategory);
-        ArgumentCaptor<Category>captor=ArgumentCaptor.forClass(Category.class);
-        //when
-        imageService.saveImageFile(id.toString(),multipartFile);
-
         //verify(imageService,times(1)).saveImageFile(anyLong(),any());
         verify(categoryRepository,times(1)).save(captor.capture());
-
+        verify(categoryRepository,times(1)).findById(anyString());
         Category returnedCategory=captor.getValue();
         assertEquals(multipartFile.getBytes().length,returnedCategory.getImage().length);
 
     }
 
     @Test
-    void showProductImageBadId()throws Exception{
-        ObjectId id=new ObjectId();
-        //when(categoryRepository.findById(id)).thenThrow(new MyNotFoundException());
-        mockMvc.perform(get("/category/"+id+"/image"))
-                .andExpect(status().isNotFound())
-                .andExpect(view().name("errors/404"));
-    }
-
-    @Test
-    void renderImageFromDB() throws Exception {
-        ObjectId id=new ObjectId();
-        String description="Atlasian";
-        Category category=new Category();
-        category.setId(id);
-        category.setDescription(description);
+    void showProductImage() throws Exception {
         CategoryCommand categoryCommand=new CategoryCommand();
         categoryCommand.setId(id.toString());
         categoryCommand.setDescription(description);
@@ -112,13 +93,10 @@ class ImageControllerTest {
         for(byte b:fakeImageTxt.getBytes())
             wrapperBytes[i++]=b;
         categoryCommand.setImage(wrapperBytes);
-        category.setImage(wrapperBytes);
-        when(categoryRepository.findById(id.toString())).thenReturn(Optional.of(category));
-        when(categoryService.getCategoryCommandById(id.toString())).thenReturn(categoryCommand);
 
-        System.out.println(""+categoryRepository.findById(id.toString()));
+        when(categoryService.getCategoryCommandById(id.toString())).thenReturn(Mono.just(categoryCommand));
         // if shown in a separate page
-        MockHttpServletResponse response=mockMvc.perform(get("/category/"+id+"/image"))
+        MockHttpServletResponse response=mockMvc.perform(get("/category/"+id.toString()+"/image"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
 

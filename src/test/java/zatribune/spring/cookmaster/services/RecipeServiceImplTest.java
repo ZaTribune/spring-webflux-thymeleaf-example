@@ -8,15 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.converters.RecipeCommandToRecipe;
+import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Recipe;
-import zatribune.spring.cookmaster.data.repositories.RecipeRepository;
-import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import zatribune.spring.cookmaster.data.repositories.RecipeReactiveRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,9 +27,12 @@ class RecipeServiceImplTest {
     @InjectMocks
     RecipeServiceImpl recipeService;
     @Mock
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeRepository;
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
     @Mock
     RecipeCommandToRecipe recipeCommandToRecipe;
+
 
     private ObjectId idRecipe;
     private String title;
@@ -47,18 +48,15 @@ class RecipeServiceImplTest {
 
     @Test
     public void getRecipes() {
-
         Recipe recipe = new Recipe();
+        recipe.setId(idRecipe);
         recipe.setTitle(title);
-        HashSet<Recipe> mockSet = new HashSet<>();
-        mockSet.add(recipe);
         //when the mock is asked to get this data -----> return this data
-        when(recipeService.getAllRecipes()).thenReturn(mockSet);
-
+        when(recipeService.getAllRecipes()).thenReturn(Flux.just(recipe));
         //ask for data
-        Set<Recipe> recipes = recipeService.getAllRecipes();
-        log.debug(""+recipes.iterator().next().getTitle());
-        assertEquals(recipes.size(), mockSet.size());
+        Flux<Recipe> recipes = recipeService.getAllRecipes();
+        assertNotNull(recipes);
+        assertEquals(1,recipes.count().block());
         //to verify it's called once
         verify(recipeRepository,times(1)).findAll();
 
@@ -68,9 +66,9 @@ class RecipeServiceImplTest {
         Recipe recipe=new Recipe();
         recipe.setId(idRecipe);
 
-        when(recipeRepository.findById(anyString())).thenReturn(Optional.of(recipe));
+        when(recipeService.getRecipeById(anyString())).thenReturn(Mono.just(recipe));
 
-        Recipe returnedRecipe=recipeService.getRecipeById(idRecipe.toString());
+        Recipe returnedRecipe=recipeService.getRecipeById(idRecipe.toString()).block();
 
         assertNotNull(returnedRecipe);
         assertEquals(idRecipe, returnedRecipe.getId());
@@ -80,11 +78,28 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    public void getRecipeByIdNotFound(){
-        Optional<Recipe> recipeOptional = Optional.empty();
-        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
-        Exception exception = assertThrows(MyNotFoundException.class, () -> recipeService.getRecipeById("0x456456"));
-        assertTrue(exception.getMessage().contains("Recipe not found"));
+    public void getRecipeCommandByIdTest(){
+        Recipe recipe=new Recipe();
+        recipe.setId(idRecipe);
+        when(recipeService.getRecipeById(anyString())).thenReturn(Mono.just(recipe));
+
+        RecipeCommand recipeCommand=new RecipeCommand();
+        recipeCommand.setId(idRecipe.toString());
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        RecipeCommand returnedRecipe=recipeService.getRecipeCommandById(idRecipe.toString()).block();
+
+        assertNotNull(returnedRecipe);
+        assertEquals(idRecipe.toString(), returnedRecipe.getId());
+
+        verify(recipeRepository,times(1)).findById(anyString());
+        verify(recipeRepository,never()).findAll();
+    }
+
+    @Test
+    void deleteRecipeByID(){
+        recipeService.deleteRecipeById(idRecipe.toString());
+        verify(recipeRepository,times(1)).deleteById(idRecipe.toString());
     }
 
 }

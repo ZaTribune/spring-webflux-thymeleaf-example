@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Recipe;
@@ -31,38 +32,39 @@ public class RecipesController {
     }
 
     @RequestMapping("/recipes")
-    public String getRecipesHomePage(Model model) {
+    public String getRecipesHomePage() {
         return "recipes/homeRecipes";
     }
 
     @RequestMapping("/searchRecipes")
     public String searchRecipes(Model model) {
-        model.addAttribute("recipes", recipeService.getAllRecipes());
+        model.addAttribute("recipes", recipeService.getAllRecipes().collectList().block());
         return "recipes/searchRecipes";
     }
 
     @RequestMapping("/showRecipe/{id}")
     public String showRecipe(@PathVariable String id, Model model){
-        Recipe recipe = recipeService.getRecipeById(id);
-        model.addAttribute("recipe", recipe);
-        //Optional<Recipe>optionalRecipe=recipeService.getRecipeById()
-        //model.addAttribute("recipe",recipeService.getRecipeById().get());
+        Mono<Recipe> recipe = recipeService.getRecipeById(id);
+        model.addAttribute("recipe", recipe.block());
         return "recipes/showRecipe";
     }
 
     @RequestMapping("/createRecipe")
     public String createNewRecipe(Model model) {
+        RecipeCommand recipeCommand=new RecipeCommand();
+        recipeCommand.setUnitMeasures(unitMeasureService.getAllUnitMeasures().collectList().block());
         model.addAttribute("recipe", new RecipeCommand());
-        model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
         return "recipes/createRecipe";
-
     }
 
     @RequestMapping("/updateRecipe/{id}")
     public String updateRecipe(@PathVariable String id, Model model){
-        Recipe recipe=recipeService.getRecipeById(id);
-        model.addAttribute("recipe",recipeToRecipeCommand.convert(recipe));
-        model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
+        Mono<Recipe> recipe=recipeService.getRecipeById(id);
+        model.addAttribute("recipe",recipe.map(r->{
+            RecipeCommand recipeCommand=recipeToRecipeCommand.convert(r);
+            recipeCommand.setUnitMeasures(unitMeasureService.getAllUnitMeasures().collectList().block());
+            return recipeCommand;
+        }).block());
         return "recipes/createRecipe";
     }
 
@@ -89,7 +91,7 @@ public class RecipesController {
         //this annotation to tell spring to bind the form post parameters to the recipe
         //command object by the naming conventions of the properties automatically
         //this "redirect:" is a command that tells spring framework to redirect to a specific url
-        recipeService.saveRecipeCommand(recipeCommand);
+        recipeService.saveRecipeCommand(recipeCommand).block();
         return "recipes/showRecipe";
     }
 

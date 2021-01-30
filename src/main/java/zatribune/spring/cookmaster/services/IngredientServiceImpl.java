@@ -2,39 +2,27 @@ package zatribune.spring.cookmaster.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import zatribune.spring.cookmaster.commands.IngredientCommand;
+import zatribune.spring.cookmaster.converters.IngredientToIngredientCommand;
 import zatribune.spring.cookmaster.data.entities.Ingredient;
-import zatribune.spring.cookmaster.data.entities.Recipe;
-import zatribune.spring.cookmaster.data.repositories.IngredientRepository;
-import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import zatribune.spring.cookmaster.data.repositories.IngredientReactiveRepository;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
-    private final IngredientRepository repository;
+    private final IngredientReactiveRepository repository;
+    private final IngredientToIngredientCommand converter;
 
     @Autowired
-    public IngredientServiceImpl(IngredientRepository repository) {
+    public IngredientServiceImpl(IngredientReactiveRepository repository,IngredientToIngredientCommand converter) {
         this.repository = repository;
+        this.converter=converter;
     }
 
     @Override
-    public Ingredient getIngredientById(String id) {
-        Optional<Ingredient> ingredient=repository.findById(id);
-        if (ingredient.isEmpty()){
-            throw new MyNotFoundException("Ingredient not found for id value: "+id);
-        }
-        return ingredient.get();
-    }
-
-    @Override
-    public Set<Ingredient> getIngredientsByRecipe(Recipe recipe) {
-        return StreamSupport.stream(repository.findAllByRecipe(recipe).spliterator(),false)
-                .collect(Collectors.toSet());
+    public Mono<IngredientCommand> getIngredientById(String id) {
+        return repository.findById(id).map(converter::convert);
     }
 
     @Override

@@ -13,17 +13,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Flux;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Recipe;
+import zatribune.spring.cookmaster.data.entities.UnitMeasure;
 import zatribune.spring.cookmaster.exceptions.MyNotFoundException;
 import zatribune.spring.cookmaster.services.RecipeService;
 import zatribune.spring.cookmaster.services.RecipeServiceImpl;
 import zatribune.spring.cookmaster.services.UnitMeasureService;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,10 +42,12 @@ class RecipesControllerTest {
     @Mock
     RecipeServiceImpl recipeService;
     @Mock
+    UnitMeasureService unitMeasureService;
+    @Mock
     Model model;
     // to fix unchecked assignment problems
     @Captor
-    ArgumentCaptor<Set<Recipe>> captor;
+    ArgumentCaptor<List<Recipe>> captor;
     @InjectMocks
     RecipesController recipesController;
     MockMvc mockMvc;
@@ -70,16 +76,13 @@ class RecipesControllerTest {
 
         //************ given ************
         String expectedURL = "recipes/searchRecipes";
-        Set<Recipe> recipes = new HashSet<>();
         Recipe recipe1 = new Recipe();
         recipe1.setTitle("recipe 1");
         Recipe recipe2 = new Recipe();
         recipe2.setTitle("recipe 2");
-        recipes.add(recipe1);
-        recipes.add(recipe2);
 
         //************ when ************
-        when(recipeService.getAllRecipes()).thenReturn(recipes);
+        when(recipeService.getAllRecipes()).thenReturn(Flux.just(recipe1,recipe2));
 
         //************ then ************
         assertEquals(expectedURL, recipesController.searchRecipes(model));
@@ -87,7 +90,9 @@ class RecipesControllerTest {
         //this verifies that addAttribute() is called once.
         //the captor is to make sure that the argument passed to the function is the right one/type
         verify(model, times(1)).addAttribute(eq("recipes"), captor.capture());
-        assertEquals(2, captor.getValue().size());
+        List<Recipe>list=captor.getValue();
+        assertNotNull(list);
+        assertEquals(2, list.size());
     }
 
     @Test

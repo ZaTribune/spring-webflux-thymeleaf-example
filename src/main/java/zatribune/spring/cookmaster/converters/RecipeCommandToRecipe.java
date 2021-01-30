@@ -4,16 +4,11 @@ import lombok.Synchronized;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.Nullable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
-import zatribune.spring.cookmaster.data.entities.Ingredient;
 import zatribune.spring.cookmaster.data.entities.Recipe;
-
-import java.util.Base64;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
@@ -32,9 +27,7 @@ public class RecipeCommandToRecipe implements Converter<RecipeCommand, Recipe> {
 
     @Synchronized
     @Override
-    public Recipe convert(@Nullable RecipeCommand source) {
-        if (source == null)
-            return null;
+    public @NonNull Recipe convert(RecipeCommand source) {
         final Recipe recipe = new Recipe();
         if (source.getId() != null)//cases like creating a new recipe --> on the website
             recipe.setId(new ObjectId(source.getId()));

@@ -3,32 +3,30 @@ package zatribune.spring.cookmaster.converters;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import zatribune.spring.cookmaster.commands.CategoryCommand;
-import zatribune.spring.cookmaster.commands.IngredientCommand;
-import zatribune.spring.cookmaster.commands.NotesCommand;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
 import zatribune.spring.cookmaster.data.entities.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class RecipeToRecipeCommandTest {
 
-    private RecipeToRecipeCommand recipeToRecipeCommandConverter;
-    private final String title="a dummy recipe title";
-    private final Integer prepTime=10;
-    private final Integer cookTime=20;
-    private final Integer servings=5;
-    private final String source="a dummy recipe source";
-    private final String url="a dummy recipe url";
-    private final String directions="a dummy recipe directions";
-    private final Difficulty difficulty=Difficulty.MODERATE;
-    private final String image="a dummy recipe image";
-    private Notes notes;
-    private final String descriptionNotes="a dummy notes description";
-    private Category category;
-    private final String descriptionCategory="a dummy Category description";
-    private Ingredient ingredient1;
-    private Ingredient ingredient2;
+    RecipeToRecipeCommand recipeToRecipeCommandConverter;
+    final String title="a dummy recipe title";
+    final Integer prepTime=10;
+    final Integer cookTime=20;
+    final Integer servings=5;
+    final String source="a dummy recipe source";
+    final String url="a dummy recipe url";
+    final String directions="a dummy recipe directions";
+    final Difficulty difficulty=Difficulty.MODERATE;
+    final String image="a dummy recipe image";
+    Notes notes;
+    final String descriptionNotes="a dummy notes description";
+    Category category;
+    final String descriptionCategory="a dummy Category description";
+    Ingredient ingredient1;
+    Ingredient ingredient2;
 
     @BeforeEach
     void setUp() {
@@ -44,10 +42,6 @@ class RecipeToRecipeCommandTest {
         assertNotNull(recipeToRecipeCommandConverter.convert(new Recipe()));
     }
 
-    @Test
-    void testNullObject(){
-        assertNull(recipeToRecipeCommandConverter.convert(null));
-    }
 
     @Test
     void convert() {

@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-@Document
 @NoArgsConstructor
+@Document(collection="ingredients")
 public class Ingredient {
     @Id
     private ObjectId id;

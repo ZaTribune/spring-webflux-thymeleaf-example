@@ -30,10 +30,6 @@ public class Recipe {
     @DBRef
     private Set<Category>categories=new HashSet<>();
 
-    public Recipe(ObjectId recipeId) {
-        this.id=recipeId;
-    }
-
     public Recipe addIngredient(Ingredient ingredient){
         this.ingredients.add(ingredient);
         return this;

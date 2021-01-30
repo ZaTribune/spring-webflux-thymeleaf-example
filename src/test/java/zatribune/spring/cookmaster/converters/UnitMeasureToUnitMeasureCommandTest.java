@@ -16,10 +16,7 @@ class UnitMeasureToUnitMeasureCommandTest {
     void setUp() {
         converter=new UnitMeasureToUnitMeasureCommand();
     }
-    @Test
-    void testNullObject(){
-        assertNull(converter.convert(null));
-    }
+
     @Test
     void testEmptyObject(){
         assertNotNull(converter.convert(new UnitMeasure()));

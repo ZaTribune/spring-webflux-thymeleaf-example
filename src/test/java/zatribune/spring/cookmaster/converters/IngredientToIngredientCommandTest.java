@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class IngredientToIngredientCommandTest {
 
-    private IngredientToIngredientCommand ingredientToIngredientCommandConverter;
+    IngredientToIngredientCommand ingredientToIngredientCommandConverter;
 
-    private Ingredient ingredient;
-    private final String descriptionIngredient ="a dummy ingredient description";
-    private final BigDecimal amount=BigDecimal.valueOf(20);
-    private UnitMeasure unitMeasure;
-    private final String descriptionUnitMeasure="a dummy unit measure description";
+    Ingredient ingredient;
+    final String descriptionIngredient ="a dummy ingredient description";
+    final BigDecimal amount=BigDecimal.valueOf(20);
+    UnitMeasure unitMeasure;
+    final String descriptionUnitMeasure="a dummy unit measure description";
 
     @BeforeEach
     void setUp() {
@@ -30,11 +30,6 @@ class IngredientToIngredientCommandTest {
     @Test
     void testEmptyObject(){
         assertNotNull(ingredientToIngredientCommandConverter.convert(new Ingredient()));
-    }
-
-    @Test
-    void testNullObject(){
-        assertNull(ingredientToIngredientCommandConverter.convert(null));
     }
 
     @Test
