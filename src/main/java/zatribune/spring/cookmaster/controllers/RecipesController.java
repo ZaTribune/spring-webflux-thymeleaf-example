@@ -8,14 +8,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
+import zatribune.spring.cookmaster.commands.UnitMeasureCommand;
 import zatribune.spring.cookmaster.converters.RecipeToRecipeCommand;
 import zatribune.spring.cookmaster.data.entities.Recipe;
 import zatribune.spring.cookmaster.services.RecipeService;
 import zatribune.spring.cookmaster.services.UnitMeasureService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -60,15 +63,14 @@ public class RecipesController {
     @RequestMapping("/createRecipe")
     public String createNewRecipe(Model model) {
         model.addAttribute("recipe", Mono.just(new RecipeCommand()));
-        model.addAttribute("unitMeasures", unitMeasureService.getAllUnitMeasures());
+        model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
         return "recipes/createRecipe";
     }
 
     @RequestMapping("/updateRecipe/{id}")
     public String updateRecipe(@PathVariable String id, Model model) {
-        Mono<Recipe> recipe = recipeService.getRecipeById(id);
-        model.addAttribute("recipe", recipe);
-        model.addAttribute("unitMeasures", unitMeasureService.getAllUnitMeasures());
+        model.addAttribute("recipe", recipeService.getRecipeCommandById(id));
+        model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());
         return "recipes/createRecipe";
     }
 
@@ -85,21 +87,21 @@ public class RecipesController {
     @RequestMapping("/updateOrSaveRecipe") // @ModelAttribute to get the attribute{recipe}
     // which we've passed to the view before--by default it will search for the name in the argument if
     //not specified in the annotation, except when there's no validation
-    public String saveOrUpdateRecipe
-            (@ModelAttribute("recipe") Mono<RecipeCommand> recipeCommand) {
+    public String saveOrUpdateRecipe(@ModelAttribute("recipe") Mono<RecipeCommand> recipeCommand,Model model) {
         log.info("categories for recipe {}", recipeCommand);
         //we're doing a manual workaround there,we're getting a hand on the web data binder
         //and this is going to contain binding information of what was bound in this call
         webDataBinder.validate();
-        BindingResult bindingResult=webDataBinder.getBindingResult();
+        BindingResult bindingResult = webDataBinder.getBindingResult();
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> log.error(objectError.toString()));
+            model.addAttribute("unitMeasures",unitMeasureService.getAllUnitMeasures());//or it won't be rendered
             return "recipes/createRecipe";
         }
         //this annotation to tell spring to bind the form post parameters to the recipe
         //command object by the naming conventions of the properties automatically
         //this "redirect:" is a command that tells spring framework to redirect to a specific url
-        recipeService.saveRecipeCommand(recipeCommand.block()).block();
+        recipeService.saveRecipeCommand(recipeCommand.block()).subscribe();//subscribe don't block
         return "recipes/showRecipe";
     }
 

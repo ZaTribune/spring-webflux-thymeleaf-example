@@ -6,15 +6,6 @@
           id="createRecipeForm"
           method="POST"
           class="justify-content-center">
-        <!-- to fix ingredient.unitMeasure options removed when validation errors happen-->
-<!--        <div class="d-none" >-->
-<!--            <input type="hidden" th:each="unit,stat:*{unitMeasures}"-->
-<!--                   th:name="'unitMeasures['+__${stat.index}__+'].id'"-->
-<!--                   th:value="*{unitMeasures[__${stat.index}__].id}">-->
-<!--            <input type="hidden" th:each="unit,stat:*{unitMeasures}"-->
-<!--                   th:name="'unitMeasures['+__${stat.index}__+'].description'"-->
-<!--                   th:value="*{unitMeasures[__${stat.index}__].description}">-->
-<!--        </div>-->
         <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger m-0">
             <p>Please, correct errors below.</p>
         </div>
@@ -85,8 +76,8 @@
                             <div class="col-12 fw-bold p-0">
                                 <label class="m-1"><span th:text="#{categories}"></span>
                                     <input type="text" class="form-control w-100" id="inputCategory"
-                                                         list="categoriesListContainer"
-                                                         onkeyup="$('#categoriesListContainer').load('/listCategories'+'?s='+this.value)">
+                                           list="categoriesListContainer"
+                                           onkeyup="$('#categoriesListContainer').load('/listCategories'+'?s='+this.value)">
                                 </label>
                                 <div id="categoriesListContainer" class="autocomplete-items list-group w-25">
                                 </div>
@@ -144,13 +135,25 @@
                                    th:field="*{ingredients[__${ingStat.index}__].id}">
                             <!-- Required!! put the index.id  not the eng.id-->
                         </td>
-                        <td class="p-0"><input class="ingredient-amount"
-                                               th:field="*{ingredients[__${ingStat.index}__].amount}"
-                                               th:value="${ing.amount}" aria-label=""></td>
+                        <td class="p-0">
+                            <input class="ingredient-amount"
+                                   th:field="*{ingredients[__${ingStat.index}__].amount}"
+                                   th:value="${ing.amount}" aria-label="">
+                            <div class="invalid-tooltip" onclick="this.style.display='none'"
+                                 th:if="${#fields.hasErrors('ingredients['+__${ingStat.index}__+'].amount')}">
+                                <ul class="m-0">
+                                    <li th:each="err:${#fields.errors('ingredients['+__${ingStat.index}__+'].amount')}"
+                                        th:text="${err}"></li>
+                                </ul>
+                            </div>
+                        </td>
                         <td class="p-0" style="vertical-align: middle">
                             <select class="ingredient-unitMeasure-id custom-select mr-sm-2" aria-label=""
                                     th:field="*{ingredients[__${ingStat.index}__].unitMeasure.id}"
-                                    onchange="selectUnitMeasure(this,this.parentElement.lastElementChild)" required><!-- to pass the hidden field-->
+                                    onchange="selectUnitMeasure(this,this.parentElement.lastElementChild)" required>
+                                <!-- to pass the hidden field-->
+                                onchange="selectUnitMeasure(this,this.parentElement.lastElementChild)" required>
+                                <!-- to pass the hidden field-->
                                 <!--       REMEMBER: compare using the ID -->
                                 <option
                                         th:each="unit,unitStat:${unitMeasures}"
@@ -165,6 +168,13 @@
                             <input class="ingredient-description"
                                    th:field="*{ingredients[__${ingStat.index}__].description}"
                                    type="text" th:value="${ing.description}" aria-label="">
+                            <div class="invalid-tooltip" onclick="this.style.display='none'"
+                                 th:if="${#fields.hasErrors('ingredients['+__${ingStat.index}__+'].description')}">
+                                <ul class="m-0">
+                                    <li th:each="err:${#fields.errors('ingredients['+__${ingStat.index}__+'].description')}"
+                                        th:text="${err}"></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -199,8 +209,8 @@
             <div class="card-header"><h1 th:text="#{notes}"></h1></div>
             <div class="card-body">
                 <input type="hidden" th:field="*{notes.id}">
-                    <textarea id="textareaNotes" class="form-control" onload="resizeTextarea(this.id)" aria-label=""
-                              onkeyup="resizeTextarea(this.id)" th:field="*{notes.description}"></textarea>
+                <textarea id="textareaNotes" class="form-control" onload="resizeTextarea(this.id)" aria-label=""
+                          onkeyup="resizeTextarea(this.id)" th:field="*{notes.description}"></textarea>
                 <div class="invalid-feedback d-inline-block" th:if="${#fields.hasErrors('notes.description')}">
                     <ul class="m-0">
                         <li th:each="err:${#fields.errors('notes.description ')}" th:text="${err}"></li>
@@ -220,7 +230,7 @@
     <script th:inline="javascript">
         $(document).ready(function () {
             resizeTextarea('textareaNotes');
-            resizeTextarea('textareaDirections')
+            resizeTextarea('textareaDirections');
         });
 
         function getBase64(input, preview, file) {
@@ -268,25 +278,25 @@
             })
         }
 
-        function insertCategory(parentId, item){
+        function insertCategory(parentId, item) {
             let invalid = false;
-            let parent=document.getElementById(parentId);
-            Array.from(parent.children).forEach((child,index)=>{
-                if (item.getAttribute("data-category-id")===child.getAttribute("data-category-id")){
-                    invalid=true;
+            let parent = document.getElementById(parentId);
+            Array.from(parent.children).forEach((child, index) => {
+                if (item.getAttribute("data-category-id") === child.getAttribute("data-category-id")) {
+                    invalid = true;
                     return false;
                 }
             });
-            if (invalid===true)
+            if (invalid === true)
                 return;
 
-            item.setAttribute('class','list-group-item d-flex justify-content-between p-1 align-items-center text-dark');
-            item.setAttribute('onclick','');
+            item.setAttribute('class', 'list-group-item d-flex justify-content-between p-1 align-items-center text-dark');
+            item.setAttribute('onclick', '');
             //alert("parentID:"+parentId+"\nitemId:"+itemId+"\nitemText"+itemText);
-            let btnDelete=document.createElement('button');
+            let btnDelete = document.createElement('button');
             item.appendChild(btnDelete);
             //must have a parent before setting outerHTML
-            btnDelete.outerHTML="<button class='btn btn-secondary' onclick='this.closest(\"a\").remove()'><i class='fa fa-trash p-1'></i></button>";
+            btnDelete.outerHTML = "<button class='btn btn-secondary' onclick='this.closest(\"a\").remove()'><i class='fa fa-trash p-1'></i></button>";
             parent.appendChild(item);
         }
 
@@ -307,7 +317,7 @@
             select.setAttribute('class', "custom-select mr-sm-2")
             select.setAttribute('name', "ingredients[" + rowCount + "].unitMeasure.id")
             select.setAttribute('value', "ingredients[" + rowCount + "].unitMeasure.id")
-            select.setAttribute('onchange',"selectUnitMeasure(this,this.parentElement.lastElementChild)")
+            select.setAttribute('onchange', "selectUnitMeasure(this,this.parentElement.lastElementChild)")
             table.append('<tr>' +
                 '<td class="p-0" style="vertical-align: middle"><input class="form-check-input me-1" type="checkbox">' +
                 '<input type="hidden" name="ingredients[' + rowCount + '].id">' +
@@ -315,8 +325,8 @@
                 '<td class="p-0"><input name="ingredients[' + rowCount + '].amount"></td>' +
                 '<td class="p-0" style="vertical-align: middle">' +
                 select.outerHTML +
-                '<input type="hidden" class="ingredient-unitMeasure-description" '+
-                'name="ingredients['+rowCount+'].unitMeasure.description">'+
+                '<input type="hidden" class="ingredient-unitMeasure-description" ' +
+                'name="ingredients[' + rowCount + '].unitMeasure.description">' +
                 '</td>' +
                 '<td class="p-0"><input name="ingredients[' + rowCount + '].description" ' +
                 'type="text">' +
@@ -324,8 +334,8 @@
                 '</tr>')
         }
 
-        function selectUnitMeasure(select,unitMeasureDescriptionField) {
-            unitMeasureDescriptionField.setAttribute('value',select.options[select.selectedIndex].text)
+        function selectUnitMeasure(select, unitMeasureDescriptionField) {
+            unitMeasureDescriptionField.setAttribute('value', select.options[select.selectedIndex].text)
         }
 
         function closeAllLists() {

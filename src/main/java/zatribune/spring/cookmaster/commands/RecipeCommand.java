@@ -5,8 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import zatribune.spring.cookmaster.data.entities.Difficulty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,6 +42,7 @@ public class RecipeCommand {
     private Difficulty difficulty;
     private String image;
     private NotesCommand notes;
+    @Valid//to validate
     private List<IngredientCommand> ingredients=new ArrayList<>();
     // because sets can't be indexed-->problems in http requests & parameters
     private List<CategoryCommand> categories=new ArrayList<>();

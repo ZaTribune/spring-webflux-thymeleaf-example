@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document(collection="ingredients")
+@Document
 public class Ingredient {
     @Id
     private ObjectId id;

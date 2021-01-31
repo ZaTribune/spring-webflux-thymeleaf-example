@@ -3,7 +3,6 @@ package zatribune.spring.cookmaster.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,7 +26,7 @@ public class RecipeServiceImpl implements RecipeService {
                              RecipeToRecipeCommand recipeToRecipeCommand) {
         this.recipeRepository = recipeRepository;
         this.recipeCommandToRecipe = recipeCommandToRecipe;
-        this.recipeToRecipeCommand=recipeToRecipeCommand;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
 
     @Override
@@ -39,7 +38,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Mono<Recipe> getRecipeById(String id) {
-      return recipeRepository.findById(id);
+        return recipeRepository.findById(id);
     }
 
     @Override
@@ -49,12 +48,14 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Mono<Recipe> getRecipeByTitle(String title) {
-       return recipeRepository.findByTitle(title);
+        return recipeRepository.findByTitle(title);
     }
 
 
     @Override
     public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand) {
+//        log.info("{},{}", recipeCommand.getIngredients().size(), recipeCommand.getIngredients());
+//        log.info("{},{}", recipeCommand.getCategories().size(), recipeCommand.getCategories());
         return recipeRepository.save(recipeCommandToRecipe.convert(recipeCommand)).map(recipeToRecipeCommand::convert);
     }
 

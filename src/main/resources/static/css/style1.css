@@ -1,24 +1,32 @@
 
-.card{
+.card {
     border-radius: 0;
 }
-.card-header{
+
+.card-header {
     border-radius: 0;
 }
 
 .list-group-item {
     cursor: default;
 }
+
 .list-group-item-action {
     cursor: default;
 }
-textarea[readonly]
-{
+
+.invalid-tooltip {
+    display: flex;
+    top: auto;
+}
+
+textarea[readonly] {
     border: 0;
     background-color: inherit;
     resize: none;
 }
-.card-header:first-child{
+
+.card-header:first-child {
     border-radius: 0;
 }
 
@@ -31,22 +39,26 @@ textarea[readonly]
     background: rgba(0, 0, 0, 0.15);
 
 }
+
 /*
 .fa, .fas{
     margin: auto;
 }
 */
-.d-table-cell{
+.d-table-cell {
     vertical-align: middle;
 }
-.btn-side-menu{
+
+.btn-side-menu {
     padding: 0;
     border-radius: 0;
 }
-i{
+
+i {
     font-style: inherit;
 }
-.list-group-item{
+
+.list-group-item {
     font-size: 2vmin;
 }
 
@@ -58,10 +70,12 @@ input {
     padding: 10px;
     font-size: 16px;
 }
+
 input[type=text] {
     background-color: #f1f1f1;
     width: 100%;
 }
+
 input[type=submit] {
     background-color: DodgerBlue;
     color: #fff;
@@ -75,16 +89,19 @@ input[type=submit] {
     left: 20px;
     right: 0;
 }
+
 .autocomplete-items a {
     padding: 10px;
     cursor: pointer;
     background-color: #fff;
     border-bottom: 1px solid #d4d4d4;
 }
+
 .autocomplete-items a:hover {
     /*when hovering an item:*/
     background-color: #e9e9e9;
 }
+
 .autocomplete-active {
     /*when navigating through the items using the arrow keys:*/
     background-color: DodgerBlue !important;

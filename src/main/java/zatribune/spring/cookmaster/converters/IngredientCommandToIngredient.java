@@ -4,6 +4,7 @@ import lombok.Synchronized;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import zatribune.spring.cookmaster.commands.IngredientCommand;
@@ -22,9 +23,7 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
 
     @Synchronized
     @Override
-    public Ingredient convert(@Nullable IngredientCommand source) {
-        if (source == null)
-            return null;
+    public @NonNull Ingredient convert(IngredientCommand source) {
         final Ingredient ingredient = new Ingredient();
         if (source.getId() == null||source.getId().isEmpty())
             ingredient.setId(new ObjectId());

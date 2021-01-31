@@ -66,45 +66,36 @@
 <div class="container-fluid">
     <div id="modalOverlay"></div>
     <header class="row bg-dark">
-        <section class="col text-start align-self-center p-1">
-            <img src="../static/images/logo.svg" th:src="@{/images/logo.svg}" alt="logo">
-        </section>
-
-        <section class="col text-end align-self-center p-1">
-            <button class="btn btn-outline-light" href="#" th:text="#{loginOrRegister}"></button>
-        </section>
-    </header>
-    <nav class="row navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" th:text="#{menu}"></a>
-            <button class="navbar-toggler collapsed" type="button" id="btnNavbar"
-                    data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
-                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark pt-0 pb-0">
+            <img src="/images/logo.svg" th:src="@{/images/logo.svg}" height="100px" alt="logo" class="navbar-brand">
+            <button class="navbar-toggler collapsed" type="button" id="btnNavbar" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <div class="navbar-collapse collapse" id="navbarResponsive">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" role="button"
-                           onclick="getContent($('#container'),'/home')" th:text="#{home}"></a>
+                        <a class="nav-link active" role="button" onclick="getContent($('#container'),'/home')">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" role="button" th:text="#{categories}" onclick="getContent($('#container'),'/categories')"></a>
+                        <a class="nav-link" role="button" onclick="getContent($('#container'),'/categories')">Categories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" role="button" th:text="#{recipes}" onclick="getContent($('#container'),'/recipes')"></a>
+                        <a class="nav-link" role="button" onclick="getContent($('#container'),'/recipes')">recipes</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" role="button" th:text="#{about}"></a>
+                        <a class="nav-link" role="button">About</a>
                     </li>
                 </ul>
                 <form class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-light" type="submit" th:text="#{search}"></button>
+                    <button class="btn btn-outline-light" type="submit">Search</button>
                 </form>
+                <button class="btn btn-outline-light m-1">Login/Register</button>
             </div>
-        </div>
-    </nav>
+
+        </nav>
+    </header>
+
     <!-- Here, we'll play with the content-->
     <div class="row" id="container"></div>
 
