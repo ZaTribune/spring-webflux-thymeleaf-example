@@ -1,8 +1,8 @@
-# CookMaster [![CircleCI](https://circleci.com/gh/ZaTribune/cookmaster.svg?style=svg)](https://circleci.com/gh/ZaTribune/cookmaster) [![codecov](https://codecov.io/gh/ZaTribune/cookmaster/branch/master/graph/badge.svg?token=SFV4GJK1O0)](https://codecov.io/gh/ZaTribune/cookmaster)
+# KitchenMaster [![CircleCI](https://circleci.com/gh/ZaTribune/cookmaster.svg?style=svg)](https://circleci.com/gh/ZaTribune/cookmaster) [![codecov](https://codecov.io/gh/ZaTribune/cookmaster/branch/master/graph/badge.svg?token=SFV4GJK1O0)](https://codecov.io/gh/ZaTribune/cookmaster)
 Spring Boot Web Application. [In progress]
 <p align="center">
-  <img  src="src/main/resources/static/images/logo.svg" width="300" height="300"/>
-  <img src="src/main/resources/static/images/spring.svg" width="200" height="300"/>
+  <img  src="src/main/resources/static/images/logo.svg" width="200" height="200"/>
+  <img src="src/main/resources/static/images/spring.svg" width="200" height="200"/>
 </p>
 
 ## Overview  
