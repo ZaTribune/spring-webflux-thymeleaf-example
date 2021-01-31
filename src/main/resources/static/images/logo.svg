@@ -20,7 +20,7 @@
    inkscape:version="1.0.2 (e86c870879, 2021-01-15, custom)"><metadata
    id="metadata20"><rdf:RDF><cc:Work
        rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
    id="defs18"><rect
      x="13.0625"
      y="205.4375"
@@ -65,12 +65,13 @@
    id="namedview16"
    showgrid="false"
    inkscape:zoom="4.2105263"
-   inkscape:cx="133.16875"
-   inkscape:cy="107.21254"
+   inkscape:cx="87.45"
+   inkscape:cy="88.21254"
    inkscape:window-x="-9"
    inkscape:window-y="-9"
    inkscape:window-maximized="1"
-   inkscape:current-layer="chefs_hat" />
+   inkscape:current-layer="chefs_hat"
+   inkscape:document-rotation="0" />
 <g
    id="parts_group">
 	<path
@@ -177,13 +178,13 @@
    style="font-size:37.3333px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';white-space:pre;shape-inside:url(#rect131);" /><text
    xml:space="preserve"
    id="text135"
-   style="font-size:26.6667px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';white-space:pre;shape-inside:url(#rect137);fill:#ffffff;"
+   style="font-size:26.6667px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';white-space:pre;shape-inside:url(#rect137);fill:#ffffff;stroke:#014463;stroke-opacity:1;fill-opacity:1;"
    transform="translate(27.65,-32.3)"><tspan
      x="13.0625"
      y="229.95004"><tspan
-       style="font-size:26.6667px;fill:#ffffff">Kitchen</tspan></tspan></text><text
+       style="font-size:26.6667px;fill:#ffffff;fill-opacity:1;stroke:#014463;stroke-opacity:1">Kitchen</tspan></tspan></text><text
    xml:space="preserve"
-   style="font-size:26.6667px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';fill:#ffffff"
+   style="font-size:26.6667px;line-height:1.25;font-family:'Bauhaus 93';-inkscape-font-specification:'Bauhaus 93, ';fill:#ffffff;stroke:#014463;fill-opacity:1;"
    x="46.174999"
    y="219.21251"
    id="text143"><tspan
