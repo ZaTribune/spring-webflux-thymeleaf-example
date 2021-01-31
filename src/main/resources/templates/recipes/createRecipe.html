@@ -7,14 +7,14 @@
           method="POST"
           class="justify-content-center">
         <!-- to fix ingredient.unitMeasure options removed when validation errors happen-->
-        <div class="d-none" >
-            <input type="hidden" th:each="unit,stat:*{unitMeasures}"
-                   th:name="'unitMeasures['+__${stat.index}__+'].id'"
-                   th:value="*{unitMeasures[__${stat.index}__].id}">
-            <input type="hidden" th:each="unit,stat:*{unitMeasures}"
-                   th:name="'unitMeasures['+__${stat.index}__+'].description'"
-                   th:value="*{unitMeasures[__${stat.index}__].description}">
-        </div>
+<!--        <div class="d-none" >-->
+<!--            <input type="hidden" th:each="unit,stat:*{unitMeasures}"-->
+<!--                   th:name="'unitMeasures['+__${stat.index}__+'].id'"-->
+<!--                   th:value="*{unitMeasures[__${stat.index}__].id}">-->
+<!--            <input type="hidden" th:each="unit,stat:*{unitMeasures}"-->
+<!--                   th:name="'unitMeasures['+__${stat.index}__+'].description'"-->
+<!--                   th:value="*{unitMeasures[__${stat.index}__].description}">-->
+<!--        </div>-->
         <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger m-0">
             <p>Please, correct errors below.</p>
         </div>
@@ -153,7 +153,7 @@
                                     onchange="selectUnitMeasure(this,this.parentElement.lastElementChild)" required><!-- to pass the hidden field-->
                                 <!--       REMEMBER: compare using the ID -->
                                 <option
-                                        th:each="unit,unitStat:*{unitMeasures}"
+                                        th:each="unit,unitStat:${unitMeasures}"
                                         th:value="${unit.id}" th:text="${unit.description}"
                                         th:selected="(${ing.unitMeasure.id} == ${unit.id})">
                                 </option>
@@ -292,7 +292,7 @@
 
         function insertIngredient() {
             /*<![CDATA[*/
-            let unitMeasures = /*[[${recipe.unitMeasures}]]*/'default';
+            let unitMeasures = /*[[${unitMeasures}]]*/'default';
             //returned object is like: [object Object],[object Object],[object Object]
             /*]]>*/
             let select = document.createElement("select");// Create with DOM
@@ -352,7 +352,7 @@
                     .appendTo('#createRecipeForm');
             });
             /*<![CDATA[*/
-            let unitMeasures = /*[[${recipe.unitMeasures}]]*/'default';
+            let unitMeasures = /*[[${unitMeasures}]]*/'default';
             //returned object is like: [object Object],[object Object],[object Object]
             /*]]>*/
             $('.' + 'ingredient-unitMeasure-description').each(function (index, element) {

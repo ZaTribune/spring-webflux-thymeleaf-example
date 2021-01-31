@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import zatribune.spring.cookmaster.commands.RecipeCommand;
@@ -23,12 +24,19 @@ public class RecipesController {
     private final RecipeService recipeService;
     private final RecipeToRecipeCommand recipeToRecipeCommand;
     private final UnitMeasureService unitMeasureService;
+    private WebDataBinder webDataBinder;
 
     @Autowired
-    public RecipesController(RecipeService recipeService,RecipeToRecipeCommand recipeToRecipeCommand,UnitMeasureService unitMeasureService) {
+    public RecipesController(RecipeService recipeService, RecipeToRecipeCommand recipeToRecipeCommand, UnitMeasureService unitMeasureService) {
         this.recipeService = recipeService;
-        this.recipeToRecipeCommand=recipeToRecipeCommand;
-        this.unitMeasureService=unitMeasureService;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
+        this.unitMeasureService = unitMeasureService;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder) {
+        this.webDataBinder = webDataBinder;
+
     }
 
     @RequestMapping("/recipes")
@@ -38,40 +46,37 @@ public class RecipesController {
 
     @RequestMapping("/searchRecipes")
     public String searchRecipes(Model model) {
-        model.addAttribute("recipes", recipeService.getAllRecipes().collectList().block());
+        model.addAttribute("recipes", recipeService.getAllRecipes());
         return "recipes/searchRecipes";
     }
 
     @RequestMapping("/showRecipe/{id}")
-    public String showRecipe(@PathVariable String id, Model model){
+    public String showRecipe(@PathVariable String id, Model model) {
         Mono<Recipe> recipe = recipeService.getRecipeById(id);
-        model.addAttribute("recipe", recipe.block());
+        model.addAttribute("recipe", recipe);
         return "recipes/showRecipe";
     }
 
     @RequestMapping("/createRecipe")
     public String createNewRecipe(Model model) {
-        RecipeCommand recipeCommand=new RecipeCommand();
-        recipeCommand.setUnitMeasures(unitMeasureService.getAllUnitMeasures().collectList().block());
-        model.addAttribute("recipe", new RecipeCommand());
+        model.addAttribute("recipe", Mono.just(new RecipeCommand()));
+        model.addAttribute("unitMeasures", unitMeasureService.getAllUnitMeasures());
         return "recipes/createRecipe";
     }
 
     @RequestMapping("/updateRecipe/{id}")
-    public String updateRecipe(@PathVariable String id, Model model){
-        Mono<Recipe> recipe=recipeService.getRecipeById(id);
-        model.addAttribute("recipe",recipe.map(r->{
-            RecipeCommand recipeCommand=recipeToRecipeCommand.convert(r);
-            recipeCommand.setUnitMeasures(unitMeasureService.getAllUnitMeasures().collectList().block());
-            return recipeCommand;
-        }).block());
+    public String updateRecipe(@PathVariable String id, Model model) {
+        Mono<Recipe> recipe = recipeService.getRecipeById(id);
+        model.addAttribute("recipe", recipe);
+        model.addAttribute("unitMeasures", unitMeasureService.getAllUnitMeasures());
         return "recipes/createRecipe";
     }
 
 
     @RequestMapping("/deleteRecipe/{id}")
-    public @ResponseBody String deleteRecipe(@PathVariable String id) {
-        log.info("deleting recipe: "+id);
+    public @ResponseBody
+    String deleteRecipe(@PathVariable String id) {
+        log.info("deleting recipe: " + id);
         recipeService.deleteRecipeById(id);
         return "ok";
     }
@@ -81,17 +86,20 @@ public class RecipesController {
     // which we've passed to the view before--by default it will search for the name in the argument if
     //not specified in the annotation, except when there's no validation
     public String saveOrUpdateRecipe
-            (@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult) {
-        log.info("categories {} for recipe {}",recipeCommand.getCategories(),recipeCommand.getId());
-        log.info("title {} for recipe",recipeCommand.getTitle());
-        if (bindingResult.hasErrors()){
+            (@ModelAttribute("recipe") Mono<RecipeCommand> recipeCommand) {
+        log.info("categories for recipe {}", recipeCommand);
+        //we're doing a manual workaround there,we're getting a hand on the web data binder
+        //and this is going to contain binding information of what was bound in this call
+        webDataBinder.validate();
+        BindingResult bindingResult=webDataBinder.getBindingResult();
+        if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors().forEach(objectError -> log.error(objectError.toString()));
             return "recipes/createRecipe";
         }
         //this annotation to tell spring to bind the form post parameters to the recipe
         //command object by the naming conventions of the properties automatically
         //this "redirect:" is a command that tells spring framework to redirect to a specific url
-        recipeService.saveRecipeCommand(recipeCommand).block();
+        recipeService.saveRecipeCommand(recipeCommand.block()).block();
         return "recipes/showRecipe";
     }
 

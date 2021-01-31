@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
+import reactor.core.publisher.Flux;
 import zatribune.spring.cookmaster.data.entities.Difficulty;
 
 import javax.validation.constraints.*;
@@ -42,5 +43,4 @@ public class RecipeCommand {
     private List<IngredientCommand> ingredients=new ArrayList<>();
     // because sets can't be indexed-->problems in http requests & parameters
     private List<CategoryCommand> categories=new ArrayList<>();
-    private List<UnitMeasureCommand>unitMeasures=new ArrayList<>();
 }
