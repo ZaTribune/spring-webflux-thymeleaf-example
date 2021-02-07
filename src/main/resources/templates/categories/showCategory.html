@@ -1,23 +1,139 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Categories</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous"
-          th:href="@{/webjars/bootstrap/5.0.0-beta1/css/bootstrap.min.css}">
+<div xmlns:th="http://www.thymeleaf.org" class="tab-pane bg-light"
+     style="margin: auto;">
+    <section class="">
+        <button type="button" class="btn btn-secondary"
+                th:attr="data-category=${category.id}"
+                onclick="makeEditable(this.getAttribute('data-category'))"
+                style="padding: 30px;border: 0;border-radius: 0;display: grid;">
+            <i class="fa fa-edit"></i>
+            <i>Edit</i>
+        </button>
+    </section>
+    <section>
+        <div th:id="'picControl-'+${category.id}" class="text-center" style="display: none" >
+            <form method="post" enctype="multipart/form-data" class="d-inline-block"
+                  th:attr="data-category=${category.id}">
+                <input  type="file" accept="image/*" name="imageFile" class="file"
+                       onchange="checkFileType(this)"/>
+                <!-- childNodes will return a Text object instead of an input -->
+            </form>
+            <button class="btn btn-primary m-2" th:height="50"
+                    type="submit"
+                    onclick="uploadImage(this.previousElementSibling)">
+                Save
+            </button>
+        </div>
+        <p th:switch="${category.image}" class="text-center m-3">
+            <img class="img-fluid"
+                 th:case="null"
+                 th:src="@{/images/camera.svg}"
+                 th:width="300"
+                 th:height="300" alt="image">
+            <!--we use a timestamp to fool the browser into thinking it's a new image/ request and not to use the
+                the cached image so that we can see the updated image
+            -->
+            <img class="img-fluid"
+                 th:case="*"
+                 th:src="@{'/category/'+${category.id}+'/image/'+${#dates.createNow().time}}"
+                 th:width="300"
+                 th:height="300"
+                 alt="">
+        </p>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
-            integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
-            crossorigin="anonymous"
-            th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
-    <!-- JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-            crossorigin="anonymous"
-            th:src="@{/webjars/bootstrap/5.0.0-beta1/js/bootstrap.min.js}"></script>
-</head>
-<body>
+    </section>
+    <section class="text-center">
+        <div>
+            <form method="post" class="d-inline-block w-50"
+                  th:attr="data-category=${category.id}">
+                            <textarea th:name="description"
+                                      class="w-100" type="text" spellcheck="false"
+                                      th:id="'category-description-'+${category.id}" th:text="${category.info}"
+                                      readonly aria-label="description"></textarea>
+            </form>
+            <button class="btn btn-primary m-2 position-absolute" th:height="50"
+                    style="display: none"
+                    th:id="'btn-category-info-'+${category.id}"
+                    type="submit" onclick="updateDescription(this.previousElementSibling)">
+                Save
+            </button>
+        </div>
+    </section>
+    <script th:inline="javascript">
+        function updateDescription(form) {
+            let categoryId = form.getAttribute("data-category");
+            $.ajax(
+                {
+                    //we specify the type:post cause it's GET by default in ajax.
+                    type: "POST",
+                    url: "/updateOrSaveCategory",
+                    data: new FormData(form),
+                    cache: false,
+                    // important or you'll get ->jquery.min.js:2 Uncaught TypeError: Illegal invocation.....
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        console.log(data)
+                        makeReadable(categoryId)
+                        $('#categoryTabContent').load('/showCategory/'+categoryId);
+                    },
+                    error: function () {
+                        alert("Error - Data not saved");
+                    }
+                });
+        }
 
-</body>
-</html>
+        function checkFileType(input) {
+            const file = input.files[0];
+            const fileType = file['type'];
+            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+            if (!validImageTypes.includes(fileType)) {
+                alert('Unsupported Image Type.');
+                input.value = null;
+            }
+        }
+
+        function uploadImage(form) {
+            let categoryId = form.getAttribute("data-category");
+            $.ajax(
+                {
+                    //we specify the type:post cause it's GET by default in ajax.
+                    type: "POST",
+                    enctype: "multipart/form-data",
+                    url: "/category/" + categoryId + "/uploadImage",
+                    data: new FormData(form),
+                    cache: false,
+                    // important or you'll get ->jquery.min.js:2 Uncaught TypeError: Illegal invocation.....
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        console.log(data);
+                        makeReadable(categoryId);
+                        $('#categoryTabContent').load("/showCategory/" + categoryId);
+                    },
+                    error: function () {
+                        alert("Error - Data not saved");
+                    }
+                });
+        }
+
+        function makeEditable(categoryId) {
+            let picControl = document.getElementById('picControl-' + categoryId);
+            let btnCategoryInfo = document.getElementById('btn-category-info-' + categoryId);
+            let textArea = document.getElementById('category-description-' + categoryId);
+            picControl.setAttribute('style', 'display:block');
+            btnCategoryInfo.setAttribute('style', 'display:inline-block');
+            textArea.readOnly = false;
+            textArea.spellcheck = true;
+        }
+
+        function makeReadable(categoryId) {
+            let picControl = document.getElementById('picControl-' + categoryId);
+            let btnCategoryInfo = document.getElementById('btn-category-info-' + categoryId);
+            let textArea = document.getElementById('category-description-' + categoryId);
+            picControl.setAttribute('style', 'display:none');
+            btnCategoryInfo.setAttribute('style', 'display:none');
+            textArea.readOnly = true;
+            textArea.spellcheck = false;
+        }
+    </script>
+</div>

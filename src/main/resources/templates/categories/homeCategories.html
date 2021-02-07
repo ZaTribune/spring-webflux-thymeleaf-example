@@ -2,153 +2,18 @@
      xmlns:th="http://www.thymeleaf.org"
      th:fragment="CategoriesFragment">
     <div class="row d-flex justify-content-center p-3">
-        <div class="col-3 list-group p-0" style="border-radius: 0" id="list-tab" role="tablist"
+        <div class="col-3 list-group" style="border-radius: 0" id="list-tab" role="list"
              th:if="${not#lists.isEmpty(categories)}">
             <a class="list-group-item list-group-item-action p-4 text-center"
                th:each="category:${categories}"
-               th:id="'list-item-' + ${category.id}"
-               th:href="'#list-item-content-' + ${category.id}"
+               th:attr="data-category=${category.id}"
                th:text="${category.description}"
-               data-bs-toggle="list" role="tab" aria-controls="home">Home</a>
+               data-bs-toggle="list"
+               role="button"
+               onclick="$('#categoryTabContent').load('/showCategory/'+this.getAttribute('data-category'));"></a>
         </div>
-        <div class="col-9 tab-content" id="recipeTabContent">
-            <div class="tab-pane fade bg-light" role="tabpanel" th:each="category:${categories}"
-                 th:id="'list-item-content-' + ${category.id}" style="margin: auto;">
-                <section class="">
-                    <button type="button" class="btn btn-secondary"
-                            th:attr="data-category=${category.id}"
-                            onclick="makeEditable(this.getAttribute('data-category'))"
-                            style="padding: 30px;border: 0;border-radius: 0;display: grid;">
-                        <i class="fa fa-edit"></i>
-                        <i>Edit</i>
-                    </button>
-                </section>
-                <section>
-                    <div th:id="'picControl-'+${category.id}" class="text-center" style="display: none">
-                        <form method="post" enctype="multipart/form-data" class="d-inline-block"
-                              th:attr="data-category=${category.id}">
-                            <input type="file" accept="image/*" name="imageFile" class="file"
-                                   onchange="checkFileType(this)"/>
-                            <!-- childNodes will return a Text object instead of an input -->
-                        </form>
-                        <button class="btn btn-primary m-2" th:height="50"
-                                type="submit" onclick="uploadImage(this.previousElementSibling)">
-                            Save
-                        </button>
-                    </div>
-                    <p th:switch="${category.image}" class="text-center m-3">
-                        <img class="img-fluid"
-                             th:case="null"
-                             th:src="@{/images/camera.svg}"
-                             th:width="300"
-                             th:height="300" alt="image">
-                        <img class="img-fluid"
-                             th:case="*"
-                             th:src="@{'/category/'+${category.id}+'/image'}"
-                             th:width="300"
-                             th:height="300"
-                             alt="">
-                    </p>
+        <div class="col-9" id="categoryTabContent">
 
-                </section>
-                <section class="text-center">
-                    <div>
-                        <form method="post" class="d-inline-block w-50"
-                              th:attr="data-category=${category.id}">
-                            <textarea th:name="description"
-                                      class="w-100" type="text" spellcheck="false"
-                                      th:id="'category-description-'+${category.id}" th:text="${category.info}"
-                                      readonly aria-label="description"></textarea>
-                        </form>
-                        <button class="btn btn-primary m-2 position-absolute" th:height="50"
-                                style="display: none"
-                                th:id="'btn-category-info-'+${category.id}"
-                                type="submit" onclick="updateDescription(this.previousElementSibling)">
-                            Save
-                        </button>
-                    </div>
-                </section>
-            </div>
         </div>
     </div>
-    <script>
-        function updateDescription(form) {
-            let categoryId = form.getAttribute("data-category");
-            $.ajax(
-                {
-                    //we specify the type:post cause it's GET by default in ajax.
-                    type: "POST",
-                    url: "/updateOrSaveCategory",
-                    data: new FormData(form),
-                    cache: false,
-                    // important or you'll get ->jquery.min.js:2 Uncaught TypeError: Illegal invocation.....
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        console.log(data)
-                        makeReadable(categoryId)
-                    },
-                    error: function () {
-                        alert("Error - Data not saved");
-                    }
-                });
-        }
-
-        function checkFileType(input) {
-            const file = input.files[0];
-            const fileType = file['type'];
-            const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-            if (!validImageTypes.includes(fileType)) {
-                alert('Unsupported Image Type.');
-                input.value = null;
-            }
-        }
-
-        function uploadImage(form) {
-            let categoryId = form.getAttribute("data-category");
-            $.ajax(
-                {
-                    //we specify the type:post cause it's GET by default in ajax.
-                    type: "POST",
-                    enctype: "multipart/form-data",
-                    url: "/category/" + categoryId + "/uploadImage",
-                    data: new FormData(form),
-                    cache: false,
-                    // important or you'll get ->jquery.min.js:2 Uncaught TypeError: Illegal invocation.....
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        console.log(data)
-                        makeReadable(categoryId)
-                        form.parentElement
-                            .nextElementSibling
-                            .firstElementChild
-                            .setAttribute('src', '/category/' + categoryId + '/image')
-                    },
-                    error: function () {
-                        alert("Error - Data not saved");
-                    }
-                });
-        }
-
-        function makeEditable(categoryId) {
-            let picControl = document.getElementById('picControl-' + categoryId);
-            let btnCategoryInfo = document.getElementById('btn-category-info-' + categoryId);
-            let textArea = document.getElementById('category-description-' + categoryId);
-            picControl.setAttribute('style', 'display:block');
-            btnCategoryInfo.setAttribute('style', 'display:inline-block');
-            textArea.readOnly = false;
-            textArea.spellcheck = true;
-        }
-
-        function makeReadable(categoryId) {
-            let picControl = document.getElementById('picControl-' + categoryId);
-            let btnCategoryInfo = document.getElementById('btn-category-info-' + categoryId);
-            let textArea = document.getElementById('category-description-' + categoryId);
-            picControl.setAttribute('style', 'display:none');
-            btnCategoryInfo.setAttribute('style', 'display:none');
-            textArea.readOnly = true;
-            textArea.spellcheck = false;
-        }
-    </script>
 </div>

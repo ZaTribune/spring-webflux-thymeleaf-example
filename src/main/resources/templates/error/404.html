@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404</title>
+</head>
+<body style="text-align: center;font-family: sans-serif;">
+<div class="text-center" style="text-align: center;display: inline-grid;">
+    <img src="/images/cook-oops-404.svg" style="display: block;margin: auto" width="200px" height="200px" alt="">
+    <!--/*@thymesVar id="exception" type="java.lang.Exception"*/-->
+    <h1 style="display: inline-block;color: crimson;" th:if="${exception!=null}" th:text="${exception.getMessage()}"></h1>
+    <h1 style="display: inline-block;color: crimson;" th:if="${exception==null}" th:text="#{notFound}"></h1>
+</div>
+
+</body>
+</html>
