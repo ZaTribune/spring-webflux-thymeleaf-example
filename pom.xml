@@ -87,6 +87,16 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--to fix this error in unitTesting webflux
+        javax.validation.ValidationException: HV000183: Unable to initialize 'javax.el.ExpressionFactory'.
+        Check that you have the EL dependencies on the classpath, or use ParameterMessageInterpolator instead
+        -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>3.0.1-b08</version>
+            <scope>test</scope>
+        </dependency>
         <!-- to fix error: When Maybe -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>

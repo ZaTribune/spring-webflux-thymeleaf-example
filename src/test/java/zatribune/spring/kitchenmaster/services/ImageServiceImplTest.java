@@ -1,7 +1,6 @@
 package zatribune.spring.kitchenmaster.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.IOUtils;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,10 +20,6 @@ import reactor.core.publisher.Mono;
 import zatribune.spring.kitchenmaster.controllers.ImageController;
 import zatribune.spring.kitchenmaster.data.entities.Category;
 import zatribune.spring.kitchenmaster.data.repositories.CategoryReactiveRepository;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,7 +39,7 @@ Actual   :404 NOT_FOUND
 class ImageServiceImplTest {
 
     @MockBean
-    ImageService imageService;
+    ImageServiceImpl imageService;
     @MockBean
     CategoryService categoryService;
     @MockBean

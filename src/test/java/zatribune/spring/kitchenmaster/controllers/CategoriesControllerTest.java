@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -21,18 +22,24 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 @WebFluxTest(CategoriesController.class)
-/*Using this annotation will disable full auto-configuration and instead apply only configuration
+/*Using this annotation WebFluxTest(CategoriesController.class) will disable full auto-configuration
+ and instead apply only configuration
  relevant to WebFlux tests (i.e. @Controller, @ControllerAdvice, @JsonComponent,
  Converter/GenericConverter, and WebFluxConfigurer beans but not
  @Component, @Service or @Repository beans).
  Typically @WebFluxTest is used in combination with
- @MockBean or @Import to create any collaborators required by your @Controller beans.*/
+ @MockBean or @Import to create any collaborators required by your @Controller beans.
+ if your controller method returns a view/means that you're making a get() request with WebClientTest
+ , in that case view will try to get resolved which will not happen until auto configuration feature works.
+ If you do not want full application loading, you'll have to mock the controller and its methods<-bad practice.
+ If you are looking to load your full application configuration and use WebTestClient,
+ you should consider @SpringBootTest combined with @AutoConfigureWebTestClient rather than this annotation.
+ */
 class CategoriesControllerTest {
     @MockBean
     CategoryService categoryService;
