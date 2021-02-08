@@ -1,68 +1,69 @@
 package zatribune.spring.kitchenmaster.controllers;
 
+import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.thymeleaf.exceptions.TemplateInputException;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import zatribune.spring.kitchenmaster.commands.RecipeCommand;
 import zatribune.spring.kitchenmaster.data.entities.Recipe;
-import zatribune.spring.kitchenmaster.exceptions.MyNotFoundException;
-import zatribune.spring.kitchenmaster.services.RecipeServiceImpl;
+import zatribune.spring.kitchenmaster.services.RecipeService;
 import zatribune.spring.kitchenmaster.services.UnitMeasureService;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
+@WebFluxTest(RecipesController.class)
 class RecipesControllerTest {
     //When using Mockito, all arguments have to be provided by matchers.
     //the mockito methods only work on objects annotated with @Mock
-    @Mock
-    RecipeServiceImpl recipeService;
-    @Mock
+    @MockBean
+    RecipeService recipeService;
+    @MockBean
     UnitMeasureService unitMeasureService;
-    @Mock
+    @MockBean
     Model model;
     // to fix unchecked assignment problems
     @Captor
-    ArgumentCaptor<List<Recipe>> captor;
-    @InjectMocks
-    RecipesController recipesController;
-    MockMvc mockMvc;
+    ArgumentCaptor<Flux<Recipe>> captor;
+
+    @Autowired
+    WebTestClient webTestClient;
 
     @BeforeEach
     void setUp() {
-        //recipesController=new RecipesController(recipeService);
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(recipesController)
-                // we have to specify it for exception handling
-                .setControllerAdvice(new ControllerExceptionHandler())
-                .build();
+
     }
 
     @Test
-    void getIndexPage() throws Exception {
+    void getRecipesHomePage() {
         //webAppContextSetup will bring the Spring context therefore our test will no longer be a unit testing
-        mockMvc.perform(get("/recipes"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("recipes/homeRecipes"));
-
+        List<String> result = webTestClient.get().uri("/recipes").exchange()
+                .expectStatus().isOk()
+                .returnResult(String.class).getResponseBody().collectList().block();
+        assertNotNull(result);
+        assertTrue(result.size() > 0);
     }
 
     @Test
@@ -76,44 +77,68 @@ class RecipesControllerTest {
         recipe2.setTitle("recipe 2");
 
         //************ when ************
-        when(recipeService.getAllRecipes()).thenReturn(Flux.just(recipe1,recipe2));
+        when(recipeService.getAllRecipes()).then(invocationOnMock ->
+                model.addAttribute("recipes", Flux.just(recipe1, recipe2))).thenReturn(Flux.just(recipe1, recipe2));
+
+        List<String> result =
+                webTestClient.get().uri("/searchRecipes").exchange()
+                        .expectStatus().isOk()
+                        .returnResult(String.class).getResponseBody().collectList().block();
 
         //************ then ************
-        assertEquals(expectedURL, recipesController.searchRecipes(model));
+        //assertEquals(expectedURL, recipesController.searchRecipes(model));
         verify(recipeService, times(1)).getAllRecipes();
+
         //this verifies that addAttribute() is called once.
         //the captor is to make sure that the argument passed to the function is the right one/type
         verify(model, times(1)).addAttribute(eq("recipes"), captor.capture());
-        List<Recipe>list=captor.getValue();
-        assertNotNull(list);
-        assertEquals(2, list.size());
+        List<Recipe> recipes = captor.getValue().collectList().block();
+        assertNotNull(recipes);
+        assertEquals(2, recipes.size());
     }
 
     @Test
-    public void getRecipeByIdNotFound() throws Exception {
-        when(recipeService.getRecipeById(anyString())).thenThrow(MyNotFoundException.class);
-        mockMvc.perform(get("/showRecipe/15"))
-               .andExpect(status().isNotFound())
-               .andExpect(view().name("errors/404"));
+    public void getRecipeByIdNotFound() {
+        String id = new ObjectId().toString();
+        String errorMessage = "Recipe not found for id " + id;
+        when(recipeService.getRecipeById(id)).thenThrow(new TemplateInputException(errorMessage));
+        List<String> result = webTestClient.get().uri("/showRecipe/" + id).exchange()
+                .expectStatus().isNotFound()
+                .returnResult(String.class)
+                .getResponseBody().collectList().block();
+        assertNotNull(result);
+        System.out.println(String.join("", result));
+        assertTrue(String.join("", result).contains(errorMessage));
         //side by side with the custom annotated exception class
         //and the double annotated exception handler function on the controller
     }
 
     @Test
-    public void postNewRecipeForm() throws Exception {
+    public void postNewRecipeForm() {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setTitle("Hello");
+        recipeCommand.setPrepTime(10);
+        recipeCommand.setCookTime(15);
+        recipeCommand.setDirections("whatever directions");
 
-        //when(recipeService.saveRecipeCommand(any())).thenReturn(recipeCommand);
-        mockMvc.perform(post("/updateOrSaveRecipe")
+        when(recipeService.saveRecipeCommand(any())).thenReturn(Mono.just(recipeCommand));
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("title", "hello");
+        body.add("prepTime", "10");
+        body.add("cookTime", "15");
+        body.add("directions", "whatever directions");
+        //don't use contentType
+        List<String> list = webTestClient.post()
+                .uri("/updateOrSaveRecipe", body)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("id","20")
-                .param("title","xx")
-                .param("directions","")
-                .param("prepTime","0")
-                .param("cookTime","0")
-                 )
-                .andExpect(status().isOk())
-        .andReturn();
-
+                .body(BodyInserters.fromFormData(body))
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(String.class).getResponseBody().collectList().block();
+        assertNotNull(list);
+        assertTrue(list.size()>0);
+        System.out.println(String.join("",list));
     }
 
 }

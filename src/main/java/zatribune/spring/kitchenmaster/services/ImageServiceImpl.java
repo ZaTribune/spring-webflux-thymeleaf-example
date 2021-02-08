@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import zatribune.spring.kitchenmaster.data.entities.Category;
 import zatribune.spring.kitchenmaster.data.repositories.CategoryReactiveRepository;
 
 @Slf4j
@@ -19,7 +20,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Mono<?> saveImageFile(String id, FilePart filePart) {
+    public Mono<Category> saveImageFile(String id, FilePart filePart) {
         //both methods must be on the same level of hierarchy meaning that you just can't call save()
         //inside the findById() stream
         //File temp = new File(System.getProperty("user.dir") + "/temp/"+file.filename());

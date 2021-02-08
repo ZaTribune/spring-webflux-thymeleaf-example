@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NotesCommandToNotesTest {
 
-    private NotesCommandToNotes converter;
-    private final String description="a dummy notes description";
+    NotesCommandToNotes converter;
+    String description="a dummy notes description";
 
     @BeforeEach
     void setUp() {
@@ -22,12 +22,6 @@ class NotesCommandToNotesTest {
     void testEmptyObject(){
         assertNotNull(converter.convert(new NotesCommand()));
     }
-
-    @Test
-    void testNullObject(){
-        assertNull(converter.convert(null));
-    }
-
 
     @Test
     void convert() {

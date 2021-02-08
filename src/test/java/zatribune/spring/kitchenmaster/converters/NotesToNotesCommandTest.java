@@ -25,12 +25,6 @@ class NotesToNotesCommandTest {
     }
 
     @Test
-    void testNullObject(){
-        assertNull(converter.convert(null));
-    }
-
-
-    @Test
     void convert() {
         Notes input=new Notes();
         input.setId(new ObjectId());

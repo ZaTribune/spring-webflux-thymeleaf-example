@@ -1,40 +1,40 @@
 package zatribune.spring.kitchenmaster.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Slf4j
 @ExtendWith(MockitoExtension.class)
+@WebFluxTest(IndexController.class)
 class IndexControllerTest {
 
-    @InjectMocks
-    IndexController indexController;
+    @Autowired
+    WebTestClient webTestClient;
 
     @BeforeEach
     void setUp() {
     }
-
-    @Test
-    void testMockMVC() throws Exception{
-        //webAppContextSetup will bring the Spring context therefore our test will no longer be a unit testing
-        MockMvc mockMvc= MockMvcBuilders
-                .standaloneSetup(indexController)
-                .build();
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("index"));
-    }
+    //webAppContextSetup will bring the Spring context therefore our test will no longer be a unit testing
 
     @Test
     void getIndexPage() { // this is an example of test-driven-development {given-when-then}
-
+        List<String> result =
+                webTestClient.get().uri("/").exchange()
+                        .expectStatus().isOk()
+                        .returnResult(String.class).getResponseBody()
+                        .collectList().block();
+        assertNotNull(result);
+        assertTrue(result.size()>0);
     }
 }

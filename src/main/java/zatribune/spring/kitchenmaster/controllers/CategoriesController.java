@@ -35,11 +35,11 @@ public class CategoriesController {
     }
 
     @RequestMapping("/listCategories")
-    public String listCategories(@RequestParam(required = false) String s, Model model) {
+    public String listCategories(@RequestParam(required = false,defaultValue = "") String s, Model model) {
         log.info("listCategories: " + s);
         Flux<CategoryCommand> categories = categoryService.getAllCategories()
-                .map(categoryToCategoryCommand::convert)
                 .filter(category -> category.getDescription().startsWith(s))
+                .map(categoryToCategoryCommand::convert)
                 .limitRate(15);
 
         model.addAttribute("categoriesSuggestions", categories);

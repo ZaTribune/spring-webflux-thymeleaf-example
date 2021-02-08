@@ -10,17 +10,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UnitMeasureCommandToUnitMeasureTest {
 
-    private final String description="a dummy description";
-    private UnitMeasureCommandToUnitMeasure converter;
+    String description="a dummy description";
+    UnitMeasureCommandToUnitMeasure converter;
 
     @BeforeEach
     void setUp() {
         converter=new UnitMeasureCommandToUnitMeasure();
     }
-    @Test
-    void testNullObject(){
-        assertNull(converter.convert(null));
-    }
+
     @Test
     void testEmptyObject(){
         assertNotNull(converter.convert(new UnitMeasureCommand()));
