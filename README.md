@@ -11,12 +11,30 @@ This project is for educational purposes, as it contains several practices commo
  
 ## Built With  
 &nbsp;&nbsp;&nbsp;&nbsp;**Java** - The Main Programming Language and Framework.  
-&nbsp;&nbsp;&nbsp;&nbsp;**Spring Boot** - Software Platform for creating and delivering Android Applications.   
+&nbsp;&nbsp;&nbsp;&nbsp;**Spring Boot** - Software Platform for creating and delivering Web Applications.  
+&nbsp;&nbsp;&nbsp;&nbsp;**Spring WebFlux** - A Spring Web Stack which is part of Spring 5 and provides reactive programming support for web applications.
+&nbsp;&nbsp;&nbsp;&nbsp;**Thymeleaf** - Web Template Engine.  
 &nbsp;&nbsp;&nbsp;&nbsp;**Intellij Idea** - Java IDE.  
 &nbsp;&nbsp;&nbsp;&nbsp;**Maven** - Build tool & Dependency Management.  
 
 ## Features  
-&nbsp;&nbsp;&nbsp;&nbsp;**[In progress]**  
+* A fully Reactive Web Application built on the Spring WebFlux Stack.  
+* An asynchronous web application on the client-side as it utilizes AJAX.  
+* Using an Embedded MongoDB as a Database.  
+* CRUD Operations against an Embedded MongoDB Using Spring Boot Reactive Repositories.  
+* Bootstraping data for Embedded MongoDB.  
+* JPA Data Modeling with Spring and Hibernate.  
+* Utilizing Project Lombok.  
+* Form Data submitting.  
+* Validation and Constraints with Spring MVC.  
+* Image upload as a Base64 String.  
+* Image upload as a byte array.  
+* Handling Errors & Exceptions on Spring WebFlux.  
+* External Properties with Spring.  
+* Unit Tests & Integrated Tests.  
+* CircleCi Integration.  
+* Code Coverage.  
+* Tested on a Docker Container + Steps to achieve that.  
 
 ## Authors  
    **Muhammad Ali Arafah** - find me on : [Twitter](https://twitter.com/ZaTribune), [LinkedIn](https://www.linkedin.com/in/zatribune).  
