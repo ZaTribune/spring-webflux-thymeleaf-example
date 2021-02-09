@@ -42,9 +42,9 @@ class IndexControllerTest {
 
     @Test
     void getModal() {
-        for (ModalType m:ModalType.values()){
+        for (ModalType type:ModalType.values()){
             String result = null;
-            switch (m) {
+            switch (type) {
                 case INFO:
                     result = webTestClient.get().uri("/modal/" + ModalType.INFO)
                             .attribute("title", "")
