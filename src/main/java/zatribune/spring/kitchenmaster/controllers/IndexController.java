@@ -26,16 +26,16 @@ public class IndexController {
     @RequestMapping("/modal/{type}")
     public Mono<String> getModal
             (@PathVariable ModalType type, Model model, @RequestParam(required = false)List<ObjectError>errors){
-        log.info("Now, I'm opening a modal.");
+        log.info("Now, I'm opening a modal of type {}",type);
         switch (type){
+            case INFO:
+                model.addAttribute("title","");
+                model.addAttribute("info","....some information");
+                break;
             case DELETE:
                 model.addAttribute("title","Confirm Deleting a Recipe !");
                 model.addAttribute("question","Are you sure you want to delete this recipe?");
                 model.addAttribute("info","....some errors");
-                break;
-            case INFO:
-                model.addAttribute("title","");
-                model.addAttribute("info","....some information");
                 break;
             case ERROR:
                 model.addAttribute("title",null);

@@ -42,41 +42,42 @@ class IndexControllerTest {
 
     @Test
     void getModal() {
-        ModalType typeSelected = ModalType.values()[0];
-        String result = null;
-        switch (typeSelected) {
-            case INFO:
-                result = webTestClient.get().uri("/modal/" + ModalType.INFO)
-                                .attribute("title", "")
-                                .attribute("question", "")
-                                .attribute("info", "")
-                                .exchange()
-                                .expectStatus().isOk()
-                                .expectBody(String.class)
-                                .returnResult().getResponseBody();
-                break;
-            case DELETE:
-                result = webTestClient.get().uri("/modal/" + ModalType.DELETE)
-                                .attribute("title", "")
-                                .attribute("info", "")
-                                .exchange()
-                                .expectStatus().isOk()
-                                .expectBody(String.class)
-                                .returnResult().getResponseBody();
-                break;
-            case ERROR:
-                result = webTestClient.get().uri("/modal/" + ModalType.ERROR)
-                                .attribute("title", "")
-                                .attribute("errors", new ArrayList<ObjectError>())
-                                .attribute("info", "")
-                                .exchange()
-                                .expectStatus().isOk()
-                                .expectBody(String.class)
-                                .returnResult().getResponseBody();
-                break;
+        for (ModalType m:ModalType.values()){
+            String result = null;
+            switch (m) {
+                case INFO:
+                    result = webTestClient.get().uri("/modal/" + ModalType.INFO)
+                            .attribute("title", "")
+                            .attribute("question", "")
+                            .attribute("info", "")
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody(String.class)
+                            .returnResult().getResponseBody();
+                    break;
+                case DELETE:
+                    result = webTestClient.get().uri("/modal/" + ModalType.DELETE)
+                            .attribute("title", "")
+                            .attribute("info", "")
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody(String.class)
+                            .returnResult().getResponseBody();
+                    break;
+                case ERROR:
+                    result = webTestClient.get().uri("/modal/" + ModalType.ERROR)
+                            .attribute("title", "")
+                            .attribute("errors", new ArrayList<ObjectError>())
+                            .attribute("info", "")
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody(String.class)
+                            .returnResult().getResponseBody();
+                    break;
+            }
+            assertNotNull(result);
+            assertTrue(result.length() > 0);
         }
-        assertNotNull(result);
-        assertTrue(result.length() > 0);
 
     }
 }
