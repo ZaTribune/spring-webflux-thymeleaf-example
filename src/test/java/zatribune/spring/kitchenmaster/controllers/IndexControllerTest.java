@@ -29,12 +29,26 @@ class IndexControllerTest {
 
     @Test
     void getIndexPage() { // this is an example of test-driven-development {given-when-then}
-        List<String> result =
+        String result =
                 webTestClient.get().uri("/").exchange()
                         .expectStatus().isOk()
-                        .returnResult(String.class).getResponseBody()
-                        .collectList().block();
+                        .expectBody(String.class)
+                        .returnResult().getResponseBody();
         assertNotNull(result);
-        assertTrue(result.size()>0);
+        assertTrue(result.length()>0);
+    }
+    @Test
+    void getModal(){
+        String typeConfirm="confirm";
+        String typeDelete="delete";
+        String typeError="error";
+        String result =
+                webTestClient.get().uri("/modal/"+typeConfirm).exchange()
+                        .expectStatus().isOk()
+                        .expectBody(String.class)
+                        .returnResult().getResponseBody();
+        assertNotNull(result);
+        assertTrue(result.length()>0);
+
     }
 }

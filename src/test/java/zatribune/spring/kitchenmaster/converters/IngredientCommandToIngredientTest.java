@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import zatribune.spring.kitchenmaster.commands.IngredientCommand;
 import zatribune.spring.kitchenmaster.commands.UnitMeasureCommand;
 import zatribune.spring.kitchenmaster.data.entities.Ingredient;
+import zatribune.spring.kitchenmaster.data.entities.Recipe;
 
 import java.math.BigDecimal;
 
@@ -19,14 +20,16 @@ class IngredientCommandToIngredientTest {
     String descriptionIngredient ="a dummy ingredient description";
     BigDecimal amount=BigDecimal.valueOf(20);
     UnitMeasureCommand unitMeasure;
-    String idUnitMeasure="0x844454";
+    ObjectId idUnitMeasure;
     String descriptionUnitMeasure="a dummy unit measure description";
-    String idIngredient="0x899994";
+    ObjectId idIngredient;
 
     @BeforeEach
     void setUp() {
         ingredientCommandToIngredientConverter=
                 new IngredientCommandToIngredient(new UnitMeasureCommandToUnitMeasure());
+        idUnitMeasure=new ObjectId();
+        idIngredient=new ObjectId();
     }
 
     @Test
@@ -37,13 +40,14 @@ class IngredientCommandToIngredientTest {
     @Test
     void convert() {
         ingredientCommand =new IngredientCommand();
-        ingredientCommand.setId(new ObjectId().toString());
+        ingredientCommand.setId(idIngredient.toString());
         ingredientCommand.setDescription(descriptionIngredient);
         ingredientCommand.setAmount(amount);
         unitMeasure=new UnitMeasureCommand();
-        unitMeasure.setId(new ObjectId().toString());
+        unitMeasure.setId(idUnitMeasure.toString());
         unitMeasure.setDescription(descriptionUnitMeasure);
         ingredientCommand.setUnitMeasure(unitMeasure);
+        ingredientCommand.setRecipe(new Recipe());
 
         Ingredient ingredient=ingredientCommandToIngredientConverter.convert(ingredientCommand);
 

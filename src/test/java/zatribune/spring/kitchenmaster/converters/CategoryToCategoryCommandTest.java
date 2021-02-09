@@ -5,19 +5,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import zatribune.spring.kitchenmaster.commands.CategoryCommand;
 import zatribune.spring.kitchenmaster.data.entities.Category;
+import zatribune.spring.kitchenmaster.data.entities.Recipe;
+
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryToCategoryCommandTest {
 
 
-    private CategoryToCategoryCommand converter;
-    private final String id="0x875454";
-    private final String description="a dummy category description";
+    CategoryToCategoryCommand converter;
+    ObjectId id;
+    String description="a dummy category description";
 
     @BeforeEach
     void setUp() {
         converter=new CategoryToCategoryCommand();
+        id=new ObjectId();
     }
 
     @Test
@@ -30,8 +34,9 @@ class CategoryToCategoryCommandTest {
     @Test
     void convert() {
         Category source=new Category();
-        source.setId(new ObjectId());
+        source.setId(id);
         source.setDescription(description);
+        source.setRecipes(new HashSet<>());
 
         CategoryCommand category=converter.convert(source);
 

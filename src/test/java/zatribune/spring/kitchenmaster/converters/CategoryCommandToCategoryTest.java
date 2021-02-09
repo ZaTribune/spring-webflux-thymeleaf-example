@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CategoryCommandToCategoryTest {
 
-    private CategoryCommandToCategory converter;
-    private final String description="a dummy category description";
+    CategoryCommandToCategory converter;
+    String description="a dummy category description";
 
     @BeforeEach
     void setUp() {
@@ -28,6 +28,7 @@ class CategoryCommandToCategoryTest {
         CategoryCommand source=new CategoryCommand();
         source.setId(new ObjectId().toString());
         source.setDescription(description);
+
 
         Category category=converter.convert(source);
 
