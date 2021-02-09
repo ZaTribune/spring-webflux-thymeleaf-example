@@ -14,7 +14,7 @@
                 <button class="btn btn-danger"
                         th:id="${recipe.id}"
                         onclick="confirmDialog(
-                                 'delete',
+                                 'DELETE',
                                  '/deleteRecipe/'+this.id,
                                  function() {getContent($('#container'),'/recipes')})"
                         data-bs-toggle="modal" data-bs-target="#myModal">

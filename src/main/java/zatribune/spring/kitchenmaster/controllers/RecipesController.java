@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.spring5.context.webflux.IReactiveDataDriverContextVariable;
+import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Mono;
 import zatribune.spring.kitchenmaster.commands.RecipeCommand;
 import zatribune.spring.kitchenmaster.data.entities.Recipe;
@@ -47,8 +49,9 @@ public class RecipesController {
 
     @RequestMapping("/showRecipe/{id}")
     public String showRecipe(@PathVariable String id, Model model){
-        Mono<Recipe> recipe = recipeService.getRecipeById(id);
-        model.addAttribute("recipe", recipe);
+        IReactiveDataDriverContextVariable reactiveDataDrivenMode =
+                new ReactiveDataDriverContextVariable(recipeService.getRecipeById(id), 1);
+        model.addAttribute("recipe", reactiveDataDrivenMode);
         return "recipes/showRecipe";
     }
 
