@@ -12,7 +12,7 @@ This project is for educational purposes, as it contains several practices commo
 ## Built With  
 &nbsp;&nbsp;&nbsp;&nbsp;**Java** - The Main Programming Language and Framework.  
 &nbsp;&nbsp;&nbsp;&nbsp;**Spring Boot** - Software Platform for creating and delivering Web Applications.  
-&nbsp;&nbsp;&nbsp;&nbsp;**Spring WebFlux** - A Spring Web Stack which is part of Spring 5 and provides reactive programming support for web applications.
+&nbsp;&nbsp;&nbsp;&nbsp;**Spring WebFlux** - A Spring Web Stack which is part of Spring 5 and provides reactive programming support for web applications.  
 &nbsp;&nbsp;&nbsp;&nbsp;**Thymeleaf** - Web Template Engine.  
 &nbsp;&nbsp;&nbsp;&nbsp;**Intellij Idea** - Java IDE.  
 &nbsp;&nbsp;&nbsp;&nbsp;**Maven** - Build tool & Dependency Management.  
