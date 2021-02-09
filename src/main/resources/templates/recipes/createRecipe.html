@@ -7,7 +7,7 @@
           method="POST"
           class="justify-content-center">
         <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger m-0">
-            <p>Please, correct errors below.</p>
+            <p th:text="'Please, correct '+${#fields.errors('*').size()}+' error/s below.'"></p>
         </div>
         <div class="card">
             <input type="hidden" th:field="*{id}">

@@ -8,8 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.spring5.context.webflux.IReactiveDataDriverContextVariable;
-import org.thymeleaf.spring5.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Mono;
 import zatribune.spring.kitchenmaster.commands.RecipeCommand;
 import zatribune.spring.kitchenmaster.data.entities.Recipe;
@@ -49,9 +47,8 @@ public class RecipesController {
 
     @RequestMapping("/showRecipe/{id}")
     public String showRecipe(@PathVariable String id, Model model){
-        IReactiveDataDriverContextVariable reactiveDataDrivenMode =
-                new ReactiveDataDriverContextVariable(recipeService.getRecipeById(id), 1);
-        model.addAttribute("recipe", reactiveDataDrivenMode);
+        Mono<Recipe> recipe = recipeService.getRecipeById(id);
+        model.addAttribute("recipe", recipe);
         return "recipes/showRecipe";
     }
 
@@ -72,17 +69,17 @@ public class RecipesController {
 
     @RequestMapping("/deleteRecipe/{id}")
     public @ResponseBody
-    String deleteRecipe(@PathVariable String id) {
+    Boolean deleteRecipe(@PathVariable String id) {
         log.info("deleting recipe: " + id);
         recipeService.deleteRecipeById(id);
-        return "ok";
+        return Boolean.TRUE;
     }
 
     @PostMapping
     @RequestMapping("/updateOrSaveRecipe") // @ModelAttribute to get the attribute{recipe}
     // which we've passed to the view before--by default it will search for the name in the argument if
     //not specified in the annotation, except when there's no validation
-    public String saveOrUpdateRecipe(@ModelAttribute("recipe") Mono<RecipeCommand> recipeCommand,Model model) {
+    public String saveOrUpdateRecipe(@ModelAttribute("recipe") Mono<RecipeCommand> recipeCommand, Model model) {
         log.info("categories for recipe {}", recipeCommand);
         //we're doing a manual workaround there,we're getting a hand on the web data binder
         //and this is going to contain binding information of what was bound in this call

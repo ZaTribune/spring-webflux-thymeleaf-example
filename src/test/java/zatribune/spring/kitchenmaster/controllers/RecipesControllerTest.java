@@ -51,9 +51,11 @@ class RecipesControllerTest {
     @Autowired
     WebTestClient webTestClient;
 
+    ObjectId id;
+
     @BeforeEach
     void setUp() {
-
+        id = new ObjectId();
     }
 
     @Test
@@ -70,7 +72,6 @@ class RecipesControllerTest {
     void getSearchRecipesPage() { // this is an example of test-driven-development {given-when-then}
 
         //************ given ************
-        String expectedURL = "recipes/searchRecipes";
         Recipe recipe1 = new Recipe();
         recipe1.setTitle("recipe 1");
         Recipe recipe2 = new Recipe();
@@ -80,13 +81,15 @@ class RecipesControllerTest {
         when(recipeService.getAllRecipes()).then(invocationOnMock ->
                 model.addAttribute("recipes", Flux.just(recipe1, recipe2))).thenReturn(Flux.just(recipe1, recipe2));
 
-        List<String> result =
+        String result =
                 webTestClient.get().uri("/searchRecipes").exchange()
                         .expectStatus().isOk()
-                        .returnResult(String.class).getResponseBody().collectList().block();
+                        .expectBody(String.class)
+                        .returnResult().getResponseBody();
 
         //************ then ************
-        //assertEquals(expectedURL, recipesController.searchRecipes(model));
+        assertNotNull(result);
+        assertTrue(result.length()>0);
         verify(recipeService, times(1)).getAllRecipes();
 
         //this verifies that addAttribute() is called once.
@@ -114,7 +117,7 @@ class RecipesControllerTest {
     }
 
     @Test
-    public void postNewRecipeForm() {
+    public void saveOrUpdateRecipeValid() {
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setTitle("Hello");
         recipeCommand.setPrepTime(10);
@@ -129,16 +132,103 @@ class RecipesControllerTest {
         body.add("cookTime", "15");
         body.add("directions", "whatever directions");
         //don't use contentType
-        List<String> list = webTestClient.post()
+        String result = webTestClient.post()
                 .uri("/updateOrSaveRecipe", body)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(body))
                 .exchange()
                 .expectStatus().isOk()
-                .returnResult(String.class).getResponseBody().collectList().block();
-        assertNotNull(list);
-        assertTrue(list.size()>0);
-        System.out.println(String.join("",list));
+                .expectBody(String.class)
+                .returnResult().getResponseBody();
+        assertNotNull(result);
+        assertTrue(result.length() > 0);
+    }
+
+    @Test
+    public void saveOrUpdateRecipeInValid() {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setTitle("Hello");
+        recipeCommand.setPrepTime(10);
+        recipeCommand.setCookTime(15);
+        recipeCommand.setDirections("whatever directions");
+
+        when(recipeService.saveRecipeCommand(any())).thenReturn(Mono.just(recipeCommand));
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("title", "h");
+        body.add("prepTime", "0");
+        body.add("cookTime", "0");
+        body.add("directions", "");
+        //don't use contentType
+        String result = webTestClient.post()
+                .uri("/updateOrSaveRecipe", body)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData(body))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).returnResult().getResponseBody();
+        assertNotNull(result);
+        assertTrue(result.length() > 0);
+        assertTrue(result.contains("4 error/s"));
+    }
+
+    @Test
+    void showRecipe() {
+        Recipe recipe = new Recipe();
+        recipe.setId(id);
+        recipe.setTitle("Dummy Title");
+        when(recipeService.getRecipeById(id.toString())).thenReturn(Mono.just(recipe));
+        String result = webTestClient.get().uri("/showRecipe/" + id)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult().getResponseBody();
+        assertNotNull(result);
+        assertTrue(result.length() > 0);
+    }
+
+    @Test
+    void createNewRecipe() {
+        //no error will happen but just it's more convenient to have it an EmptyFlux rather than a null value
+        when(unitMeasureService.getAllUnitMeasures()).thenReturn(Flux.empty());
+        String result = webTestClient.get().uri("/createRecipe")
+                .attribute("recipe", Mono.just(new RecipeCommand()))
+                .attribute("unitMeasures", unitMeasureService.getAllUnitMeasures())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult().getResponseBody();
+        assertNotNull(result);
+        assertTrue(result.length() > 0);
+    }
+
+    @Test
+    void updateRecipe() {
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(id.toString());
+        recipeCommand.setTitle("Dummy Title");
+        when(recipeService.getRecipeCommandById(id.toString())).thenReturn(Mono.just(recipeCommand));
+        when(unitMeasureService.getAllUnitMeasures()).thenReturn(Flux.empty());
+        String result = webTestClient.get().uri("/updateRecipe/" + id)
+                .attribute("recipe", Mono.just(new RecipeCommand()))
+                .attribute("unitMeasures", unitMeasureService.getAllUnitMeasures())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult().getResponseBody();
+        assertNotNull(result);
+        assertTrue(result.length() > 0);
+    }
+
+    @Test
+    void deleteRecipe() {
+        Boolean result = webTestClient.get().uri("/deleteRecipe/" + id)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Boolean.class)
+                .returnResult().getResponseBody();
+        assertNotNull(result);
+        assertTrue(result);
     }
 
 }
