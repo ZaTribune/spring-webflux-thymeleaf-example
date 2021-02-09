@@ -28,14 +28,18 @@ public class IndexController {
         log.info("Now, I'm opening a modal.");
         switch (type){
             case "delete":
-                model.addAttribute("title","Confirm deleting a recipe !");
+                model.addAttribute("title","Info");
                 model.addAttribute("question","Are you sure you want to delete this recipe?");
+                model.addAttribute("info","....some errors");
                 break;
             case "info":
-
+                model.addAttribute("title","");
+                model.addAttribute("info","....some information");
                 break;
             case "error":
+                model.addAttribute("title",null);
                 model.addAttribute("errors",errors);
+                model.addAttribute("info","....some errors");
                 break;
         }
 

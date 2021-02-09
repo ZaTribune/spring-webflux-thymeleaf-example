@@ -8,7 +8,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.validation.ObjectError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,16 +41,41 @@ class IndexControllerTest {
     }
     @Test
     void getModal(){
-        String typeConfirm="confirm";
         String typeDelete="delete";
+        String typeInfo="info";
         String typeError="error";
-        String result =
-                webTestClient.get().uri("/modal/"+typeConfirm).exchange()
+        String result1 =
+                webTestClient.get().uri("/modal/"+typeDelete)
+                        .attribute("title","")
+                        .attribute("question","")
+                        .attribute("info","")
+                        .exchange()
                         .expectStatus().isOk()
                         .expectBody(String.class)
                         .returnResult().getResponseBody();
-        assertNotNull(result);
-        assertTrue(result.length()>0);
+        String result2 =
+                webTestClient.get().uri("/modal/"+typeInfo)
+                        .attribute("title","")
+                        .attribute("info","")
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody(String.class)
+                        .returnResult().getResponseBody();
+        String result3 =
+                webTestClient.get().uri("/modal/"+typeError)
+                        .attribute("title","")
+                        .attribute("errors",new ArrayList<ObjectError>())
+                        .attribute("info","")
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody(String.class)
+                        .returnResult().getResponseBody();
+        assertNotNull(result1);
+        assertNotNull(result2);
+        assertNotNull(result3);
+        assertTrue(result1.length()>0);
+        assertTrue(result2.length()>0);
+        assertTrue(result3.length()>0);
 
     }
 }
