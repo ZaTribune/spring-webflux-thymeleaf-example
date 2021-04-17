@@ -31,7 +31,6 @@ public class RecipesController {
     @InitBinder
     public void initBinder(WebDataBinder webDataBinder) {
         this.webDataBinder = webDataBinder;
-
     }
 
     @RequestMapping("/recipes")
@@ -68,15 +67,13 @@ public class RecipesController {
 
 
     @RequestMapping("/deleteRecipe/{id}")
-    public @ResponseBody
-    Boolean deleteRecipe(@PathVariable String id) {
+    public @ResponseBody Boolean deleteRecipe(@PathVariable String id) {
         log.info("deleting recipe: " + id);
         recipeService.deleteRecipeById(id);
         return Boolean.TRUE;
     }
 
-    @PostMapping
-    @RequestMapping("/updateOrSaveRecipe") // @ModelAttribute to get the attribute{recipe}
+    @PostMapping("/updateOrSaveRecipe") // @ModelAttribute to get the attribute{recipe}
     // which we've passed to the view before--by default it will search for the name in the argument if
     //not specified in the annotation, except when there's no validation
     public String saveOrUpdateRecipe(@ModelAttribute("recipe") Mono<RecipeCommand> recipeCommand, Model model) {

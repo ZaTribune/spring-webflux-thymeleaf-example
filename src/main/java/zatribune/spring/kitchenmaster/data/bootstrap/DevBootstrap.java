@@ -7,14 +7,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import zatribune.spring.kitchenmaster.data.entities.*;
-import zatribune.spring.kitchenmaster.data.repositories.CategoryReactiveRepository;
-import zatribune.spring.kitchenmaster.data.repositories.RecipeReactiveRepository;
-import zatribune.spring.kitchenmaster.data.repositories.UnitMeasureReactiveRepository;
+import zatribune.spring.kitchenmaster.data.repositories.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -22,23 +19,40 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     private final RecipeReactiveRepository recipeRepository;
     private final CategoryReactiveRepository categoryRepository;
     private final UnitMeasureReactiveRepository unitMeasureRepository;
+    private final UserReactiveRepository userRepository;
+    private final IngredientReactiveRepository ingredientRepository;
+    private final RoleReactiveRepository roleRepository;
 
     @Autowired
-    public DevBootstrap(RecipeReactiveRepository recipeRepository, CategoryReactiveRepository categoryRepository, UnitMeasureReactiveRepository unitMeasureRepository) {
-        log.debug("I'm at the Bootstrap phase");
+    public DevBootstrap(RecipeReactiveRepository recipeRepository, CategoryReactiveRepository categoryRepository,
+                        UnitMeasureReactiveRepository unitMeasureRepository,IngredientReactiveRepository ingredientRepository, UserReactiveRepository userRepository
+            , RoleReactiveRepository roleRepository) {
+        log.debug(getClass().getSimpleName()+":I'm at the Bootstrap phase.");
         this.recipeRepository = recipeRepository;
         this.categoryRepository = categoryRepository;
         this.unitMeasureRepository = unitMeasureRepository;
+        this.ingredientRepository=ingredientRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public void onApplicationEvent(@Nullable ContextRefreshedEvent contextRefreshedEvent) {
+        clearOldData();
         initData();
+        initAccess();
+    }
+
+    void clearOldData(){
+        recipeRepository.deleteAll().subscribe();
+        categoryRepository.deleteAll().subscribe();
+        unitMeasureRepository.deleteAll().subscribe();
+        userRepository.deleteAll().subscribe();
+        roleRepository.deleteAll().subscribe();
     }
 
 
     void initData() {
-        log.info("bootstrap data");
         UnitMeasure emptyUOM = new UnitMeasure();
         emptyUOM.setDescription("");
         UnitMeasure teaspoon = new UnitMeasure();
@@ -65,10 +79,11 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         Category mexican = new Category();
         mexican.setDescription("Mexican");
         mexican.setInfo("From the home of spicy foods and bad ass recipes,.......");
+
         try {
-            byte[] usaBytes = DevBootstrap.class.getResourceAsStream("/static/images/usa.png").readAllBytes();
-            byte[] italyBytes = DevBootstrap.class.getResourceAsStream("/static/images/italy.png").readAllBytes();
-            byte[] mexicoBytes = DevBootstrap.class.getResourceAsStream("/static/images/mexico.png").readAllBytes();
+            byte[] usaBytes = getClass().getResourceAsStream("/static/images/usa.png").readAllBytes();
+            byte[] italyBytes = getClass().getResourceAsStream("/static/images/italy.png").readAllBytes();
+            byte[] mexicoBytes = getClass().getResourceAsStream("/static/images/mexico.png").readAllBytes();
             Byte[] usaImage = new Byte[usaBytes.length];
             Byte[] italyImage = new Byte[italyBytes.length];
             Byte[] mexicoImage = new Byte[mexicoBytes.length];
@@ -88,10 +103,18 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        categoryRepository.saveAll(List.of(american, italian, mexican)).subscribe();
-        american=categoryRepository.findByDescription("American").block();
-        italian=categoryRepository.findByDescription("Italian").block();
-        mexican=categoryRepository.findByDescription("Mexican").block();
+            /*
+             The method readAllBytes() Reads all remaining bytes from the input stream.
+             This method blocks until all remaining bytes have been read and end of stream is detected,
+             or an exception is thrown.
+             The method subscribe() will Subscribe to this Flux and request unbounded demand.
+             This version doesn't specify any consumption behavior for the events from the chain,
+             especially no error handling, so other variants should usually be preferred.
+             the method block() will Subscribe to this Mono and block indefinitely until a next signal is received.
+            * */
+
+        categoryRepository.saveAll(Arrays.asList(american, italian, mexican)).collectList().block();
+
         Recipe recipe1 = new Recipe();
         recipe1.setTitle("Perfect Guacamole");
         recipe1.setPrepTime(10);
@@ -104,8 +127,6 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
                 "Once the pit is removed, just cut the avocado into chunks right inside the peel and use a spoon to scoop them out.");
         recipe1.setNotes(notes1);
         recipe1.setDifficulty(Difficulty.EASY);
-        recipe1.getCategories().add(american);
-        recipe1.getCategories().add(italian);
         recipe1.setServings(4);
 
         Recipe recipe2 = new Recipe();
@@ -121,29 +142,35 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
                 "You could also easily double or even triple this recipe for a larger party. A taco and a cold beer on a warm day? Now that’s living!");
         recipe2.setNotes(notes2);
         recipe2.setDifficulty(Difficulty.MODERATE);
-        recipe2.getCategories().add(mexican);
         recipe2.setServings(3);
-        recipe1.addIngredient(new Ingredient(BigDecimal.valueOf(2), emptyUOM, "ripe advocates"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(0.25), teaspoon, "salt"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(1), tablespoon, "fresh lime juice or lemon juice"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon, "of minced red onion or thinly sliced green onion"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM, "serrano chiles, stems and seeds removed, minced"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon, "cilantro (leaves and tender stems), finely chopped"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM, "freshly grated black peppe"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(0.5), emptyUOM, "ripe tomato, seeds and pulp removed, chopped"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(0), emptyUOM, "Red radishes or jicama, to garnish"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(0), emptyUOM, "Tortilla chips, to serve"));
 
-        recipe2.addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon, "ancho chili powder"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon, "dried oregano"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon, "dried cumin"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(1), teaspoon, "sugar"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(0.5), teaspoon, "salt"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(1), emptyUOM, "clove garlic, finely chopped"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(1), tablespoon, "finely grated orange zest"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(3), tablespoon, "fresh-squeezed orange juice"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(2), tablespoon, "olive oil"))
-                .addIngredient(new Ingredient(BigDecimal.valueOf(4), emptyUOM, "skinless, boneless chicken thighs "));
+        List<Ingredient>ingredients1=List.of(
+                new Ingredient(BigDecimal.valueOf(2), emptyUOM, "ripe advocates"),
+                new Ingredient(BigDecimal.valueOf(0.25), teaspoon, "salt"),
+                new Ingredient(BigDecimal.valueOf(1), tablespoon, "fresh lime juice or lemon juice"),
+                new Ingredient(BigDecimal.valueOf(2), tablespoon, "of minced red onion or thinly sliced green onion"),
+                new Ingredient(BigDecimal.valueOf(1), emptyUOM, "serrano chiles, stems and seeds removed, minced"),
+                new Ingredient(BigDecimal.valueOf(2), tablespoon, "cilantro (leaves and tender stems), finely chopped"),
+                new Ingredient(BigDecimal.valueOf(1), emptyUOM, "freshly grated black peppe"),
+                new Ingredient(BigDecimal.valueOf(0.5), emptyUOM, "ripe tomato, seeds and pulp removed, chopped"),
+                new Ingredient(BigDecimal.valueOf(0), emptyUOM, "Red radishes or jicama, to garnish"),
+                new Ingredient(BigDecimal.valueOf(0), emptyUOM, "Tortilla chips, to serve"));
+
+        List<Ingredient>ingredients2=List.of(
+                new Ingredient(BigDecimal.valueOf(2), tablespoon, "ancho chili powder"),
+                new Ingredient(BigDecimal.valueOf(1), teaspoon, "dried oregano"),
+                new Ingredient(BigDecimal.valueOf(1), teaspoon, "dried cumin"),
+                new Ingredient(BigDecimal.valueOf(1), teaspoon, "sugar"),
+                new Ingredient(BigDecimal.valueOf(0.5), teaspoon, "salt"),
+                new Ingredient(BigDecimal.valueOf(1), emptyUOM, "clove garlic, finely chopped"),
+                new Ingredient(BigDecimal.valueOf(1), tablespoon, "finely grated orange zest"),
+                new Ingredient(BigDecimal.valueOf(3), tablespoon, "fresh-squeezed orange juice"),
+                new Ingredient(BigDecimal.valueOf(2), tablespoon, "olive oil"),
+                new Ingredient(BigDecimal.valueOf(4), emptyUOM, "skinless, boneless chicken thighs ")
+        );
+
+        ingredientRepository.saveAll(ingredients1).subscribe();
+        ingredientRepository.saveAll(ingredients2).subscribe();
 
 
         recipe1.setDirections("1 Cut the avocado, remove flesh: Cut the avocados in half. Remove the pit. Score the inside of the avocado with a blunt knife and scoop out the flesh with a spoon. (See How to Cut and Peel an Avocado.) Place in a bowl.\n" +
@@ -184,6 +211,60 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
             e.printStackTrace();
         }
 
+        recipe1.setCategories(new HashSet<>(List.of(american,italian)));
+        recipe2.setCategories(new HashSet<>(List.of(mexican)));
+        recipe1.setIngredients(new HashSet<>(ingredients1));
+        recipe2.setIngredients(new HashSet<>(ingredients2));
+
         recipeRepository.saveAll(List.of(recipe1, recipe2)).subscribe();
+    }
+
+    void initAccess() {
+        log.debug("initAccess");
+        Role role1 = new Role();
+        role1.setName("ROLE_ADMIN");
+
+        Role role2 = new Role();
+        role2.setName("ROLE_USER");
+
+        User user1 = new User();
+        user1.setUsername("user1@gmail.com");
+        //strength 12 and input= 'pass'
+        user1.setPassword("$2y$12$bwUGNLEwKKGA/CleGetPIOfJGGZsB9Ymj0KOmJirJ/pn/wdSQVfie");
+        user1.setPasswordConfirm("$2y$12$bwUGNLEwKKGA/CleGetPIOfJGGZsB9Ymj0KOmJirJ/pn/wdSQVfie");
+        user1.setAccountNonExpired(Boolean.TRUE);
+        user1.setAccountNonLocked(Boolean.TRUE);
+        user1.setCredentialsNotExpired(Boolean.TRUE);
+        user1.setEnabled(Boolean.TRUE);
+
+
+        User user2 = new User();
+        user2.setUsername("user2@gmail.com");
+        //strength 12 and input= 'pass'
+        user2.setPassword("$2y$12$bwUGNLEwKKGA/CleGetPIOfJGGZsB9Ymj0KOmJirJ/pn/wdSQVfie");
+        user2.setPasswordConfirm("$2y$12$bwUGNLEwKKGA/CleGetPIOfJGGZsB9Ymj0KOmJirJ/pn/wdSQVfie");
+        user2.setAccountNonExpired(Boolean.TRUE);
+        user2.setAccountNonLocked(Boolean.TRUE);
+        user2.setCredentialsNotExpired(Boolean.TRUE);
+        user2.setEnabled(Boolean.TRUE);
+
+        User user3 = new User();
+        user3.setUsername("user3@gmail.com");
+        //strength 12 and input= 'pass'
+        user3.setPassword("$2y$12$bwUGNLEwKKGA/CleGetPIOfJGGZsB9Ymj0KOmJirJ/pn/wdSQVfie");
+        user3.setPasswordConfirm("$2y$12$bwUGNLEwKKGA/CleGetPIOfJGGZsB9Ymj0KOmJirJ/pn/wdSQVfie");
+        user3.setAccountNonExpired(Boolean.TRUE);
+        user3.setAccountNonLocked(Boolean.TRUE);
+        user3.setCredentialsNotExpired(Boolean.TRUE);
+        user3.setEnabled(Boolean.TRUE);
+
+        //save first entities
+        roleRepository.saveAll(Arrays.asList(role1, role2)).collectList().block();
+        //in mongo, we Cannot create a reference to an object with a NULL id.
+        user1.setRoles(new HashSet<>(Collections.singletonList(role1)));
+        user2.setRoles(new HashSet<>(Collections.singletonList(role2)));
+        user3.setRoles(new HashSet<>(Collections.singletonList(role2)));
+        //save the second entities + save the relationship
+        userRepository.saveAll(List.of(user1, user2, user3)).subscribe();
     }
 }

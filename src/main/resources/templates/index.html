@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Restaurant</title>
-    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="shortcut icon" href="/images/favicon.ico" th:href="@{/images/favicon.ico}">
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
           rel="stylesheet"
@@ -23,43 +23,7 @@
           th:href="@{/webjars/font-awesome/5.15.1/css/all.min.css}">
     <link href="../static/css/style1.css" rel="stylesheet"
           th:href="@{/css/style1.css}">
-    <script>
-        $(document).ready(function () {
-            $("#container").load('/home');
-            $('.navbar-nav .nav-link').click(function(){
-                $('.navbar-nav .nav-link').removeClass('active');
-                $(this).addClass('active');
-            })
-        });
-
-        function getContent(id,url) {
-            $(id).load(url);
-            let navbar=$("#navbarResponsive");
-            if (navbar.hasClass('show')){
-                $('#btnNavbar').click();
-                //navbar.area_expanded=false;
-                //navbar.addClass('collapsing');
-                //navbar.removeClass('show');
-            }
-        }
-
-        function resizeTextarea (id) {
-            let a = document.getElementById(id);
-            a.style.height = 'auto';
-            a.style.height = a.scrollHeight+'px';
-        }
-
-        function init() {
-            let a = document.getElementsByTagName('textarea');
-            for(let i=0,inb=a.length;i<inb;i++) {
-                if(a[i].getAttribute('data-resizable')==='true')
-                    resizeTextarea(a[i].id);
-            }
-        }
-
-        addEventListener('DOMContentLoaded', init);
-
-    </script>
+    <script src="../static/js/master.js" crossorigin="anonymous" th:src="@{/js/master.js}"></script>
 
 </head>
 <body style="background-color: antiquewhite">
@@ -68,7 +32,9 @@
     <header class="row bg-dark">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark pt-0 pb-0">
             <img src="/images/logo.svg" th:src="@{/images/logo.svg}" height="100px" alt="logo" class="navbar-brand">
-            <button class="navbar-toggler collapsed" type="button" id="btnNavbar" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler collapsed" type="button" id="btnNavbar" data-bs-toggle="collapse"
+                    data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse" id="navbarResponsive">
@@ -77,7 +43,8 @@
                         <a class="nav-link active" role="button" onclick="getContent($('#container'),'/home')">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" role="button" onclick="getContent($('#container'),'/categories')">Categories</a>
+                        <a class="nav-link" role="button"
+                           onclick="getContent($('#container'),'/categories')">Categories</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" role="button" onclick="getContent($('#container'),'/recipes')">recipes</a>
@@ -86,18 +53,36 @@
                         <a class="nav-link" role="button">About</a>
                     </li>
                 </ul>
-                <form class="d-flex">
+                <form class="d-flex m-1">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-light" type="submit">Search</button>
                 </form>
-                <button class="btn btn-outline-light m-1">Login/Register</button>
+                <button sec:authorize="isAnonymous()"
+                        class="btn btn-outline-light m-1"
+                        onclick="confirmDialog(
+                                 'LOGIN',
+                                 null,
+                                 null)">Login/Register
+                </button>
+                <div class="alert alert-success alert-dismissible fade show m-1" role="alert"
+                     th:if="${logout}" ><!---->
+                    <strong>You have been signed out.</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="d-flex m-1 bg-secondary rounded" sec:authorize="isAuthenticated()" style="place-content:space-between">
+                    <form id="logoutForm" method="POST" th:action="@{/logout}"></form>
+                    <a class="btn btn-dark m-1" onclick="document.forms['logoutForm'].submit()">Logout</a>
+                    <p class="d-inline-block m-1 text-light align-self-center"><span sec:authentication="name"></span></p>
+                </div>
             </div>
 
         </nav>
     </header>
 
     <!-- Here, we'll play with the content-->
-    <div class="row" id="container"></div>
+    <div class="row" id="container">
+        <div th:replace="home::HomeFragment"></div>
+    </div>
 
 </div>
 

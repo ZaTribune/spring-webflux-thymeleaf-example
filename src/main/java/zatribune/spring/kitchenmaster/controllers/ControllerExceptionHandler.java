@@ -29,4 +29,5 @@ public class ControllerExceptionHandler {
         model.addAttribute("exception",e);
         return "error/400";
     }
+
 }

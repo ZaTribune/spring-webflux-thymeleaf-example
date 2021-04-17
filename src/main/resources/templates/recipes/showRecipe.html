@@ -101,34 +101,4 @@
             <p th:text="${recipe.notes?.description}"></p>
         </div>
     </div>
-    <script>
-        function confirmDialog(modalType, url, laterFunction) {
-            $('#modalOverlay').load('/modal/' + modalType, function () {
-                let myModel = $('#myModal');
-                myModel.on('hidden.bs.modal', function () {
-                    this.remove();
-                    // to remove the modal
-                })
-                myModel.modal('show');
-                $('#btnOkDialog').click(function () {
-                    $.ajax(
-                        {
-                            type: "GET",
-                            data: null,//data to be sent
-                            cache: false,
-                            url: url,
-                            success: function (data) {
-                                //after
-                                myModel.modal('hide');
-                                laterFunction();
-                            },
-                            error: function () {
-                                //error
-                            }
-                        });
-                })
-            });
-
-        }
-    </script>
 </div>

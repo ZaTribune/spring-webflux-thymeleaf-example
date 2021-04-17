@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Document
-public class Category {
+public class Category{
     @Id
     private ObjectId id;
 
@@ -22,6 +22,7 @@ public class Category {
     private String info;
 
     private Byte[] image;
+
     @DBRef
-    private Set<Recipe>recipes=new HashSet<>();
+    private Set<Recipe>recipes;
 }

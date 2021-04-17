@@ -26,9 +26,11 @@ public class Recipe {
     private Difficulty difficulty;
     private String image;
     private Notes notes;
+
     private Set<Ingredient> ingredients=new HashSet<>();
+
     @DBRef
-    private Set<Category>categories=new HashSet<>();
+    private Set<Category>categories;
 
     public Recipe addIngredient(Ingredient ingredient){
         this.ingredients.add(ingredient);
