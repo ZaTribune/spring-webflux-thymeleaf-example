@@ -31,6 +31,7 @@ This project is for educational purposes, as it contains several practices commo
 * Image upload as a byte array.  
 * Handling Errors & Exceptions on Spring WebFlux.  
 * External Properties with Spring.  
+* Spring Security.  
 * Unit Tests & Integrated Tests.  
 * CircleCi Integration.  
 * Code Coverage.  
