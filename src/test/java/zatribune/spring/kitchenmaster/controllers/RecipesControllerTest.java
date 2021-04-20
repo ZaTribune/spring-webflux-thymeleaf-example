@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -30,11 +31,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 @WebFluxTest(RecipesController.class)
+@WithMockUser
 class RecipesControllerTest {
     //When using Mockito, all arguments have to be provided by matchers.
     //the mockito methods only work on objects annotated with @Mock
@@ -116,8 +119,11 @@ class RecipesControllerTest {
         //and the double annotated exception handler function on the controller
     }
 
+
     @Test
     public void saveOrUpdateRecipeValid() {
+
+
         RecipeCommand recipeCommand = new RecipeCommand();
         recipeCommand.setTitle("Hello");
         recipeCommand.setPrepTime(10);
@@ -132,7 +138,8 @@ class RecipesControllerTest {
         body.add("cookTime", "15");
         body.add("directions", "whatever directions");
         //don't use contentType
-        String result = webTestClient.post()
+        String result = webTestClient.mutateWith(csrf())
+                .post()
                 .uri("/updateOrSaveRecipe", body)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(body))
@@ -160,7 +167,7 @@ class RecipesControllerTest {
         body.add("cookTime", "0");
         body.add("directions", "");
         //don't use contentType
-        String result = webTestClient.post()
+        String result = webTestClient.mutateWith(csrf()).post()
                 .uri("/updateOrSaveRecipe", body)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(body))
@@ -188,7 +195,7 @@ class RecipesControllerTest {
     }
 
     @Test
-    void createNewRecipe() {
+    void requestToCreateNewRecipe() {
         //no error will happen but just it's more convenient to have it an EmptyFlux rather than a null value
         when(unitMeasureService.getAllUnitMeasures()).thenReturn(Flux.empty());
         String result = webTestClient.get().uri("/createRecipe")

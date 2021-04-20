@@ -34,7 +34,10 @@ public class RecipesController {
     }
 
     @RequestMapping("/recipes")
-    public String getRecipesHomePage() {
+    public String getRecipesHomePage(Model model) {
+        //todo: add paging & limit ....etc
+        //because "/recipes/searchRecipes" is loaded by default ==> th:replace
+        model.addAttribute("recipes", recipeService.getAllRecipes());
         return "recipes/homeRecipes";
     }
 

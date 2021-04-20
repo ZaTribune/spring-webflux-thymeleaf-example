@@ -20,72 +20,22 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
           rel="stylesheet"
           crossorigin="anonymous"
-          th:href="@{/webjars/font-awesome/5.15.1/css/all.min.css}">
+          th:href="@{/webjars/font-awesome/5.15.2/css/all.min.css}">
     <link href="../static/css/style1.css" rel="stylesheet"
           th:href="@{/css/style1.css}">
     <script src="../static/js/master.js" crossorigin="anonymous" th:src="@{/js/master.js}"></script>
 
 </head>
-<body style="background-color: antiquewhite">
-<div class="container-fluid">
+<body class="bg-body">
+<header th:replace="fragments/header"></header>
+<div class="container container-fluid">
     <div id="modalOverlay"></div>
-    <header class="row bg-dark">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark pt-0 pb-0">
-            <img src="/images/logo.svg" th:src="@{/images/logo.svg}" height="100px" alt="logo" class="navbar-brand">
-            <button class="navbar-toggler collapsed" type="button" id="btnNavbar" data-bs-toggle="collapse"
-                    data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse" id="navbarResponsive">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" role="button" onclick="getContent($('#container'),'/home')">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" role="button"
-                           onclick="getContent($('#container'),'/categories')">Categories</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" role="button" onclick="getContent($('#container'),'/recipes')">recipes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" role="button">About</a>
-                    </li>
-                </ul>
-                <form class="d-flex m-1">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-light" type="submit">Search</button>
-                </form>
-                <button sec:authorize="isAnonymous()"
-                        class="btn btn-outline-light m-1"
-                        onclick="confirmDialog(
-                                 'LOGIN',
-                                 null,
-                                 null)">Login/Register
-                </button>
-                <div class="alert alert-success alert-dismissible fade show m-1" role="alert"
-                     th:if="${logout}" ><!---->
-                    <strong>You have been signed out.</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <div class="d-flex m-1 bg-secondary rounded" sec:authorize="isAuthenticated()" style="place-content:space-between">
-                    <form id="logoutForm" method="POST" th:action="@{/logout}"></form>
-                    <a class="btn btn-dark m-1" onclick="document.forms['logoutForm'].submit()">Logout</a>
-                    <p class="d-inline-block m-1 text-light align-self-center"><span sec:authentication="name"></span></p>
-                </div>
-            </div>
-
-        </nav>
-    </header>
-
     <!-- Here, we'll play with the content-->
-    <div class="row" id="container">
-        <div th:replace="home::HomeFragment"></div>
+    <div class="row justify-content-center" id="mainContainer" th:insert="home::HomeFragment" style="min-height:100vh">
+
     </div>
 
 </div>
-
-
+<footer th:replace="fragments/footer"></footer>
 </body>
 </html>

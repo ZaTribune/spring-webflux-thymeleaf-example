@@ -1,39 +1,33 @@
-<div class="container-fluid" style="margin-top: 20px;"
+<div style="margin-top: 20px;"
      xmlns:th="http://www.thymeleaf.org"
-     th:fragment="RecipesMainFragment">
-    <div class="row justify-content-center">
-        <div class="col-lg-2 col-sm-12 p-1">
+     th:fragment="RecipesMainFragment"
+     class="row justify-content-center h-100">
+    <div class="col-sm-12 col-lg-2  p-1">
+        <div class="list-group d-table m-auto text-center bg-light" role="list">
+            <!-- apply different styles to the label-->
+            <a id="btnSearch" role="button" data-bs-toggle="list"
+               class="btn col-lg-12 col-md-4 col-sm-4 col-4 btn-outline-dark btn-side-menu active"
+               onclick="getContent($('#recipesContainer'),'/searchRecipes')">
+                <i class="btn-label fa fa-search d-table-cell"></i>
+                <i class="d-table-cell">Search Recipes</i>
+            </a>
 
-            <div class="btn-group d-table m-auto text-center" role="group" aria-label="Basic radio toggle button group">
-                <!-- apply different styles to the label-->
+            <a id="btnAddNew" role="button" data-bs-toggle="list"
+               class="btn col-lg-12 col-md-4 col-sm-4 col-4 btn-outline-dark btn-side-menu"
+               onclick="getContent($('#recipesContainer'),'/createRecipe')">
+                <i class="btn-label fa fa-plus-circle d-table-cell"></i>
+                <i class="d-table-cell">Add New Recipe</i>
+            </a>
 
-                <input type="radio" class="btn-check" name="btnradio" id="btnSearch"
-                       onclick="getContent($('#recipesContainer'),'/searchRecipes')" autocomplete="off" checked>
-                <label class="btn col-lg-12 col-md-4 col-sm-3 col-4 btn-outline-dark btn-side-menu" for="btnSearch">
-                    <i class="btn-label fa fa-search d-table-cell"></i>
-                    <i class="d-table-cell">Search Recipes</i>
-                </label>
-
-                <input type="radio" class="btn-check" name="btnradio" id="btnAddNew"
-                       onclick="getContent($('#recipesContainer'),'/createRecipe')" autocomplete="off">
-                <label class="btn col-lg-12 col-md-4 col-sm-4 col-4 btn-outline-dark btn-side-menu" for="btnAddNew">
-                    <i class="btn-label fa fa-plus-circle d-table-cell"></i>
-                    <i class="d-table-cell">Add New Recipe</i>
-                </label>
-
-                <input type="radio" class="btn-check" name="btnradio" id="btnImport"
-                       onclick="getContent($('#recipesContainer'),'/importRecipes')" autocomplete="off">
-                <label class="btn col-lg-12 col-md-4 col-sm-4 col-4 btn-outline-dark btn-side-menu" for="btnImport">
-                    <i class="btn-label fa fa-file-import d-table-cell"></i>
-                    <i class="d-table-cell">Import Recipes</i>
-                </label>
-            </div>
+            <a id="btnImport" role="button" data-bs-toggle="list"
+               class="btn col-lg-12 col-md-4 col-sm-4 col-4 btn-outline-dark btn-side-menu"
+               onclick="getContent($('#recipesContainer'),'/importRecipes')">
+                <i class="btn-label fa fa-file-import d-table-cell"></i>
+                <i class="d-table-cell">Import Recipes</i>
+            </a>
         </div>
-        <div id="recipesContainer" class="col-lg-10 col-sm-12" style="padding: .25rem!important;"></div>
     </div>
-    <script>
-        $(document).ready(function () {
-            $("#recipesContainer").load('/searchRecipes');
-        });
-    </script>
+    <div id="recipesContainer" class="col-sm-12 col-lg-10 " style="padding: .25rem!important;">
+        <div th:replace="/recipes/searchRecipes::RecipesSearchFragment"></div>
+    </div>
 </div>

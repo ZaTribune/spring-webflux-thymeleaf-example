@@ -27,6 +27,8 @@ public class ReactiveUserDetailsServiceImpl implements ReactiveUserDetailsServic
     @Override
     public Mono<UserDetails> findByUsername(String username) {
         log.info("find by username "+username);
+
+
         Mono<User> user = userRepository.findDistinctByUsername(username);
         if (user == null)
             throw new UsernameNotFoundException(username);

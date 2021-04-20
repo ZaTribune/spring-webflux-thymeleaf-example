@@ -18,7 +18,7 @@
         <java.version>11</java.version>
         <jquery.version>3.5.1</jquery.version>
         <bootstrap.version>5.0.0-beta1</bootstrap.version>
-        <fontawesome.version>5.15.1</fontawesome.version>
+        <fontawesome.version>5.15.2</fontawesome.version>
     </properties>
 
     <dependencies>
@@ -44,11 +44,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>de.flapdoodle.embed</groupId>-->
-<!--            <artifactId>de.flapdoodle.embed.mongo</artifactId>-->
-<!--            &lt;!&ndash;<scope>test</scope>&ndash;&gt;-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <!--<scope>test</scope>-->
+        </dependency>
         <!-- Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -96,6 +96,10 @@
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
         </dependency>
         <!--to fix this error in unitTesting webflux
         javax.validation.ValidationException: HV000183: Unable to initialize 'javax.el.ExpressionFactory'.

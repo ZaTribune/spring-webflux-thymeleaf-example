@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,18 +28,20 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @WebFluxTest(CategoriesController.class)
 /*Using this annotation WebFluxTest(CategoriesController.class) will disable full auto-configuration
- and instead apply only configuration
- relevant to WebFlux tests (i.e. @Controller, @ControllerAdvice, @JsonComponent,
- Converter/GenericConverter, and WebFluxConfigurer beans but not
- @Component, @Service or @Repository beans).
- Typically @WebFluxTest is used in combination with
- @MockBean or @Import to create any collaborators required by your @Controller beans.
+ and instead apply only configuration relevant to WebFlux tests
+ (i.e. @Controller, @ControllerAdvice, @JsonComponent,Converter/GenericConverter,
+ and WebFluxConfigurer beans but not @Component, @Service or @Repository beans).
+ Typically @WebFluxTest is used in combination with @MockBean or @Import
+ to create any collaborators required by your @Controller beans.
  if your controller method returns a view/means that you're making a get() request with WebClientTest
  , in that case view will try to get resolved which will not happen until auto configuration feature works.
  If you do not want full application loading, you'll have to mock the controller and its methods<-bad practice.
  If you are looking to load your full application configuration and use WebTestClient,
  you should consider @SpringBootTest combined with @AutoConfigureWebTestClient rather than this annotation.
  */
+@WithMockUser(username = "asd",password = "pass")
+//annotation used in unit testing and not intended to execute authentication.
+// It creates a user which is authenticated already. By default his credentials are user : password
 class CategoriesControllerTest {
     @MockBean
     CategoryService categoryService;

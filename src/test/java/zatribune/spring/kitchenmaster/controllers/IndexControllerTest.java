@@ -7,8 +7,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.validation.ObjectError;
+import zatribune.spring.kitchenmaster.data.entities.User;
 
 import java.util.ArrayList;
 
@@ -18,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 @WebFluxTest(IndexController.class)
+@WithMockUser
 class IndexControllerTest {
 
     @Autowired
@@ -41,7 +44,7 @@ class IndexControllerTest {
 
     @Test
     void getModal() {
-        for (ModalType type:ModalType.values()){
+        for (ModalType type : ModalType.values()) {
             String result = null;
             switch (type) {
                 case INFO:
@@ -73,6 +76,15 @@ class IndexControllerTest {
                             .expectBody(String.class)
                             .returnResult().getResponseBody();
                     break;
+                case LOGIN:
+                    result = webTestClient.get().uri("/modal/" + ModalType.LOGIN)
+                            .attribute("user", new User())
+                            .attribute("title", "Login")
+                            .attribute("info", "Please, enter your credentials.")
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody(String.class)
+                            .returnResult().getResponseBody();
             }
             assertNotNull(result);
             assertTrue(result.length() > 0);

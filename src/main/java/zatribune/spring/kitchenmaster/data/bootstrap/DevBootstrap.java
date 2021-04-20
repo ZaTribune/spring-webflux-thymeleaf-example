@@ -53,6 +53,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
 
 
     void initData() {
+        log.info("initData()");
         UnitMeasure emptyUOM = new UnitMeasure();
         emptyUOM.setDescription("");
         UnitMeasure teaspoon = new UnitMeasure();

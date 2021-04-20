@@ -3,9 +3,9 @@ function getContent(id,url) {
     let navbar=$("#navbarResponsive");
     if (navbar.hasClass('show')){
         $('#btnNavbar').click();
-        //navbar.area_expanded=false;
-        //navbar.addClass('collapsing');
-        //navbar.removeClass('show');
+        navbar.area_expanded=false;
+        navbar.addClass('collapsing');
+        navbar.removeClass('show');
     }
 }
 

@@ -1,0 +1,53 @@
+<header class="bg-dark" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark pt-0 pb-0">
+        <img src="/images/logo.svg" th:src="@{/images/logo.svg}" height="100px" alt="logo" class="navbar-brand">
+        <button class="navbar-toggler collapsed" type="button" id="btnNavbar" data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarResponsive">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 list-group" role="list">
+                <li class="nav-item">
+                    <a class="nav-link active" role="button" data-bs-toggle="list"
+                       onclick="getContent($('#mainContainer'),'/home')">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" role="button" data-bs-toggle="list"
+                       onclick="getContent($('#mainContainer'),'/categories')">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" role="button" data-bs-toggle="list"
+                       onclick="getContent($('#mainContainer'),'/recipes')">recipes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" role="button" data-bs-toggle="list">About</a>
+                </li>
+            </ul>
+            <form class="d-flex m-1">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
+            <button sec:authorize="isAnonymous()"
+                    class="btn btn-outline-light m-1"
+                    onclick="confirmDialog(
+                                 'LOGIN',
+                                 null,
+                                 null)">Login/Register
+            </button>
+            <div class="alert alert-success alert-dismissible fade show m-1" role="alert"
+                 th:if="${logout}"><!---->
+                <strong>You have been signed out.</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="d-flex m-1 bg-secondary rounded" sec:authorize="isAuthenticated()"
+                 style="place-content:space-between">
+                <form id="logoutForm" method="POST" th:action="@{/logout}"></form>
+                <a class="btn btn-dark m-1" onclick="document.forms['logoutForm'].submit()">Logout</a>
+                <p class="d-inline-block m-1 text-light align-self-center"><span sec:authentication="name"></span>
+                </p>
+            </div>
+        </div>
+
+    </nav>
+</header>

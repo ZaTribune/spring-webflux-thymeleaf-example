@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +38,7 @@ Actual   :404 NOT_FOUND
 * */
 @ExtendWith(SpringExtension.class)
 @WebFluxTest({ImageController.class})
+@WithMockUser
 class ImageServiceImplTest {
 
     @MockBean
@@ -81,7 +84,7 @@ class ImageServiceImplTest {
         // to expose content length and the filename along with the InputStream.
         System.out.println(multipartFile.getResource());
         body.add("imageFile", multipartFile.getResource());
-        Boolean result = webTestClient.post().uri("/category/" + id.toString() + "/uploadImage")
+        Boolean result = webTestClient.mutateWith(csrf()).post().uri("/category/" + id.toString() + "/uploadImage")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(body))
                 .exchange()
