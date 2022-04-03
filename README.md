@@ -38,4 +38,4 @@ This project is for educational purposes, as it contains several practices commo
 * Tested on a Docker Container + Steps to achieve that.  
 
 ## Authors  
-   **Muhammad Ali Arafah** - find me on : [Twitter](https://twitter.com/ZaTribune)[LinkedIn](https://www.linkedin.com/in/zatribune).  
+   **Muhammad Ali** - find me on : [LinkedIn](https://www.linkedin.com/in/zatribune).  
