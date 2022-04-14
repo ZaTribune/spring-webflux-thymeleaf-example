@@ -1,4 +1,4 @@
-# KitchenMaster [![CircleCI](https://circleci.com/gh/ZaTribune/kitchenmaster.svg?style=svg)](https://circleci.com/gh/ZaTribune/kitchenmaster) [![codecov](https://codecov.io/gh/ZaTribune/kitchenmaster/branch/master/graph/badge.svg?token=SFV4GJK1O0)](https://codecov.io/gh/ZaTribune/kitchenmaster)
+# KitchenMaster [![CircleCI](https://circleci.com/gh/ZaTribune/spring-webflux-thymeleaf-example.svg?style=svg)](https://circleci.com/gh/ZaTribune/spring-webflux-thymeleaf-example) [![codecov](https://codecov.io/gh/ZaTribune/kitchenmaster/branch/master/graph/badge.svg?token=SFV4GJK1O0)](https://codecov.io/gh/ZaTribune/kitchenmaster)
 Spring Boot Web Application. [In progress]
 <p align="center">
   <img  src="src/main/resources/static/images/logo.svg" width="200" height="200"/>
