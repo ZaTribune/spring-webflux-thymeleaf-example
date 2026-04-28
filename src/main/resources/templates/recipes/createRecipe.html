@@ -2,7 +2,7 @@
     <!--specify the encoding type to allow uploading images via html -->
     <form th:fragment="AddRecipeFragment"
           th:object="${recipe}"
-          th:action="@{/updateOrSaveRecipe}"
+          th:action="@{/recipes}"
           id="createRecipeForm"
           method="POST"
           class="justify-content-center">

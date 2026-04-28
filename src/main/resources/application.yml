@@ -1,0 +1,20 @@
+# MongoDB Configuration
+spring:
+  data:
+    mongodb:
+      host: ${MONGO_HOST:localhost}
+      port: ${MONGO_PORT:27017}
+      database: ${MONGO_DATABASE:kitchen_master}
+      username: ${MONGO_USERNAME:km_user}
+      password: ${MONGO_PASSWORD:Pass1234}
+      authentication-database: ${MONGO_AUTH_DB:kitchen_master}
+  webflux:
+    multipart:
+      max-in-memory-size: 512KB
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    org.springframework.data.mongodb: DEBUG
+    com.tribune.demo.km.config: DEBUG

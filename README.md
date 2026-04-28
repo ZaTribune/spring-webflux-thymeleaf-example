@@ -1,41 +1,125 @@
-# KitchenMaster [![CircleCI](https://circleci.com/gh/ZaTribune/spring-webflux-thymeleaf-example.svg?style=svg)](https://circleci.com/gh/ZaTribune/spring-webflux-thymeleaf-example) [![codecov](https://codecov.io/gh/ZaTribune/kitchenmaster/branch/master/graph/badge.svg?token=SFV4GJK1O0)](https://codecov.io/gh/ZaTribune/kitchenmaster)
-Spring Boot Web Application. [In progress]
-<p align="center">
-  <img  src="src/main/resources/static/images/logo.svg" width="200" height="200"/>
-  <img src="src/main/resources/static/images/spring.svg" width="200" height="200"/>
-</p>
+<div style="margin-top: 20px" align="center">
+  <div style="background-color: white; border-radius: 50%; width: 280px; height: 280px; display: flex; align-items: center; justify-content: center; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <img src="src/main/resources/static/images/logo.svg" alt="KitchenMaster Logo" width="250" height="250"/>
+  </div>
 
-## Overview  
-Just Another Web Application for recipes & cooking meals ; built mainly with Spring Boot.  
-This project is for educational purposes, as it contains several practices commonly used when developing spring boot web applications.
- 
-## Built With  
-&nbsp;&nbsp;&nbsp;&nbsp;**Java** - The Main Programming Language and Framework.  
-&nbsp;&nbsp;&nbsp;&nbsp;**Spring Boot** - Software Platform for creating and delivering Web Applications.  
-&nbsp;&nbsp;&nbsp;&nbsp;**Spring WebFlux** - A Spring Web Stack which is part of Spring 5 and provides reactive programming support for web applications.  
-&nbsp;&nbsp;&nbsp;&nbsp;**Thymeleaf** - Web Template Engine.  
-&nbsp;&nbsp;&nbsp;&nbsp;**Intellij Idea** - Java IDE.  
-&nbsp;&nbsp;&nbsp;&nbsp;**Maven** - Build tool & Dependency Management.  
+# 🍽️ KitchenMaster
 
-## Features  
-* A fully Reactive Web Application built on the Spring WebFlux Stack.  
-* An asynchronous web application on the client-side as it utilizes AJAX.  
-* Using an Embedded MongoDB as a Database.  
-* CRUD Operations against an Embedded MongoDB Using Spring Boot Reactive Repositories.  
-* Bootstraping data for Embedded MongoDB.  
-* JPA Data Modeling with Spring and Hibernate.  
-* Utilizing Project Lombok.  
-* Form Data submitting.  
-* Validation and Constraints with Spring MVC.  
-* Image upload as a Base64 String.  
-* Image upload as a byte array.  
-* Handling Errors & Exceptions on Spring WebFlux.  
-* External Properties with Spring.  
-* Spring Security.  
-* Unit Tests & Integrated Tests.  
-* CircleCi Integration.  
-* Code Coverage.  
-* Tested on a Docker Container + Steps to achieve that.  
+> Not your average recipe website — this one is fully reactive. Built with Spring WebFlux & Thymeleaf.
 
-## Authors  
-   **Muhammad Ali** - find me on : [LinkedIn](https://www.linkedin.com/in/zatribune).  
+![Java](https://img.shields.io/badge/Java-26+-brown)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0+-olivegreen)
+
+
+</div>
+
+---
+
+## Features & Concepts Demonstrated
+
+### Backend
+
+- **Fully Reactive & Non-blocking** - Built on Spring WebFlux with Project Reactor.
+  - Non-blocking streams with `Flux` and `Mono`.
+  - Composable async operations with backpressure handling.
+  - Asynchronous operations for superior performance.
+
+- **Router Functions** - Functional routing with query parameters.
+  - Example of functional routing as alternative to `@Controller` approach.
+  - Demonstrates Spring WebFlux's flexible routing capabilities.
+
+- **MongoDB Integration** - Embedded MongoDB with Spring Data Reactive Repositories.
+  - Complete recipe, category, and ingredient management.
+
+- **Smart Pagination** - Efficient data loading with configurable page sizes (12 recipes/page).
+  - Frontend-driven pagination detection.
+  - Automatic "Next" button disabling.
+  - Optimized database queries with `skip()` and `take()`.
+
+### Frontend
+
+- **AJAX-powered UI** - Dynamic, responsive interface without page reloads.
+- **Thymeleaf Templates** - Server-side rendering with template engine.
+- **Bootstrap Styling** - Clean, modern, mobile-responsive design.
+- **Image Management** - Base64 encoding and byte array handling.
+  - Base64 encoding for recipe images.
+  - Byte array storage for category images.
+  - Efficient image loading.
+- **Form Validation** - Client and server-side validation.
+
+### Security & Quality
+
+- **Spring Security** - Authentication and authorization.
+  - Form-based authentication.
+  - Role-based access control with Admin and User roles.
+  - Bcrypt password encoding (strength 12).
+
+- **Exception Handling** - Global error handling with custom error pages.
+- **Unit & Integration Tests** - Comprehensive test coverage.
+- **Docker Support** - Containerized deployment.
+
+---
+
+## Technology Stack
+
+|                     | Technology                       |
+|---------------------|----------------------------------|
+| **Language**        | Java                             |
+| **Main Framework**  | Spring Boot                      |
+| **Reactive Stack**  | Spring WebFlux & Project Reactor |
+| **Template Engine** | Thymeleaf                        |
+| **Database**        | MongoDB                          |
+| **Build Tool**      | Maven                            |
+| **Security**        | Spring Security                  |
+| **Utilities**       | Project Lombok                   |
+| **Testing**         | JUnit 5, Mockito                 |
+| **IDE**             | IntelliJ IDEA                    |
+| **CI/CD**           | Docker                           |
+
+---
+
+### Default Credentials
+
+```
+Username: user1@gmail.com
+Password: pass
+Role: ADMIN
+
+Username: user2@gmail.com
+Password: pass
+Role: USER
+```
+
+---
+
+## Testing locally
+
+Run the `docker-compose.yml` file to start the MongoDB container:
+
+```bash
+docker-compose up -d
+```
+Also, run the application with profile `dev` to bootstrap/reset the database with sample data:
+
+```bashbash
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+To run the test suite:
+
+```bash
+mvn test
+```
+
+View coverage:
+
+```bash
+mvn jacoco:report
+```
+
+---
+## Authors
+[![Linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white&label=Muhammad%20Ali)](https://linkedin.com/in/zatribune)
+
+**Made with ❤️ for the Java & Spring community**.
+

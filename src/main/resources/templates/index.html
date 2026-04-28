@@ -1,41 +1,131 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Restaurant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Master - Recipe & Category Manager</title>
     <link rel="shortcut icon" href="/images/favicon.ico" th:href="@{/images/favicon.ico}">
-    <!-- CSS only -->
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          crossorigin="anonymous"
+          rel="stylesheet" crossorigin="anonymous"
           th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
 
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          rel="stylesheet" crossorigin="anonymous"
+          th:href="@{/webjars/font-awesome/6.7.2/css/all.min.css}">
+
+    <!-- Custom CSS -->
+    <link href="/css/style.css" rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-utensils"></i> Kitchen Master
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recipes">Recipes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories">Categories</a>
+                    </li>
+                    <li class="nav-item m-1" id="navSignIn" style="display: none;">
+                        <a class="btn btn-light btn-sm" href="/login">
+                            <i class="fas fa-sign-in-alt"></i> Sign in
+                        </a>
+                    </li>
+                    <li class="nav-item d-flex" id="navUserInfo" style="display: none;">
+                        <span class="navbar-text text-light small" id="navUsername"></span>
+                    </li>
+
+                    <li class="nav-item m-1" id="navNewRecipe" style="display: none;">
+                        <a class="btn btn-success btn-sm" href="#" onclick="showRecipeForm(); return false;">
+                            <i class="fas fa-plus"></i> New Recipe
+                        </a>
+                    </li>
+
+                    <li class="nav-item m-1" id="navLogout" style="display: none;">
+                        <form id="logoutForm" method="POST" action="/logout" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-5">
+        <div class="container" id="mainContent">
+            <!-- Success Alert -->
+            <div th:if="${logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle"></i> You have been signed out successfully.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Hero Section -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold mb-2">Welcome to Kitchen Master</h1>
+                <p class="lead text-muted">Discover, create, and manage delicious recipes</p>
+            </div>
+
+            <!-- Browse Section -->
+            <div class="row mb-5 g-3">
+                <div class="col-md-6">
+                    <a href="/recipes" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm hover-card">
+                            <div class="card-body text-center py-5">
+                                <i class="fas fa-book-open fa-3x text-primary mb-3"></i>
+                                <h3 class="card-title">Browse Recipes</h3>
+                                <p class="card-text text-muted">Explore our collection of delicious recipes</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="/categories" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm hover-card">
+                            <div class="card-body text-center py-5">
+                                <i class="fas fa-list fa-3x text-success mb-3"></i>
+                                <h3 class="card-title">Browse Categories</h3>
+                                <p class="card-text text-muted">Browse recipes by category</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Include Modals from Fragments -->
+    <div th:replace="~{fragments/recipe-detail-modal :: recipeDetailModal}"></div>
+    <div th:replace="~{fragments/category-detail-modal :: categoryDetailModal}"></div>
+    <div th:replace="~{fragments/recipe-form-modal :: recipeFormModal}"></div>
+
+    <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
             crossorigin="anonymous"
             th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
-    <!-- JavaScript Bundle with Popper -->
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             crossorigin="anonymous"
             th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-          rel="stylesheet"
-          crossorigin="anonymous"
-          th:href="@{/webjars/font-awesome/6.7.2/css/all.min.css}">
-    <link href="../static/css/style1.css" rel="stylesheet"
-          th:href="@{/css/style1.css}">
-    <script src="../static/js/master.js" crossorigin="anonymous" th:src="@{/js/master.js}"></script>
 
-</head>
-<body class="bg-body">
-<header th:replace="fragments/header"></header>
-<div class="container container-fluid">
-    <div id="modalOverlay"></div>
-    <!-- Here, we'll play with the content-->
-    <div class="row justify-content-center" id="mainContainer" th:insert="home::HomeFragment" style="min-height:100vh">
-
-    </div>
-
-</div>
-<footer th:replace="fragments/footer"></footer>
+    <!-- Custom JS -->
+    <script src="/js/app.js" th:src="@{/js/app.js}"></script>
 </body>
 </html>

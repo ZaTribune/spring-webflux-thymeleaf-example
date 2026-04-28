@@ -1,0 +1,37 @@
+package com.tribune.demo.km.converter;
+
+import org.bson.types.ObjectId;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import com.tribune.demo.km.command.UnitMeasureCommand;
+import com.tribune.demo.km.data.entity.UnitMeasure;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class UnitMeasureToUnitMeasureCommandTest {
+    private final String description = "a dummy description";
+    private UnitMeasureToUnitMeasureCommand converter;
+
+    @BeforeEach
+    void setUp() {
+        converter = new UnitMeasureToUnitMeasureCommand();
+    }
+
+    @Test
+    void testEmptyObject() {
+        assertNotNull(converter.convert(new UnitMeasure()));
+    }
+
+    @Test
+    void convert() {
+        UnitMeasure unitMeasure = new UnitMeasure();
+        unitMeasure.setId(new ObjectId());
+        unitMeasure.setDescription(description);
+
+        UnitMeasureCommand unitMeasureCommand = converter.convert(unitMeasure);
+
+        assertNotNull(unitMeasureCommand);
+        assertEquals(unitMeasure.getId().toString(), unitMeasureCommand.getId());
+        assertEquals(description, unitMeasureCommand.getDescription());
+    }
+}

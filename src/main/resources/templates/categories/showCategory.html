@@ -34,7 +34,7 @@
             -->
             <img class="img-fluid"
                  th:case="*"
-                 th:src="@{'/category/'+${category.id}+'/image/'+${#dates.createNow().time}}"
+                 th:src="@{'/categories/'+${category.id}+'/image'}"
                  th:width="300"
                  th:height="300"
                  alt="">
@@ -65,7 +65,7 @@
                 {
                     //we specify the type:post cause it's GET by default in ajax.
                     type: "POST",
-                    url: "/updateOrSaveCategory",
+                    url: "/categories",
                     data: new FormData(form),
                     cache: false,
                     // important or you'll get ->jquery.min.js:2 Uncaught TypeError: Illegal invocation.....
@@ -74,7 +74,7 @@
                     success: function (data) {
                         console.log(data)
                         makeReadable(categoryId)
-                        $('#categoryTabContent').load('/showCategory/'+categoryId);
+                        $('#categoryTabContent').load('/categories/'+categoryId+'/fragment');
                     },
                     error: function () {
                         alert("Error - Data not saved");
@@ -99,7 +99,7 @@
                     //we specify the type:post cause it's GET by default in ajax.
                     type: "POST",
                     enctype: "multipart/form-data",
-                    url: "/category/" + categoryId + "/uploadImage",
+                    url: "/categories/" + categoryId + "/image",
                     data: new FormData(form),
                     cache: false,
                     // important or you'll get ->jquery.min.js:2 Uncaught TypeError: Illegal invocation.....
@@ -108,7 +108,7 @@
                     success: function (data) {
                         console.log(data);
                         makeReadable(categoryId);
-                        $('#categoryTabContent').load("/showCategory/" + categoryId);
+                        $('#categoryTabContent').load("/categories/" + categoryId + "/fragment");
                     },
                     error: function () {
                         alert("Error - Data not saved");

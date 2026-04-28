@@ -1,0 +1,123 @@
+<!-- Recipe Form Modal Fragment (Add/Edit) -->
+<div class="modal fade" id="recipeFormModal" tabindex="-1" th:fragment="recipeFormModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="recipeFormTitle">
+                    <i class="fas fa-utensils"></i> <span id="recipeFormTitleText">New Recipe</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="recipeForm">
+                    <input type="hidden" id="recipeId">
+
+                    <!-- Row 1: Title -->
+                    <div class="mb-3">
+                        <label for="recipeTitle" class="form-label fw-bold">Title *</label>
+                        <input type="text" class="form-control" id="recipeTitleInput" required
+                               minlength="3" maxlength="255" placeholder="Recipe name">
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-3">
+                        <label for="recipeImageInput" class="form-label fw-bold">
+                            <i class="fas fa-camera"></i> Recipe Image
+                        </label>
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="flex-grow-1">
+                                <input type="file" class="form-control" id="recipeImageInput"
+                                       accept="image/*" onchange="previewRecipeImage(this)">
+                                <small class="text-muted">JPG, PNG or GIF. Max 2MB recommended.</small>
+                            </div>
+                            <div id="recipeImagePreview" style="display: none;">
+                                <img id="recipeImagePreviewImg" src="" alt="Preview"
+                                     style="max-width: 120px; max-height: 90px; border-radius: 8px; border: 2px solid #dee2e6; object-fit: cover;">
+                                <button type="button" class="btn btn-outline-danger btn-sm d-block mt-1" onclick="clearRecipeImage()">
+                                    <i class="fas fa-times"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" id="recipeImageBase64">
+                    </div>
+
+                    <!-- Row 2: Times, Servings, Difficulty -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="recipePrepTime" class="form-label fw-bold">Prep Time (min) *</label>
+                            <input type="number" class="form-control" id="recipePrepTime" required min="1" max="999">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="recipeCookTime" class="form-label fw-bold">Cook Time (min) *</label>
+                            <input type="number" class="form-control" id="recipeCookTime" required min="1" max="999">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="recipeServings" class="form-label fw-bold">Servings</label>
+                            <input type="number" class="form-control" id="recipeServings" min="1" max="100">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="recipeDifficulty" class="form-label fw-bold">Difficulty</label>
+                            <select class="form-select" id="recipeDifficulty">
+                                <option value="EASY">Easy</option>
+                                <option value="MODERATE">Moderate</option>
+                                <option value="HARD">Hard</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Source & URL -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="recipeSource" class="form-label">Source</label>
+                            <input type="text" class="form-control" id="recipeSource" placeholder="e.g. Grandma's cookbook">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="recipeUrl" class="form-label">URL</label>
+                            <input type="url" class="form-control" id="recipeUrl" placeholder="https://...">
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Categories</label>
+                        <div id="categoriesCheckboxes" class="d-flex flex-wrap gap-2">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- Ingredients -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Ingredients</label>
+                        <div id="ingredientsList">
+                            <!-- Dynamically populated -->
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addIngredientRow()">
+                            <i class="fas fa-plus"></i> Add Ingredient
+                        </button>
+                    </div>
+
+                    <!-- Directions -->
+                    <div class="mb-3">
+                        <label for="recipeDirections" class="form-label fw-bold">Directions *</label>
+                        <textarea class="form-control" id="recipeDirections" rows="4" required
+                                  placeholder="Step-by-step cooking directions..."></textarea>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="mb-3">
+                        <label for="recipeNotes" class="form-label">Notes</label>
+                        <textarea class="form-control" id="recipeNotes" rows="2"
+                                  placeholder="Additional notes or tips..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitRecipeForm()">
+                    <i class="fas fa-save"></i> Save Recipe
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

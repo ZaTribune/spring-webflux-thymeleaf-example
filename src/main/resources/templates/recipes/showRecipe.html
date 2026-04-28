@@ -5,7 +5,7 @@
             <section class="d-inline-block">
                 <button class="btn btn-secondary" id="btnEdit"
                         th:attr="data-recipe=${recipe.id}"
-                        onclick="$('#recipeTabContent').load('/updateRecipe/'+this.getAttribute('data-recipe'))">
+                        onclick="$('#recipeTabContent').load('/recipes/'+this.getAttribute('data-recipe')+'/edit')">
 
                     <i class="fa fa-edit d-table-cell"></i>
                     <i class="d-table-cell">Edit</i>
@@ -15,9 +15,9 @@
                         th:id="${recipe.id}"
                         onclick="confirmDialog(
                                  'DELETE',
-                                 '/deleteRecipe/'+this.id,
-                                 function() {getContent($('#container'),'/recipes')})"
-                        data-bs-toggle="modal" data-bs-target="#myModal">
+                                 '/recipes/'+this.id,
+                                 function() {getContent($('#container'),'/recipes')},
+                                 'DELETE')">
                     <i class="fa fa-trash d-table-cell"></i>
                     <i class="d-table-cell">Delete</i>
                 </button>

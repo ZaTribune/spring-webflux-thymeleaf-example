@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404</title>
+</head>
+<body style="text-align: center;font-family: sans-serif;">
+<div class="text-center" style="text-align: center;display: inline-grid;">
+    <h1>500</h1>
+    <img src="/images/kitchen.svg" style="display: block;margin: auto" width="200px" height="200px" alt="">
+    <!--/*@thymesVar id="exception" type="java.lang.Exception"*/-->
+    <h1 style="display: block;color: crimson;text-align: center;" th:if="${exception!=null}" th:text="${exception.getMessage()}"></h1>
+    <h1 style="display: block;color: crimson;text-align: center;" th:if="${exception==null}" th:text="#{notFound}"></h1>
+</div>
+
+</body>
+</html>

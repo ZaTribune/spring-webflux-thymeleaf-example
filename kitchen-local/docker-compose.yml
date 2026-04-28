@@ -1,0 +1,25 @@
+
+services:
+  mongodb:
+    image: bitnami/mongodb:7.0
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_ROOT_USER: ${MONGODB_ROOT_USER:-admin}
+      MONGODB_ROOT_PASSWORD: ${MONGODB_ROOT_PASSWORD:-password}
+      MONGODB_DATABASE: ${MONGODB_DATABASE:-kitchen_master}
+      MONGODB_USERNAME: ${MONGODB_USERNAME:-km_user}
+      MONGODB_PASSWORD: ${MONGODB_PASSWORD:-Pass1234}
+    volumes:
+      - mongodb_data:/bitnami/mongodb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  mongodb_data:
+    driver: local
